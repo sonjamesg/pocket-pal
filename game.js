@@ -47,17 +47,40 @@ function hearts(n){for(let j=0;j<n;j++)ui.fx.push({x:100+j*12,y:90,vx:Math.rando
 function setPose(p,t){ui.pose=p;ui.poseT=t}
 const PAUSE=['RESUME','SAVE','MY PETS','NEW PET','HOME'];
 function titleItems(){return petList().length?['CONTINUE','MY PETS','NEW PET']:['NEW PET']}
-function newPet(){let n=prompt('Name your new pet (optional):','')||'';n=n.trim().slice(0,8).toUpperCase()||'PIP';S=fix({scene:'pick',name:n});ui.sel=0}
+const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
+function newPet(){S={scene:'title'};ui.msgT=0;ui.modal={type:'name',name:'',k:0}}
+function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';S=fix({scene:'pick',name:n});ui.sel=0}
+function askConfirm(q,yes){ui.modal={type:'confirm',q,yes,k:1}}
+function modalInput(k){const m=ui.modal;
+  if(m.type==='confirm'){if(k==='left'||k==='right'||k==='up'||k==='down')m.k^=1;if(k==='b'){ui.modal=null}if(k==='a'||k==='start'){ui.modal=null;if(m.k===0)m.yes()}return}
+  const C=7,n=KEYS.length;
+  if(k==='left')m.k=(m.k+n-1)%n;if(k==='right')m.k=(m.k+1)%n;if(k==='up')m.k=(m.k-C+n)%n;if(k==='down')m.k=Math.min(n-1,m.k+C)%n;
+  if(k==='b'){if(m.name)m.name=m.name.slice(0,-1);else{ui.modal=null;S={scene:'title'};ui.tsel=0}}
+  if(k==='start')finishName(m.name);
+  if(k==='a'){const c=KEYS[m.k];if(c==='DEL')m.name=m.name.slice(0,-1);else if(c==='SKIP')finishName('');else if(c==='DONE')finishName(m.name);else if(m.name.length<8){m.name+=c;if(m.name.length===8)m.k=n-1}}}
+function drawModal(t){const m=ui.modal;R(0,0,W,H,'#2b244099');
+  if(m.type==='confirm'){panel(24,62,W-48,92,'ARE YOU SURE?');const words=m.q.split(' ');let line='',y=88;words.forEach(w=>{if((line+w).length>26){txt(line,W/2,y,'#2b2440',10);y+=13;line=''}line+=w+' '});txt(line,W/2,y,'#2b2440',10);
+    ['YES','NO'].forEach((l,i)=>{const x=W/2-62+i*66,on=m.k===i;RR(x,128,58,18,9,on?'#ff5a8b':'#fff',on?'#fff':'#5b4b8a');txt(l,x+29,141,on?'#fff':'#5b4b8a',10)});return}
+  panel(12,14,W-24,H-26,'NAME YOUR PAL');
+  RR(40,28,W-80,24,8,'#efe6ff','#5b4b8a');const nm=m.name+(m.name.length<8&&t%40<20?'_':'');txt(nm||'',W/2,46,'#5b4b8a',15);if(!m.name)txt(t%40<20?'_':'',W/2,46,'#5b4b8a',15);
+  txt(m.name.length+'/8',W-46,62,'#8a80a8',8,'right');
+  const C=7,cw=26,ch=20,x0=(W-C*cw)/2+1,y0=66;
+  KEYS.forEach((c,i)=>{const wide=i>=26,on=i===m.k;let x,y,w;
+    if(wide){const j=i-26;w=52;x=W/2-84+j*58;y=y0+4*ch+2}else{x=x0+(i%C)*cw;y=y0+Math.floor(i/C)*ch;w=cw-4}
+    RR(x,y,w,ch-4,6,on?'#ff5a8b':(wide?'#e6dcff':'#fff'),on?'#fff':'#5b4b8a55');txt(c,x+w/2,y+12,on?'#fff':'#5b4b8a',wide?9:10)});
+  txt('✚ move  A pick  B delete  START done',W/2,H-16,'#8a80a8',8)}
+function input(k){if(ui.modal)return modalInput(k);return input0(k)}
+
 const ACTIONS=['FEED','PLAY','TRICKS','PET','SLEEP'];
 
 // ===== input =====
-function input(k){
+function input0(k){
   const sc=S.scene;
   if(sc==='title'){const it=titleItems(),n=it.length;if(k==='up')ui.tsel=(ui.tsel+n-1)%n;if(k==='down')ui.tsel=(ui.tsel+1)%n;
     if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
   else if(sc==='list'){const L=petList(),n=L.length+1;if(k==='up')ui.psel=(ui.psel+n-1)%n;if(k==='down')ui.psel=(ui.psel+1)%n;if(k==='b'){S={scene:'title'};ui.tsel=0;ui.msgT=0}
     if(k==='a'||k==='start'){if(ui.psel===L.length)newPet();else loadPet(L[ui.psel].id)}
-    if(k==='select'&&L[ui.psel]&&confirm('Release '+L[ui.psel].name+' forever? Other pets stay safe.')){delete DB.pets[L[ui.psel].id];if(DB.lastId===L[ui.psel].id)DB.lastId=null;save(true);ui.psel=0}}
+    if(k==='select'&&L[ui.psel]){const id=L[ui.psel].id;askConfirm('Release '+L[ui.psel].name+' forever? Other pets stay safe.',()=>{delete DB.pets[id];if(DB.lastId===id)DB.lastId=null;save(true);ui.psel=0})}}
   else if(sc==='pause'){const n=PAUSE.length;if(k==='up')ui.sel=(ui.sel+n-1)%n;if(k==='down')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){S.scene='main';return}
     if(k==='a'){const c=PAUSE[ui.sel];S.scene='main';if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
   else if(sc==='pick'){const keys=Object.keys(SPECIES);
@@ -70,7 +93,7 @@ function input(k){
     const n=ACTIONS.length;
     if(k==='left')ui.menu=(ui.menu+n-1)%n;if(k==='right')ui.menu=(ui.menu+1)%n;
     if(k==='a')openAct(ui.menu);if(k==='b'){ui.menu=0;openAct(0)}
-    if(k==='select'&&confirm('Reset '+S.name+' to a new egg? Your other pets stay saved.')){Object.assign(S,{stage:undefined,care:0,tricks:{},best:{},sleep:false});fix(S);S.scene='egg';ui.hatch=0;save()}
+    if(k==='select')askConfirm('Reset '+S.name+' to a new egg? Your other pets stay saved.',()=>{Object.assign(S,{stage:undefined,care:0,tricks:{},best:{},sleep:false});fix(S);S.scene='egg';ui.hatch=0;save()});
     if(k==='start'){S.scene='pause';ui.sel=0}
   }
   else if(sc==='food'){const n=FOODS.length;
@@ -156,7 +179,7 @@ addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('chan
 if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 addEventListener('pagehide',()=>save(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true)});
 const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',z:'b',x:'a',Enter:'start',Shift:'select',Escape:'start',Backspace:'select'};
-addEventListener('keydown',e=>{const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
+addEventListener('keydown',e=>{if(ui.modal&&ui.modal.type==='name'&&!e.ctrlKey&&!e.metaKey){const m=ui.modal;if(/^[a-zA-Z]$/.test(e.key)){e.preventDefault();if(m.name.length<8)m.name+=e.key.toUpperCase();return}if(e.key==='Backspace'){e.preventDefault();m.name=m.name.slice(0,-1);return}if(e.key==='Enter'){e.preventDefault();finishName(m.name);return}if(e.key==='Escape'){e.preventDefault();ui.modal=null;S={scene:'title'};ui.tsel=0;return}}const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 
 // ===== drawing helpers =====
@@ -302,7 +325,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     if(f.ch==='heart')heartS(f.x,f.y,1.2);else if(f.ch==='shell')E(f.x,f.y,3,2,'#f4e8d0');else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});
   if(ui.msgT>0){ui.msgT--;const y=sc==='main'?42:H-40;RR(14,y,W-28,22,10,'#fff','#2b2440');txt(ui.msg.slice(0,36),W/2,y+15,'#2b2440',10)}
   if(saveFlash>0){saveFlash--;g.globalAlpha=Math.min(1,saveFlash/15);RR(W/2-24,3,48,14,7,'#5ad07a');txt('SAVED',W/2,13,'#fff',8);g.globalAlpha=1}
-  requestAnimationFrame(frame)}
+  if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
 function gameIcon(id,x,y){if(id==='fetch'){E(x,y,9,9,'#c8e83a');g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(x-9,y,8,-.9,.9);g.stroke();g.beginPath();g.arc(x+9,y,8,Math.PI-.9,Math.PI+.9);g.stroke()}
   if(id==='simon'){['#ff5a7a','#5ad07a','#5ab0ff','#ffc83a'].forEach((c,i)=>RR(x-9+(i%2)*10,y-9+Math.floor(i/2)*10,8,8,2,c))}
   if(id==='dash'){g.fillStyle='#ff5a8b';g.beginPath();g.moveTo(x-8,y-8);g.lineTo(x+9,y);g.lineTo(x-8,y+8);g.fill();R(x-12,y-6,3,2,'#5b4b8a');R(x-14,y,4,2,'#5b4b8a');R(x-12,y+5,3,2,'#5b4b8a')}}
