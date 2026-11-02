@@ -149,7 +149,7 @@ document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault());
 // ===== responsive canvas (layout v3) =====
 const LAND=matchMedia('(orientation: landscape)');
-function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-8)/W,(box.height-6)/H));
+function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-12)/W,(box.height-12)/H));
   const cw=Math.floor(W*sc),ch=Math.floor(H*sc),dpr=Math.min(3,window.devicePixelRatio||1);cv.style.width=cw+'px';cv.style.height=ch+'px';
   cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);g.setTransform(cv.width/W,0,0,cv.height/H,0,0);document.body.dataset.layout=LAND.matches?'landscape':'portrait'}
 addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('change',()=>setTimeout(fit,60)):LAND.addListener(fit);
@@ -290,11 +290,11 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     if(sc==='games'){panel(16,50,W-32,H-62,'PLAY');GAMES.forEach((gm,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');gameIcon(gm.id,46,y+17);txt(gm.n,66,y+15,'#2b2440',11,'left');txt(gm.d,66,y+28,'#8a80a8',8,'left');txt('★'+(S.best[gm.id]||0),W-34,y+15,'#e0a020',9,'right')});
       txt('▲▼ choose  A play  B back',W/2,H-16,'#8a80a8',11)}
     if(sc==='tricks'){panel(16,50,W-32,H-62,'TRICKS');TRICKS.forEach((tr,i)=>{const y=60+i*26,on=i===ui.sel,p=S.tricks[tr.id],done=p>=TUNE.trickNeed;RR(26,y,W-52,22,7,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
-        txt(tr.n,36,y+15,'#2b2440',10,'left');for(let j=0;j<TUNE.trickNeed;j++)star(108+j*11,y+11,4.5,j<p?'#ffc83a':'#ddd');txt(done?'DO IT':'TEACH',W-34,y+15,done?'#2a9a50':'#e0457b',9,'right')});
+        txt(tr.n,36,y+15,'#2b2440',10,'left');for(let j=0;j<TUNE.trickNeed;j++)star(108+j*11,y+11,4.5,j<p?'#ffc83a':'#a99fc8');txt(done?'DO IT':'TEACH',W-34,y+15,done?'#2a9a50':'#e0457b',9,'right')});
       txt('A teach / perform  B back',W/2,H-16,'#8a80a8',11)}
     if(sc==='pause'){R(0,0,W,H,'#2b244099');panel(50,46,W-100,PAUSE.length*24+20,'MENU');PAUSE.forEach((c,i)=>{const y=58+i*24,on=i===ui.sel;RR(60,y,W-120,20,8,on?'#ff5a8b':'#fff',on?null:'#d8d0e8');txt(c,W/2,y+14,on?'#fff':'#5b4b8a',10)});txt('A choose  B back',W/2,H-12,'#fff',9)}
     if(sc==='teach'){const m=ui.mg;teachTick();if(!ui.mg){}else{panel(20,46,W-40,40,'TEACH '+m.tr.n);
-      txt(m.cue?'Press it NOW!':'Watch for the cue…',W/2,66,'#5b4b8a',10);for(let j=0;j<TUNE.trickNeed;j++)star(W/2-24+j*12,78,5,j<S.tricks[m.tr.id]?'#ffc83a':'#ddd');
+      txt(m.cue?'Press it NOW!':'Watch for the cue…',W/2,66,'#5b4b8a',10);for(let j=0;j<TUNE.trickNeed;j++)star(W/2-24+j*12,78,5,j<S.tricks[m.tr.id]?'#ffc83a':'#a99fc8');
       if(m.cue){const sz=1+Math.sin(t/3)*.08;g.save();g.translate(W/2+50,110);g.scale(sz,sz);RR(-18,-18,36,36,10,'#ff5a8b','#2b2440');otxt({a:'A',up:'▲',down:'▼',left:'◀',right:'▶'}[m.cue],0,7,'#fff',20);g.restore();RR(W/2+30,132,40*(m.win/90),4,2,'#ff5a8b')}
       if(m.resT>0)otxt(m.res,W/2,40+m.resT/2+60,m.res==='GOOD!'?'#5ad07a':'#ff5a7a',16);txt('B stop',W/2,H-8,'#fff',9)}}
   }
