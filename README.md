@@ -1,8 +1,13 @@
-# Pocket Pal
-Browser pet game (dog / horse / rabbit): hatch an egg, raise it baby → old, feed, play mini-games, teach tricks.
+# Pocket Pal (v7 — dogs first)
 
-**Play:** https://sonjamesg.github.io/pocket-pal/
+A slow, wholesome browser Tamagotchi for phones (portrait or landscape) with Game Boy Advance-style controls.
+Play: https://sonjamesg.github.io/pocket-pal/
 
-- **Layout v3:** portrait = game top, full-width control deck bottom; landscape = D-pad left, screen centre, A/B right (switches live on rotate).
-- **Saves:** multiple pets stored on this device (localStorage `pocketpal_v3`, no server). Title: Continue / My pets / New pet. In game, START opens menu (Resume, Save, My pets, New pet, Home). SELECT resets the current pet only; in My pets, SELECT releases the highlighted pet. Old v2 saves migrate automatically.
-- **Keys:** arrows, X = A, Z = B, Enter/Esc = Start, Shift = Select.
+- **Pick a dog breed**: Labrador, French Bulldog, Dachshund, Poodle, Corgi, Husky, Beagle, Border Collie. Cats, horses & rabbits are *coming soon*.
+- **Grows in real time**: Puppy → Youngster → Teen → Adult → Senior. Needs real days *and* daily care (max 14 care XP/day): Adult in ~6 weeks, Senior after ~4 months.
+- **Idle life**: walks, hops, zoomies, sniffs, naps, rolls and plays with its toys.
+- **Care**: dog-only foods (kibble, wet food, chicken, salmon, peanut treat, dental chew, carrot), toys bought with coins, cuddles, teeth brushing (plaque builds up), optional walks (sniff, wee, bag the poo — no fixed schedule).
+- **Tara Scissor Hounds**: the coat grows over ~12 days; long fur mats and hurts happiness. Cecily brushes and trims it.
+- Tricks, Fetch / Memory / Dash games. Multi-pet saves on the device (`localStorage` key `pocketpal_v7`, migrates v3 saves).
+
+Keys: arrows, X = A, Z = B, Enter = Start, Shift = Select.
