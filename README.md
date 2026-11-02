@@ -1,5 +1,8 @@
-# Pocket Pal — browser pet game (v1)
-Zero-build: open `index.html`, or serve: `python3 -m http.server 8080` then visit http://localhost:8080 (on phone use LAN IP / tunnel).
-Controls: D-pad ◀▶ choose action, A = do action / hatch / confirm, B = quick feed, START = status, SELECT = restart.
-Keyboard: arrows, X=A, Z=B, Enter=Start, Shift=Select.
-Tuning: `TUNE` object at top of game.js (drain rates, stage thresholds, hatch taps). Save is in localStorage key `pocketpal_v1`.
+# Pocket Pal
+Browser pet game (dog / horse / rabbit): hatch an egg, raise it baby → old, feed, play mini-games, teach tricks.
+
+**Play:** https://sonjamesg.github.io/pocket-pal/
+
+- **Layout v3:** portrait = game top, full-width control deck bottom; landscape = D-pad left, screen centre, A/B right (switches live on rotate).
+- **Saves:** multiple pets stored on this device (localStorage `pocketpal_v3`, no server). Title: Continue / My pets / New pet. In game, START opens menu (Resume, Save, My pets, New pet, Home). SELECT resets the current pet only; in My pets, SELECT releases the highlighted pet. Old v2 saves migrate automatically.
+- **Keys:** arrows, X = A, Z = B, Enter/Esc = Start, Shift = Select.
