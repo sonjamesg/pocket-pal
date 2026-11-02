@@ -31,7 +31,7 @@ function petList(){return Object.values(DB.pets).sort((a,b)=>(b.lastPlayed||0)-(
 function fix(s){s.tricks=s.tricks||{};TRICKS.forEach(t=>{if(s.tricks[t.id]==null)s.tricks[t.id]=0});s.best=s.best||{};if(s.scene!=='egg'&&s.scene!=='title'&&s.scene!=='pick')s.scene='main';return s}
 function save(quiet){if(S.id&&S.species){S.lastPlayed=Date.now();const c=Object.assign({},S);if(!['egg','main'].includes(c.scene))c.scene=c.stage?'main':'egg';c.hatch=ui.hatch;DB.pets[S.id]=c;DB.lastId=S.id}
   try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}if(!quiet)flashSave()}
-let saveFlash=0;function flashSave(){saveFlash=40}
+let saveFlash=0;function flashSave(){saveFlash=90}
 function loadPet(id){const p=DB.pets[id];if(!p)return;S=fix(JSON.parse(JSON.stringify(p)));ui.hatch=p.hatch||0;ui.menu=0;
   if(S.scene==='main'){const n=Math.min(30,Math.floor((now()-(S.last||now()))/TUNE.tickMs));for(let i=0;i<n;i++)drain()}DB.lastId=id;save(true)}
 let S={scene:'title'};
@@ -120,14 +120,14 @@ function startGame(id){S.scene='game';ui.mg={id,t:0,score:0,over:false,dur:id===
 function addSimon(m){m.seq.push(Math.floor(Math.random()*4));m.show=0;m.showT=40;m.pos=0;m.mode='show'}
 const PADS=['up','right','down','left'];
 function gameInput(k){const m=ui.mg;
-  if(m.over){if(k==='a'||k==='b')endGame();return}
-  if(k==='b'&&m.t>10){m.over=true;return}
+  if(m.over){if((k==='a'||k==='b')&&!(m.lock>0))endGame();return}
+  if(k==='b'&&m.t>10){m.over=true;m.lock=25;m.state='done';m.resT=0;return}
   if(m.id==='fetch'&&k==='a'&&m.state==='fly'){const d=Math.abs(m.ball-m.zone);
     if(d<.06){m.score+=d<.025?3:2;m.res=d<.025?'PERFECT!':'NICE!';m.state='caught';setPose('happy',30)}else{m.res='MISS';m.state='miss'}m.resT=45;m.throws++}
   if(m.id==='simon'&&m.mode==='input'){const p=PADS.indexOf(k);if(p<0)return;m.lit=p;m.litT=12;
     if(p===m.seq[m.pos]){m.pos++;if(m.pos>=m.seq.length){m.score=m.seq.length;m.res='GREAT!';m.resT=40;m.mode='wait';m.waitT=45}}else{m.res='WRONG!';m.resT=60;m.over=true}}
   if(m.id==='dash'){if(k==='up')m.lane=Math.max(0,m.lane-1);if(k==='down')m.lane=Math.min(2,m.lane+1)}}
-function gameTick(){const m=ui.mg;if(m.over)return;m.t++;if(m.resT>0)m.resT--;if(m.t>=m.dur){m.over=true;return}
+function gameTick(){const m=ui.mg;if(m.over){if(m.lock>0)m.lock--;return}m.t++;if(m.resT>0)m.resT--;if(m.t>=m.dur){m.over=true;return}
   if(m.id==='fetch'){if(m.state==='fly'){m.ball+=m.spd/100;if(m.ball>1.05){m.state='miss';m.res='MISSED';m.resT=40;m.throws++}}
     else if(m.resT<=0){m.state='fly';m.ball=0;m.zone=.45+Math.random()*.45;m.spd=1.3+m.throws*.12+Math.random()*.5}}
   if(m.id==='simon'){if(m.litT>0)m.litT--;
@@ -149,14 +149,14 @@ document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault());
 // ===== responsive canvas (layout v3) =====
 const LAND=matchMedia('(orientation: landscape)');
-function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-16)/W,(box.height-16)/H));
+function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-8)/W,(box.height-6)/H));
   const cw=Math.floor(W*sc),ch=Math.floor(H*sc),dpr=Math.min(3,window.devicePixelRatio||1);cv.style.width=cw+'px';cv.style.height=ch+'px';
   cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);g.setTransform(cv.width/W,0,0,cv.height/H,0,0);document.body.dataset.layout=LAND.matches?'landscape':'portrait'}
 addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('change',()=>setTimeout(fit,60)):LAND.addListener(fit);
 if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 addEventListener('pagehide',()=>save(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true)});
 const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',z:'b',x:'a',Enter:'start',Shift:'select',Escape:'start',Backspace:'select'};
-addEventListener('keydown',e=>{if(KM[e.key]){e.preventDefault();input(KM[e.key])}});
+addEventListener('keydown',e=>{const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 
 // ===== drawing helpers =====
@@ -286,12 +286,12 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       R(0,H-28,W,28,'#2b2440');ACTIONS.forEach((a,i)=>{const x=24+i*48;if(i===ui.menu)RR(x-23,H-25,46,22,7,'#ff5a8b');txt(a,x,H-10,'#fff',9)})}
     if(sc==='food'){panel(10,46,W-20,H-56,'FEED');FOODS.forEach((f,i)=>{const x=20+(i%4)*52,y=58+Math.floor(i/4)*58,on=i===ui.sel,lv=f.love.includes(S.species)&&f.id!=='treat';
         RR(x,y,46,50,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');foodIcon(f.id,x+23,y+19,on?1.3+Math.sin(t/6)*.08:1.15);txt('+'+(lv?Math.round(f.v*1.5):f.v),x+23,y+45,lv?'#e0457b':'#5b4b8a',9);if(lv)heartS(x+39,y+8,.6)});
-      const f=FOODS[ui.sel];txt(f.n+(f.love.includes(S.species)&&f.id!=='treat'?' ♥ favourite':f.joy?' +joy':''),W/2,186,'#2b2440',10);txt('✚ choose  A feed  B back',W/2,201,'#8a80a8',9)}
+      const f=FOODS[ui.sel];txt(f.n+(f.love.includes(S.species)&&f.id!=='treat'?' ♥ favourite':f.joy?' +joy':''),W/2,186,'#2b2440',10);txt('✚ choose  A feed  B back',W/2,201,'#8a80a8',11)}
     if(sc==='games'){panel(16,50,W-32,H-62,'PLAY');GAMES.forEach((gm,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');gameIcon(gm.id,46,y+17);txt(gm.n,66,y+15,'#2b2440',11,'left');txt(gm.d,66,y+28,'#8a80a8',8,'left');txt('★'+(S.best[gm.id]||0),W-34,y+15,'#e0a020',9,'right')});
-      txt('▲▼ choose  A play  B back',W/2,H-16,'#8a80a8',9)}
+      txt('▲▼ choose  A play  B back',W/2,H-16,'#8a80a8',11)}
     if(sc==='tricks'){panel(16,50,W-32,H-62,'TRICKS');TRICKS.forEach((tr,i)=>{const y=60+i*26,on=i===ui.sel,p=S.tricks[tr.id],done=p>=TUNE.trickNeed;RR(26,y,W-52,22,7,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
-        txt(tr.n,36,y+15,'#2b2440',10,'left');for(let j=0;j<TUNE.trickNeed;j++)star(130+j*12,y+11,5,j<p?'#ffc83a':'#ddd');txt(done?'DO IT':'TEACH',W-34,y+15,done?'#2a9a50':'#e0457b',9,'right')});
-      txt('A teach / perform  B back',W/2,H-16,'#8a80a8',9)}
+        txt(tr.n,36,y+15,'#2b2440',10,'left');for(let j=0;j<TUNE.trickNeed;j++)star(108+j*11,y+11,4.5,j<p?'#ffc83a':'#ddd');txt(done?'DO IT':'TEACH',W-34,y+15,done?'#2a9a50':'#e0457b',9,'right')});
+      txt('A teach / perform  B back',W/2,H-16,'#8a80a8',11)}
     if(sc==='pause'){R(0,0,W,H,'#2b244099');panel(50,46,W-100,PAUSE.length*24+20,'MENU');PAUSE.forEach((c,i)=>{const y=58+i*24,on=i===ui.sel;RR(60,y,W-120,20,8,on?'#ff5a8b':'#fff',on?null:'#d8d0e8');txt(c,W/2,y+14,on?'#fff':'#5b4b8a',10)});txt('A choose  B back',W/2,H-12,'#fff',9)}
     if(sc==='teach'){const m=ui.mg;teachTick();if(!ui.mg){}else{panel(20,46,W-40,40,'TEACH '+m.tr.n);
       txt(m.cue?'Press it NOW!':'Watch for the cue…',W/2,66,'#5b4b8a',10);for(let j=0;j<TUNE.trickNeed;j++)star(W/2-24+j*12,78,5,j<S.tricks[m.tr.id]?'#ffc83a':'#ddd');
@@ -301,7 +301,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
   ui.fx=ui.fx.filter(f=>{f.x+=f.vx;f.y+=f.vy;f.vy+=f.ch==='shell'?.15:0;f.t--;g.globalAlpha=Math.min(1,f.t/20);
     if(f.ch==='heart')heartS(f.x,f.y,1.2);else if(f.ch==='shell')E(f.x,f.y,3,2,'#f4e8d0');else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});
   if(ui.msgT>0){ui.msgT--;const y=sc==='main'?42:H-40;RR(14,y,W-28,22,10,'#fff','#2b2440');txt(ui.msg.slice(0,36),W/2,y+15,'#2b2440',10)}
-  if(saveFlash>0){saveFlash--;g.globalAlpha=Math.min(1,saveFlash/15);RR(W-50,H-48,44,14,7,'#5ad07a');txt('SAVED',W-28,H-38,'#fff',8);g.globalAlpha=1}
+  if(saveFlash>0){saveFlash--;g.globalAlpha=Math.min(1,saveFlash/15);RR(W/2-24,3,48,14,7,'#5ad07a');txt('SAVED',W/2,13,'#fff',8);g.globalAlpha=1}
   requestAnimationFrame(frame)}
 function gameIcon(id,x,y){if(id==='fetch'){E(x,y,9,9,'#c8e83a');g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(x-9,y,8,-.9,.9);g.stroke();g.beginPath();g.arc(x+9,y,8,Math.PI-.9,Math.PI+.9);g.stroke()}
   if(id==='simon'){['#ff5a7a','#5ad07a','#5ab0ff','#ffc83a'].forEach((c,i)=>RR(x-9+(i%2)*10,y-9+Math.floor(i/2)*10,8,8,2,c))}
