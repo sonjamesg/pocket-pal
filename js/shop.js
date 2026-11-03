@@ -19,7 +19,7 @@ owInput=function(k){const o=ui.ow;
     if(th.exit){shopExit();return}
     if(th.pen){const n={dog0:'A playful pup!',dog1:'This pup wags at you!',cat:'A cat — coming soon to buy!',pig:'A pig — coming soon to buy!',rabbit:'A bunny — coming soon to buy!',chicken:'A chicken — coming soon to buy!'}[th.pen];say(n);return}
     if(th.shelf)say('Shelves of pet food and toys.')}};
-function shopLady(X,Y){E(X+8,Y+15,6,2,'#0003');R(X+3,Y+8,10,7,'#e86a9a');R(X+4,Y+9,8,6,'#fff');R(X+6,Y+11,4,2,'#e86a9a');R(X+2,Y+9,2,4,'#ffd8b8');R(X+12,Y+9,2,4,'#ffd8b8');
+function shopLady(X,Y){const LI=IMG.npc_lady;if(LI&&LI.naturalWidth){E(X+8,Y+15,6,2,'#0003');g.drawImage(LI,((Date.now()/700|0)%4===0?16:0),0,16,24,X,Y-9,16,24);return}E(X+8,Y+15,6,2,'#0003');R(X+3,Y+8,10,7,'#e86a9a');R(X+4,Y+9,8,6,'#fff');R(X+6,Y+11,4,2,'#e86a9a');R(X+2,Y+9,2,4,'#ffd8b8');R(X+12,Y+9,2,4,'#ffd8b8');
   R(X+4,Y+2,8,7,'#ffd8b8');R(X+3,Y+1,10,3,'#7a3a20');R(X+3,Y+3,2,5,'#7a3a20');R(X+11,Y+3,2,5,'#7a3a20');E(X+8,Y,3,2.5,'#7a3a20');R(X+6,Y+5,1,1,'#2b2020');R(X+9,Y+5,1,1,'#2b2020');R(X+7,Y+7,2,1,'#d05060');R(X+5,Y+6,1,1,'#ffa0a0');R(X+10,Y+6,1,1,'#ffa0a0')}
 function drawShop(t){owUpdate();const o=ui.ow,cx=(MW*TS-W)/2,cy=Math.max(-20,Math.min(MH*TS-H+4,o.py+8-H/2));
   g.fillStyle='#181020';g.fillRect(0,0,W,H);g.save();g.translate(-Math.round(cx),-Math.round(cy));g.imageSmoothingEnabled=false;
@@ -47,7 +47,7 @@ function drawShop(t){owUpdate();const o=ui.ow,cx=(MW*TS-W)/2,cy=Math.max(-20,Mat
   // mat by the door
   R(6*TS+4,10*TS+6,4*TS-8,8,'#5a8a48');
   const AVS=avImg('s'),FS=DB.avatar==='girl'&&IMG.farmergirl&&IMG.farmergirl.naturalWidth?'farmergirl':'farmer';
-  if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;g.drawImage(AVS||IMG[FS],fr*16,row*16,16,16,Math.round(o.px),Math.round(o.py)-4,16,16)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);
+  if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);
   g.restore();
   R(0,0,W,16,'#2b2440cc');txt('PET SHOP',6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.lady?'A: talk to the shop lady':th&&th.pen?'A: look at the animal':th&&th.exit?'Walk out the door':null;
