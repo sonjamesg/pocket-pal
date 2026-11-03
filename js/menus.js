@@ -1,16 +1,20 @@
 // ===== menus.js — title/pause items, naming & confirm modals =====
-const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','NEW PET','HOME'];
-function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS','NEW PET']:['NEW PET']}
+const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','HOME'];
+function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS']:['START']}
 function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
-function newPet(){S={scene:'title'};ui.msgT=0;ui.modal={type:'name',name:'',k:0}}
-function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';S={scene:'species',name:n};ui.sel=0}
+// v16: no starter pet — pets are bought at the PET STORE on the farm map
+function newPet(){openMap();say('Visit the PET STORE to get a pet!',200)}
+function openStore(){S={scene:'store'};ui.sel=0;ui.msgT=0}
+function buyDog(b){const p=priceOf(b);if(DB.wallet<p){say('Need '+p+' coins — you have '+DB.wallet);return}ui.buy=b;ui.modal={type:'name',name:'',k:0}}
+function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';const b=ui.buy;ui.buy=null;if(!b){S={scene:'species',name:n};ui.sel=0;return}
+  DB.wallet-=priceOf(b);S={scene:'egg',name:n,species:'dog',breed:b};syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();fix(S);ui.hatch=0;save();saveDB()}
 function askConfirm(q,yes){ui.modal={type:'confirm',q,yes,k:1}}
 function modalInput(k){const m=ui.modal;
   if(m.type==='confirm'){if(k==='left'||k==='right'||k==='up'||k==='down')m.k^=1;if(k==='b'){ui.modal=null}if(k==='a'||k==='start'){ui.modal=null;if(m.k===0)m.yes()}return}
   const C=7,n=KEYS.length;
   if(k==='left')m.k=(m.k+n-1)%n;if(k==='right')m.k=(m.k+1)%n;if(k==='up')m.k=(m.k-C+n)%n;if(k==='down')m.k=Math.min(n-1,m.k+C)%n;
-  if(k==='b'){if(m.name)m.name=m.name.slice(0,-1);else{ui.modal=null;S={scene:'title'};ui.tsel=0}}
+  if(k==='b'){if(m.name)m.name=m.name.slice(0,-1);else{ui.modal=null;if(ui.buy){ui.buy=null}else{S={scene:'title'};ui.tsel=0}}}
   if(k==='start')finishName(m.name);
   if(k==='a'){const c=KEYS[m.k];if(c==='DEL')m.name=m.name.slice(0,-1);else if(c==='SKIP')finishName('');else if(c==='DONE')finishName(m.name);else if(m.name.length<8){m.name+=c;if(m.name.length===8)m.k=n-1}}}
 function drawModal(t){const m=ui.modal;R(0,0,W,H,'#2b244099');

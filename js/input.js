@@ -3,7 +3,7 @@
 function input0(k){
   const sc=S.scene;
   if(sc==='title'){const it=titleItems(),n=it.length;if(k==='up')ui.tsel=(ui.tsel+n-1)%n;if(k==='down')ui.tsel=(ui.tsel+1)%n;
-    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='FARM MAP')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
+    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='FARM MAP'||c==='START')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
   else if(sc==='list'){const L=petList(),n=L.length+1;if(k==='up')ui.psel=(ui.psel+n-1)%n;if(k==='down')ui.psel=(ui.psel+1)%n;if(k==='b'){S={scene:'title'};ui.tsel=0;ui.msgT=0}
     if(k==='a'||k==='start'){if(ui.psel===L.length)newPet();else loadPet(L[ui.psel].id)}
     if(k==='select'&&L[ui.psel]){const id=L[ui.psel].id;askConfirm('Say goodbye to '+L[ui.psel].name+' forever? Other pets stay safe.',()=>{delete DB.pets[id];if(DB.lastId===id)DB.lastId=null;save(true);ui.psel=0})}}
@@ -12,6 +12,7 @@ function input0(k){
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
     if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
   else if(sc==='map')owInput(k);
+  else if(sc==='store'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){openMap();return}if(k==='a')buyDog(BKEYS[ui.sel])}
   else if(sc==='breed'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'){S.scene='species';ui.sel=0}
     if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
   else if(sc==='egg'){if(k==='a'){ui.hatch++;ui.shake=12;for(let i=0;i<4;i++)ui.fx.push({x:W/2+Math.random()*30-15,y:100,vx:Math.random()*2-1,vy:-Math.random()*2,t:25,ch:'shell'});

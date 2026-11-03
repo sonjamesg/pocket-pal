@@ -28,6 +28,11 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       otxt(sp.n,x,172,on?'#ff5a8b':'#fff',10)});
     if(off>0)otxt('◀',6,104,'#fff',12);if(off+4<SPECIES.length)otxt('▶',W-6,104,'#fff',12);
     otxt(SPECIES[ui.sel].ok?'◀ ▶ choose   A select':'More pets coming soon!',W/2,198,'#fff',11)}
+  else if(sc==='store'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b],p=priceOf(b),can=DB.wallet>=p;otxt('PET STORE',W/2,22,'#ffe36a',15);txt('● '+DB.wallet,W-10,22,'#ffd84a',10,'right');
+    RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
+    g.save();g.translate(W/2+70,160);g.scale(.8,.8);dog(0,0,b,'puppy',{pose:'sit',mood:'happy'});g.restore();txt('puppy',W/2+70,166,'#8a80a8',7);
+    otxt('◀',22,104,'#fff',16);otxt('▶',W-22,104,'#fff',16);otxt(B.n+'  ● '+p,W/2,186,can?'#ffe36a':'#ff8a8a',14);txt(can?'A buy   B leave':'Not enough coins   B leave',W/2,200,'#2b2440',8);
+    BKEYS.forEach((k,i)=>E(W/2-28+i*8,210,2.5,2.5,i===ui.sel?'#ff5a8b':'#fff'))}
   else if(sc==='breed'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b];otxt('PICK YOUR DOG',W/2,22,'#fff',15);
     RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
     g.save();g.translate(W/2+70,160);g.scale(.8,.8);dog(0,0,b,'puppy',{pose:'sit',mood:'happy'});g.restore();txt('puppy',W/2+70,166,'#8a80a8',7);

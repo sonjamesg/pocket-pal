@@ -173,6 +173,18 @@
       "grid": "W10"
     }
   ],
+  "petStore": {
+    "origin": [
+      8,
+      14
+    ],
+    "door": [
+      9,
+      15
+    ],
+    "grid": "I15",
+    "doorGrid": "J16"
+  },
   "cells": {
     "A1": {
       "x": 0,
@@ -2830,19 +2842,22 @@
       "x": 8,
       "y": 14,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "J15": {
       "x": 9,
       "y": 14,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "K15": {
       "x": 10,
       "y": 14,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "L15": {
       "x": 11,
@@ -3010,19 +3025,22 @@
       "x": 8,
       "y": 15,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "J16": {
       "x": 9,
       "y": 15,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "K16": {
       "x": 10,
       "y": 15,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "L16": {
       "x": 11,

@@ -3,7 +3,9 @@ const cv=document.getElementById('screen'),g=cv.getContext('2d');
 const SAVE='pocketpal_v9';
 const now=()=>Date.now(),clamp=v=>Math.max(0,Math.min(100,v)),rnd=a=>a[Math.floor(Math.random()*a.length)];
 const STAGE_MAP={baby:'puppy',toddler:'youngster',teen:'teen',adult:'adult',old:'senior'};
-let DB=loadDB();
+let DB=loadDB();if(DB.wallet==null)DB.wallet=60;
+function saveDB(){try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}}
+const DOG_PRICE={lab:40,frenchie:50,dachshund:35,poodle:45,corgi:45,husky:50,beagle:30,collie:40};const priceOf=b=>DOG_PRICE[b]||40;
 function loadDB(){let d=null;try{d=JSON.parse(localStorage.getItem(SAVE))}catch(e){}
   if(d&&d.pets)return d;d={v:9,pets:{},lastId:null};
   try{const o=JSON.parse(localStorage.getItem('pocketpal_v7'));if(o&&o.pets){Object.values(o.pets).forEach(p=>{p.species=p.species||'dog';d.pets[p.id]=p});d.lastId=o.lastId;localStorage.setItem(SAVE,JSON.stringify(d));return d}}catch(e){}

@@ -47,3 +47,8 @@ A git pre-commit hook (`.githooks/`, enable with `git config core.hooksPath .git
 
 ## Adding / changing an image
 Drop the PNG in `assets/world/<folder>/`, add/keep its key in `assets/world/manifest.json`, bump `rev`. With `?dev=1` the game hot-swaps it (SELECT on the map reloads art). New tile letters: add to `legend` in map-data.js and the tile→key map in `js/overworld-draw.js` + `scripts/build-farm-grid.py` (`TILE`).
+
+## v17 (staging)
+- GBA FireRed-style art: `scripts/make-gba-art.py` regenerates grass/path/water/water-edge/tree/fence/pet store PNGs (replace any PNG by hand as usual).
+- No starter pet: title START → farm map → **PET STORE** (`petStore` in js/map-data.js, door J16). Buy dog breeds with coins (wallet starts at 60, `DB.wallet`).
+- Staging: https://sonjamesg.github.io/pocket-pal-staging/ (repo `sonjamesg/pocket-pal-staging`, pushed from `feature/pokemon-world`). Live `main` is untouched.

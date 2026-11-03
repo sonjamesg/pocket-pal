@@ -31,10 +31,17 @@ for hx, hy, n in L['locks']:
         for dx in range(3):
             cells[name(hx+dx, hy+dy)].update(kind='locked', feature=n)
     locked.append({'name': n, 'origin': [hx, hy], 'grid': name(hx, hy)})
+store = None
+if L.get('petStore'):
+    sx, sy = L['petStore']
+    for dy in range(2):
+        for dx in range(3):
+            cells[name(sx+dx, sy+dy)].update(kind='pet_store', feature='PET STORE')
+    store = {'origin': [sx, sy], 'door': [sx+1, sy+1], 'grid': name(sx, sy), 'doorGrid': name(sx+1, sy+1)}
 out = {'generatedFrom': 'js/map-data.js', 'width': MW, 'height': MH, 'tileSize': TS,
        'cols': [col(x) for x in range(MW)], 'rows': list(range(1, MH+1)),
        'howTo': 'Caller says e.g. B2 → look up cells["B2"]. Letters = columns left→right starting A=x0. Numbers = rows top→bottom starting 1=y0.',
-       'legend': legend, 'houseSlots': slots, 'locked': locked, 'cells': cells}
+       'legend': legend, 'houseSlots': slots, 'locked': locked, 'petStore': store, 'cells': cells}
 json.dump(out, open(os.path.join(W_DIR, 'farm-grid.json'), 'w'), indent=2, ensure_ascii=False)
 # --- PNG ---
 man = json.load(open(os.path.join(W_DIR, 'manifest.json')))['images']
@@ -67,6 +74,7 @@ def box(hx, hy, fill, label):
     d.text((X+3*S/2, Y+S), label, fill='#fff', font=small, anchor='mm')
 for s in slots: box(*s['origin'], '#c0503a', f"HOUSE {s['slot']}")
 for l in locked: box(*l['origin'], '#7a7090', l['name'])
+if store: box(*store['origin'], '#e08a20', 'PET STORE')
 for x in range(MW + 1): d.line([M + x*S, M, M + x*S, M + MH*S], fill=(0, 0, 0, 90))
 for y in range(MH + 1): d.line([M, M + y*S, M + MW*S, M + y*S], fill=(0, 0, 0, 90))
 for x in range(MW): d.text((M + x*S + S/2, M/2), col(x), fill='#ffd84a', font=font, anchor='mm')
@@ -83,7 +91,7 @@ code{{background:#2a2347;padding:2px 6px;border-radius:4px}}</style></head>
 <body>
 <p><b>Pet Farm overworld grid</b> — say coordinates like <code>B2</code> or <code>P10</code>. Letters = columns left→right (<code>A</code> = x0). Numbers = rows top→bottom (<code>1</code> = y0). Each cell is one game tile. Auto-generated from <code>js/map-data.js</code>.</p>
 <img src="farm-grid.png?t={os.path.getmtime(os.path.join(W_DIR, 'farm-grid.png')):.0f}" alt="Farm grid" width="{im.width}" height="{im.height}">
-<p>Pet house origins: {hs}. Locked: {ls}.</p>
+<p>Pet house origins: {hs}. Locked: {ls}. Pet store: {store['grid'] if store else '-'} (door {store['doorGrid'] if store else '-'}).</p>
 <p>Download: <a href="farm-grid.png" style="color:#ffd84a">farm-grid.png</a> · <a href="farm-grid.json" style="color:#ffd84a">farm-grid.json</a> (agent reference).</p>
 </body></html>
 ''')
