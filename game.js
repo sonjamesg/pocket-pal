@@ -259,13 +259,14 @@ const OWBASE=(()=>{const m=[];for(let y=0;y<MH;y++){const r=[];for(let x=0;x<MW;
   if((x===2&&y>15&&y<22))c='t';if(y===MH-2&&x>1&&x<12&&x%3===0)c='t';
   r.push(c)}m.push(r)}
   for(let y=16;y<21;y++)for(let x=3;x<10;x++)if((x-6)**2/9+(y-18)**2/4<=1.1)m[y][x]='w';
-  for(let y=16;y<21;y++)for(let x=16;x<26;x++)m[y][x]='c';
+  const F=(x0,y0,x1,y1,ch,gx)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)m[y][x]=(y===y0||y===y1||x===x0||x===x1)?(x===gx&&y===y0?'g':'f'):ch};
+  F(15,15,20,21,'C',17);F(21,15,26,21,'W',23);F(18,2,21,6,'C',-1);
   [[6,1],[12,1],[20,1],[25,1],[28,5],[28,10],[19,15],[11,15],[1,14]].forEach(([x,y])=>{if(m[y])m[y][x]='t'});
   m[7][0]='p';m[13][MW-1]='f';m[12][13]='s';return m})();
-function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x];if(c==='f'||c==='t'||c==='w'||c==='s')return true;
+function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x];if(c==='f'||c==='t'||c==='w'||c==='s'||c==='C'||c==='W')return true;
   for(const [hx,hy] of HSLOT.concat(LOCKS))if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return true;return false}
 function owThing(x,y){const L=petList().slice(0,6);for(let i=0;i<6;i++){const [hx,hy]=HSLOT[i];if(y===hy+1&&x===hx+1)return L[i]?{pet:L[i]}:{empty:true};if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{wall:1}}
-  for(const [hx,hy,n] of LOCKS)if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{lock:n};if(OWBASE[y]&&OWBASE[y][x]==='s')return{sign:1};if(OWBASE[y]&&OWBASE[y][x]==='c')return{crop:1};if(OWBASE[y]&&OWBASE[y][x]==='w')return{water:1};return null}
+  for(const [hx,hy,n] of LOCKS)if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{lock:n};if(OWBASE[y]&&OWBASE[y][x]==='s')return{sign:1};if(OWBASE[y]&&'cCW'.includes(OWBASE[y][x]))return{crop:OWBASE[y][x]};if(OWBASE[y]&&OWBASE[y][x]==='w')return{water:1};return null}
 const held={};const IMG={};let ART_REV=0;const ART_DEV=/[?&]dev=1/.test(location.search)||(()=>{try{return localStorage.PETFARM_DEV==='1'}catch(e){return false}})()||/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
 function loadArt(force){return fetch('assets/world/manifest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(m=>{if(!force&&m.rev===ART_REV)return;ART_REV=m.rev;
   for(const k in m.images){const im=new Image();im.onload=()=>{IMG[k]=im};im.src='assets/world/'+m.images[k]+'?r='+m.rev+(ART_DEV?'.'+Date.now():'')}}).catch(()=>{})}
@@ -280,7 +281,7 @@ function owUpdate(){const o=ui.ow;if(!o)return;if(o.mv){o.mv.t+=1/8;const k=Math
 function owInput(k){const o=ui.ow;if(k==='select'){loadArt(true);say('Art reloaded');return}if(DV[k]){if(!o.mv)owTry(k);return}
   if(k==='a'&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(!th)return;
     if(th.pet){loadPet(th.pet.id);return}if(th.empty){say('An empty plot. Adopt a pet!');newPet();return}
-    if(th.lock)say(th.lock+' — coming soon!');else if(th.sign)say('NORTH: Homes  EAST: Barns  S: Field');else if(th.crop)say('Crops coming soon!');else if(th.water)say('A shiny pond.');else if(th.wall)say('Go round to the door!')}
+    if(th.lock)say(th.lock+' — coming soon!');else if(th.sign)say('NORTH: Homes  EAST: Barns  S: Field');else if(th.crop)say((th.crop==='C'?'Corn':th.crop==='W'?'Wheat':'Crops')+' — harvesting coming soon!');else if(th.water)say('A shiny pond.');else if(th.wall)say('Go round to the door!')}
   if(k==='b'){if(ui.mapBack&&DB.pets[ui.mapBack])loadPet(ui.mapBack);else{S={scene:'title'};ui.tsel=0}}
   if(k==='start'){S={scene:'title'};ui.tsel=0}}
 function farmer(x,y,dir,step,moving){g.save();g.translate(Math.round(x),Math.round(y));const b=moving&&step%2?1:0;E(8,15,5,2,'#0003');
@@ -292,9 +293,8 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   g.imageSmoothingEnabled=false;const ok=n=>IMG[n]&&IMG[n].naturalWidth;
   for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){const c=OWBASE[y][x],X=x*TS,Y=y*TS;
     if(ok('grass'))g.drawImage(IMG.grass,X,Y);else R(X,Y,TS,TS,'#78c858');
-    const n={p:'path',w:'water',c:'field',f:'fence',t:'tree',s:'sign'}[c];
-    if(n==='water'&&ok('water'))g.drawImage(IMG.water,X+((t>>4)%2?0:0),Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{path:'#e8d8a0',water:'#4888e8',field:'#986838',fence:'#b07038',tree:'#307030',sign:'#c89a60'}[n])}
-  txt('FIELD — soon',21*TS,16*TS-3,'#fff',7);
+    const n={C:'corn',W:'wheat',p:'path',w:'water',c:'field',f:'fence',t:'tree',s:'sign'}[c];
+    if(n==='water'&&ok('water'))g.drawImage(IMG.water,X+((t>>4)%2?0:0),Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{path:'#e8d8a0',water:'#4888e8',field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',tree:'#307030',sign:'#c89a60'}[n])}
   const L=petList().slice(0,6);
   HSLOT.forEach(([hx,hy],i)=>{const p=L[i],X=hx*TS+24,Y=hy*TS+32;if(p){const sp=spOf(p);house(sp,X,Y,.66,false,p.name);R(X-4,Y-1,8,2,'#5a3a20')}
     else{g.fillStyle='#0001';g.fillRect(hx*TS+2,hy*TS+2,44,28);txt('EMPTY',X,Y-12,'#ffffffaa',6)}});

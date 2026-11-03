@@ -1,17 +1,26 @@
-# Pet Farm world art
+# Pet Farm world assets
 
-All overworld art lives here and is loaded **only** via `manifest.json` — no code change needed to swap art.
+Drop replacement PNGs here using the **same filenames**. No code changes needed.
 
-| key | file | size |
-|---|---|---|
-| tree | trees/tree.png | 16×16, transparent |
+| key | path | size |
+|-----|------|------|
+| tree | trees/tree.png | 16×24 |
 | grass/path/water/field/fence/sign | tiles/*.png | 16×16 |
-| farmer | player/farmer.png | 32×64 sheet: rows down/up/left/right, 2 walk frames (16×16 each) |
+| corn / wheat | tiles/corn.png, tiles/wheat.png | 16×16 |
+| farmer | player/farmer.png | spritesheet |
 
-## Swap art
-1. Edit or replace a PNG (keep the same filename and size; hard pixels, transparent background).
-2. Bump `"rev"` in `manifest.json` by 1 and save. (New image? add a key → path; the code uses the keys above.)
-3. Local: run `scripts/serve-dev.sh` (or `python3 -m http.server 8000` in the project folder), open `http://localhost:8000/?dev=1`. The game re-checks the manifest every 2s and swaps art while you play. SELECT on the farm map forces a reload.
-4. Live (GitHub Pages): commit + push to `main`; the `?r=<rev>` query busts the browser cache.
+## Workflow
+1. Copy an asset out (e.g. `trees/tree.png` or `tiles/corn.png`).
+2. Edit it in Aseprite / Piskel / Photoshop (keep transparency).
+3. Save back over the same path.
+4. Bump `"rev"` in `manifest.json` by 1 (e.g. 2 → 3).
+5. With the game open in **dev mode**, art refreshes automatically within a couple of seconds.
 
-Dev mode is on for `?dev=1`, `localStorage.PETFARM_DEV='1'`, or localhost/LAN addresses.
+## Dev mode (auto-refresh)
+Open with `?dev=1`, or `localStorage.setItem('PETFARM_DEV','1')` then reload.
+
+## Local server
+```bash
+python3 -m http.server 8080
+```
+Open `http://localhost:8080/?dev=1`.

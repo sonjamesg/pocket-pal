@@ -1,5 +1,5 @@
 {
-  "rev": 1,
+  "rev": 3,
   "images": {
     "tree": "trees/tree.png",
     "grass": "tiles/grass.png",
@@ -8,6 +8,8 @@
     "field": "tiles/field.png",
     "fence": "tiles/fence.png",
     "sign": "tiles/sign.png",
+    "corn": "tiles/corn.png",
+    "wheat": "tiles/wheat.png",
     "farmer": "player/farmer.png"
   }
 }
