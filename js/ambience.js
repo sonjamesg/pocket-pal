@@ -7,6 +7,7 @@ function skyTint(h){ // [r,g,b,a]
   if(h>=5.5&&h<7)return[255,190,120,.12];if(h>=19.5&&h<21)return[90,60,160,.3];return[30,40,110,.36]}
 const isDusk=h=>h>=18||h<6.5;
 function owExtras2(t,o){if(CUR!=='ranch')return;
+  if(MAP_LAYOUT.pond&&IMG.pond&&IMG.pond.naturalWidth){const [qx,qy]=MAP_LAYOUT.pond;g.drawImage(IMG.pond,qx*TS,qy*TS)}
   // door shadows + welcome mats on each doorstep
   const mat=(X,Y,w)=>{R(X-w/2,Y-3,w,3,'#0a281440');RR(X-w/2+1,Y+1,w-2,6,2,'#c0503a','#6a2a1a');for(let i=X-w/2+4;i<X+w/2-3;i+=3)R(i,Y+3,1,2,'#f0c070')};
   for(const [bx,by,bw,bh] of BARNS)mat(bx*TS+bw*8,(by+bh)*TS+8,bw%2?14:22);mat(HOME[0]*TS+24,(HOME[1]+2)*TS+2,14);

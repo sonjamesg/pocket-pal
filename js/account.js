@@ -60,7 +60,7 @@ const _input0A=input0;input0=function(k){au&&au();
   if(S.scene==='acct'&&!ui.modal)return acctInput(k);if(S.scene==='pin')return pinInput(k);
   if(S.scene==='title'&&(k==='a'||k==='start')){const it=titleItems(),c=it[ui.tsel%it.length];if(c==='PLAY'){openAcct();if(lastName())ui.asel=1;return}if(c==='LOG OUT'){accLogout();say('Logged out. See you soon!');return}}
   return _input0A(k)};
-const _frameA=frame;frame=function(){try{frame0()}catch(e){console.error(e);requestAnimationFrame(frame)}};function frame0(){const sc=S.scene;if(sc!=='acct'&&sc!=='pin'){_frameA();if(sc==='title'&&ACC.name&&(LOGO.ok||LOGO.err)){RR(W/2-70,100,140,16,8,'#fffd','#2b2440');txt('Player: '+ACC.name,W/2,112,'#5b4b8a',10)}return}
+const _frameA=frame;frame=function(){try{frame0()}catch(e){console.error(e);requestAnimationFrame(frame)}};function frame0(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);const sc=S.scene;if(sc!=='acct'&&sc!=='pin'){_frameA();if(sc==='title'&&ACC.name&&(LOGO.ok||LOGO.err)){RR(W/2-70,100,140,16,8,'#fffd','#2b2440');txt('Player: '+ACC.name,W/2,112,'#5b4b8a',10)}return}
   ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(sc==='acct')drawAcct(t);else drawPin(t);if(ui.msgT>0){ui.msgT--;drawMsg(H-40)}if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
 // ===== v36 flow: CONTINUE / SWITCH ACCOUNT; username → code; username = in-game name =====
 try{const t=localStorage.getItem('pf_tok'),n=localStorage.getItem('pf_name');if(!ACC.token&&t){ACC.token=t;ACC.name=n}}catch(e){}

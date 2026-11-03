@@ -378,6 +378,12 @@ const MAP_LAYOUT=/*JSON-START*/{
    1,
    "trough"
   ]
+ ],
+ "pond": [
+  33,
+  51,
+  11,
+  7
  ]
 }/*JSON-END*/;
 const TS=MAP_LAYOUT.tileSize,HSLOT=MAP_LAYOUT.houseSlots,LOCKS=MAP_LAYOUT.locks,STORE=MAP_LAYOUT.outer.petStore,HOME=MAP_LAYOUT.home,BARNS=MAP_LAYOUT.barns||[],PROPS=MAP_LAYOUT.props||[];

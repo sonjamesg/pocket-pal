@@ -173,3 +173,21 @@ c.rr(11,58,10,18,3,hx('c8844a')); c.save('props/silo.png')
 c=C(16,16); c.ell(8,14.5,7,1.6,(30,50,30,110)); c.rr(2,3,2.4,12,1,hx('8a5228')); c.rr(11.6,3,2.4,12,1,hx('8a5228'))
 c.ell(8,8,5.6,5.6,hx('2fb050'),ol=True); c.ell(8,8,3.8,3.8,hx('4ad068')); c.ell(8,8,1.6,1.6,hx('1a6a30')); c.ell(6,6,1.4,1,hx('b8f8c8')); c.save('props/hose.png')
 print('done')
+# v53: one smooth hand-drawn duck pond (replaces stair-step water tiles). 11x7 tiles, top-left = map 'pond' [x,y].
+def pond():
+  W_,H_=176,112; c=C(W_,H_); cx,cy,rx,ry=88,56,70,49
+  c.ell(cx,cy+3,rx+4,ry+3,(40,90,30,90))                       # soft ground shadow
+  c.ell(cx,cy,rx+3,ry+3,hx('4f9a36'))                          # grassy bank lip
+  c.ell(cx,cy,rx,ry,hx('2f6fb8'),ol=True)                       # deep edge
+  c.ell(cx,cy+2,rx-4,ry-5,hx('46a8f0'))
+  c.ell(cx-6,cy-4,rx-16,ry-16,hx('6cc4ff'))
+  c.ell(cx-22,cy-18,22,6,hx('b8e6ff'),ol=False); c.ell(cx-28,cy-20,9,2.5,hx('ffffff'),ol=False)   # sky shine
+  for (x,y,r) in ((cx+30,cy+14,7),(cx+44,cy+4,5),(cx-40,cy+18,6)):
+    c.ell(x,y,r,r*.7,hx('4ab848'),ol=True); c.poly([(x,y),(x+r,y-1),(x+r,y+1)],hx('2f6fb8'),ol=False)
+  c.ell(cx+30,cy+12,2,2,hx('ff8ab8'))
+  for (x,y) in ((cx-60,cy-14),(cx-56,cy-20),(cx+58,cy-18),(cx+62,cy-12),(cx+50,cy+30)):
+    for k in range(4): c.poly([(x+k*2-1,y+8),(x+k*2+(k-1.5)*1.2,y-4-k%2*3),(x+k*2+1,y+8)],hx('3a9a36') if k%2 else hx('5ac848'),ol=False)
+    c.rr(x+2,y-6,2,4,1,hx('8a5a32'),ol=False,shade=False)
+  for k in range(3): c.d.arc(c.S([cx-10+k*14,cy+16+k*4,cx+2+k*14,cy+20+k*4]),200,340,fill=hx('d8f4ff'),width=K)
+  c.save('tiles/pond.png')
+pond()

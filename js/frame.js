@@ -1,5 +1,5 @@
 // ===== frame.js — main render loop per scene (incl. title logo anim) =====
-function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
+function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';if(g.filter!==undefined)g.filter='none';/* v53: reset leaked transform (HUD gap bug) */ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
   const sc=S.scene;
   if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,k=Math.max(W/iw,H/ih),dw=iw*k,dh=ih*k,ox=(W-dw)/2,oy=(H-dh)/2;g.drawImage(LOGO.img,ox,oy,dw,dh);
       const P=(x,y)=>[ox+x*1.25*k,oy+y*1.25*k];

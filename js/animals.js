@@ -1,7 +1,7 @@
 // ===== animals.js — dog art, egg, food/toy icons =====
 // ===== dog art =====
 function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,Object.assign({sv:bid},o));
-  if(IMG['dog_'+bid]&&IMG['dog_'+bid].naturalWidth&&!o.oldArt)return critter(cx,cy,'dog_'+bid,stage,o); // v52 plastic-toy puppy sprites
+  if(IMG['dog_'+bid]&&IMG['dog_'+bid].naturalWidth&&!o.oldArt)return toyDog(cx,cy,bid,stage,o); // v53 toy puppy sprites + walk/mood frames
   const B=BREEDS[bid]||BREEDS.lab,T=ui.anim,pose=o.pose||'idle',coat=o.coat||0,mood=o.mood||'ok',plq=o.plaque||0,pt=o.pt||0;
   let c=B.c,d=B.d,l=B.l;const sen=stage==='senior';
   const sz={puppy:.62,youngster:.75,teen:.88,adult:1,senior:1}[stage]||1,hk={puppy:1.38,youngster:1.22,teen:1.1,adult:1,senior:1}[stage]||1;
@@ -122,4 +122,19 @@ function toyIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
   if(id==='rope'){g.lineCap='round';g.strokeStyle='#e44';g.lineWidth=4;g.beginPath();g.moveTo(-9,0);g.lineTo(9,0);g.stroke();g.strokeStyle='#fff';g.setLineDash([3,3]);g.beginPath();g.moveTo(-9,0);g.lineTo(9,0);g.stroke();g.setLineDash([]);E(-10,0,3,4,'#4a8ae8');E(10,0,3,4,'#4a8ae8')}
   if(id==='frisbee'){E(0,0,10,4,'#5ab0ff');E(0,-1,7,2.4,'#8ad0ff')}
   if(id==='duck'){E(0,2,7,5,'#ffd84a');E(4,-4,4,4,'#ffd84a');E(8,-3,3,1.5,'#ff9a2a');E(5,-5,.9,.9,'#222')}
+  g.restore()}
+
+// v53: plastic-toy puppy renderer — walk cycle, happy/sad/sleep faces, messy-coat + plaque overlays
+function toyDog(cx,cy,bid,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok',M=DOG_META[bid]||{mx:34,my:28,hx:28,hy:21,hr:10,bx:18,by:28,bl:16,w:48,h:40};
+  const sleep=pose==='sleep'||pose==='lay'||pose==='nap',walk=['walk','trot','play','dance','twirl'].includes(pose),hap=!sleep&&(pose==='happy'||pose==='hop'||pose==='smile'||(mood==='happy'&&T%240<60));
+  const fr=sleep?'_z':walk&&(T>>3)%2?'_w':mood==='sad'?'_s':hap?'_h':'',im=(IMG['dog_'+bid+fr]&&IMG['dog_'+bid+fr].naturalWidth)?IMG['dog_'+bid+fr]:IMG['dog_'+bid];
+  const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1,sc=62*sz/Math.max(M.w,M.h);let dy=0;
+  if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;else if(walk)dy=-Math.abs(Math.sin(T/4))*1.5;
+  g.save();g.translate(cx,cy);E(0,1,18*sz,4*sz,'#0003');g.translate(0,dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);if(sleep)g.translate(0,3);
+  g.imageSmoothingEnabled=false;const ox=-M.w/2,oy=-M.h+3;g.drawImage(im,ox,oy);
+  const coat=o.coat||0,plq=o.plaque||0,matAt=(typeof TUNE!=='undefined'&&TUNE.matAt)||80,pBad=(typeof TUNE!=='undefined'&&TUNE.plaqueBad)||70;
+  if(coat>=matAt*.6){const n=coat>=matAt?7:4;g.strokeStyle='#5a4030';g.lineWidth=.9;for(let i=0;i<n;i++){const x=ox+M.bx-M.bl/2+3+i*(M.bl-4)/n,y=oy+M.by-4+(i%2)*3;g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+2,y-3,x+3,y+1);g.stroke()}
+    if(coat>=matAt){E(ox+M.bx-3,oy+M.by,2.5,1.6,'#8a6a4a');E(ox+M.bx+4,oy+M.by+2,2,1.3,'#8a6a4a')}}
+  if(plq>=pBad*.6&&!sleep){R(ox+M.mx-1.5,oy+M.my-.5,3,1.6,plq>=pBad?'#c9a23a':'#e8d070');if(plq>=pBad&&T%60<30){g.fillStyle='#8aa040';g.font='bold 5px sans-serif';g.fillText('~',ox+M.mx+3,oy+M.my-2)}}
+  if(sleep&&T%90<60){g.fillStyle='#fff';g.font='bold 6px sans-serif';g.fillText('z',ox+M.hx+M.hr,oy+M.hy-M.hr-2-(T%90)/15)}
   g.restore()}

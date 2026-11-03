@@ -30,6 +30,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   const wa=ok('waterauto1')&&(t>>5)%2?'waterauto1':'waterauto0',trees=[],fences=[];
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=OWBASE[y][x],X=x*TS,Y=y*TS,hh=((x*73856093)^(y*19349663))>>>0,gv=hh%10<6?0:hh%10<8?1:hh%10<9?2:3;
     if(ok('grass'+gv))g.drawImage(IMG['grass'+gv],X,Y);else if(ok('grass'))g.drawImage(IMG.grass,X,Y);else R(X,Y,TS,TS,'#78c858');
+    if(c==='w'&&CUR==='ranch'&&MAP_LAYOUT.pond&&ok('pond')){const [qx,qy,qw,qh]=MAP_LAYOUT.pond;if(x>=qx&&x<qx+qw&&y>=qy&&y<qy+qh)continue}
     if(c==='w'||c==='B'){if([[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,1],[-1,1],[1,-1]].some(([a,b])=>isK('b',x+a,y+b)))R(X,Y,TS,TS,'#f0e0a8');if(ok(wa))autoT(IMG[wa],'wB',x,y,X,Y);else R(X,Y,TS,TS,'#4888e8');if(c==='B'){if(ok('bridge'))g.drawImage(IMG.bridge,X,Y);else R(X,Y,TS,TS,'#a06830')}continue}
     if(c==='b'){if(ok('sandauto'))autoT(IMG.sandauto,'bwB',x,y,X,Y);else R(X,Y,TS,TS,'#f0e0a8');continue}
     if(c==='p'||c==='G'){if(ok('pathauto'))autoT(IMG.pathauto,'pGB',x,y,X,Y);else R(X,Y,TS,TS,'#e8d8a0');continue}

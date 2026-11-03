@@ -73,7 +73,7 @@ function owExtras(t,o){if(CUR==='ranch')for(const k in grows()){const e=grows()[
   const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0,sv:p.breed});g.restore()}}}
 // screen-space HUD: bucket + current job tracker (the full list lives only on the JOB BOARD)
 function owHud(t){if(DB.bucket>0){RR(W-96,1,36,14,4,'#9ad8ff','#2b2440');R(W-92,4,7,7,'#3a86e8');R(W-93,3,9,1,'#2b2440');txt('×'+DB.bucket,W-74,12,'#2b2440',9)}
-  const nx=nextThing();RR(3,18,W-6,18,6,'#8a5a2e','#4a2c14');RR(6,20,W-12,13,5,'#fff3d6');R(8,21,W-16,1,'#ffffff');txt('▶ '+nx.t,W/2,30,'#5a3418',9);drawGoalArrow(t,nx)}
+  const nx=nextThing();ui.banner=nx;if(ui.bannerOff!==nx.t){RR(3,18,W-6,18,6,'#8a5a2e','#4a2c14');RR(6,20,W-12,13,5,'#fff3d6');R(8,21,W-16,1,'#ffffff');txt('▶ '+nx.t,W/2-6,30,'#5a3418',9);RR(W-20,21,12,12,6,'#e8604a','#4a2c14');txt('✕',W-14,30,'#fff',8)};drawGoalArrow(t,nx)}
 // ---- JOB BOARD scene ----
 const JOBS={more:{n:'MORE WOOL',d:'Shear 2 more full fleeces.',rew:30,unl:()=>wm().step>=6,ready:j=>(DB.woolBales||0)>=j.base+2,base:()=>DB.woolBales||0,hint:'Grow & SHEAR wool'},
   dog:{n:'DOG BUDDY',d:'Get a dog at the PET SHOP and teach it SIT.',rew:30,unl:()=>wm().step>=6,ready:()=>petList().some(p=>p.species==='dog'&&p.tricks&&p.tricks.sit>=TUNE.trickNeed),base:()=>0,hint:'Get a dog & teach SIT'},
@@ -88,7 +88,7 @@ function nextThing(){const m=wm(),S1=['Read the JOB BOARD','Get a FREE sheep at 
   for(const id in JOBS){const st=jst(id);if(st.s===1&&JOBS[id].ready(st))return{t:'Get your reward at the JOB BOARD',k:'board'}}
   if(m.step===0)return{t:S1[0],k:'board'};if(m.paused&&m.step<6&&!Object.keys(JOBS).some(id=>jst(id).s===1))return{t:'No job right now. Visit the JOB BOARD!',k:'free'};
   for(const id in JOBS){const st=jst(id);if(st.s===1)return{t:JOBS[id].hint,k:'job_'+id}}
-  if(jobs().some(j=>j.tag==='NEW'))return{t:'New job on the JOB BOARD!',k:'free'};return{t:'Grow, shear & sell for coins!',k:'free'}}
+  if(jobs().some(j=>j.tag==='NEW'&&!(DB.jobSeen||{})[j.id]))return{t:'New job on the JOB BOARD!',k:'free'};return{t:'Grow, shear & sell for coins!',k:'free'}}
 function openJobs(){S={scene:'jobs'};ui.jsel=0;ui.jconf=0;ui.msgT=0}
 function celebrate(a,b){ui.cele={a,b,t:0};sfx('fanfare');sparkle(40,W/2,100)}
 function jobsInput(k){const J=jobs(),n=J.length;
@@ -192,3 +192,7 @@ const _sayM=say;say=function(m,t){_sayM(m,t);sfx('blip')};
 const _careActM=careAct;careAct=function(id){if(id==='cuddle'&&S.species==='sheep')sfx('baa');return _careActM(id)};
 // sheep food costs a little (or uses farm stock)
 const _feedM=feed;feed=function(f){if(S.species==='sheep'&&f.cost&&S.hunger<97){const st=DB.stock||(DB.stock={});if(f.stock&&st[f.stock]>0)st[f.stock]--;else if(DB.wallet>=f.cost)DB.wallet-=f.cost;else{say('Need ● '+f.cost+'. Try FRESH GRASS — it is free!');return}saveDB()}return _feedM(f)};
+
+// v53: tap the goal banner (✕) to dismiss it; 'New job' stays hidden until a NEW job appears that you haven't seen
+function dismissBanner(){const nx=ui.banner;if(!nx)return;if(nx.t==='New job on the JOB BOARD!'){DB.jobSeen=DB.jobSeen||{};jobs().forEach(j=>{if(j.tag==='NEW')DB.jobSeen[j.id]=1});saveDB()}else ui.bannerOff=nx.t}
+cv.addEventListener('pointerdown',e=>{if(!S||(S.scene!=='map'))return;const r=cv.getBoundingClientRect(),y=(e.clientY-r.top)*H/r.height;if(y>=17&&y<=37){e.preventDefault();dismissBanner()}});
