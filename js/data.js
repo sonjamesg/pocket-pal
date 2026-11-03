@@ -1,0 +1,46 @@
+// ===== data.js — species, breeds, foods, toys, tricks tables + logo =====
+const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=14';
+// ===== Pet Farm v16 — modular build =====
+const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
+// per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
+const RATE={hunger:6,happy:3,coat:100/(12*24),plaque:100/(8*24)};
+const TUNE={petAmt:8,hatchTaps:6,trickNeed:5,xpPerDay:14,longAt:60,matAt:80,plaqueBad:65};
+const STAGES=['egg','puppy','youngster','teen','adult','senior'];
+const STAGE_N={egg:'EGG',puppy:'PUPPY',youngster:'YOUNGSTER',teen:'TEEN',adult:'ADULT',senior:'SENIOR'};
+// real days in stage + care XP (max 14 XP/day) — Adult ≈ 6 weeks, Senior ≈ 4 months of caring
+const GROW={puppy:{days:7,xp:60},youngster:{days:14,xp:120},teen:{days:21,xp:180},adult:{days:75,xp:600}};
+const SPECIES=[{id:'dog',n:'DOG',ok:true},{id:'cat',n:'CAT',ok:true},{id:'chicken',n:'CHICKEN',ok:true},{id:'pig',n:'PIG',ok:true},
+ {id:'horse',n:'HORSE',ok:true},{id:'rabbit',n:'RABBIT',ok:true},{id:'cow',n:'COW'},{id:'sheep',n:'SHEEP'},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'bird',n:'BIRD'}];
+const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'},horse:{baby:'FOAL',house:'STABLE',food:'HORSE FEED'},rabbit:{baby:'KIT',house:'HUTCH',food:'RABBIT FOOD'}};
+const spOf=p=>(p&&p.species&&SP[p.species])?p.species:'dog';
+function stageName(st,sp){return st==='puppy'?SP[sp||'dog'].baby:STAGE_N[st||'egg']}
+const BREEDS={
+ lab:{n:'LABRADOR',c:'#e9c47e',d:'#c99a50',l:'#f7e6c0',ear:'flop',tail:'otter',bl:22,bh:13,leg:14,hr:11,sn:8,fur:.6,desc:'Loyal, loves food & swimming'},
+ frenchie:{n:'FRENCH BULLDOG',c:'#dcc6a4',d:'#3a2e2a',l:'#f1e6d2',ear:'bat',tail:'stub',bl:17,bh:13,leg:10,hr:12,sn:4,fur:.4,mask:true,desc:'Big bat ears, little snorts'},
+ dachshund:{n:'DACHSHUND',c:'#a8552a',d:'#6e3216',l:'#c97a48',ear:'long',tail:'whip',bl:28,bh:10,leg:7,hr:10,sn:11,fur:.6,desc:'Long sausage body, brave!'},
+ poodle:{n:'POODLE',c:'#f3e4d0',d:'#dcc4a8',l:'#fffaf2',ear:'pom',tail:'pom',bl:19,bh:12,leg:17,hr:10,sn:9,fur:1.5,curly:true,desc:'Curly coat — grows FAST'},
+ corgi:{n:'CORGI',c:'#e38b3a',d:'#b0602a',l:'#fff6ea',ear:'pointy',tail:'stub',bl:24,bh:12,leg:7,hr:11,sn:8,fur:.8,white:true,desc:'Short legs, huge smile'},
+ husky:{n:'HUSKY',c:'#6d7484',d:'#3e4452',l:'#f4f6fa',ear:'pointy',tail:'curl',bl:23,bh:13,leg:15,hr:11,sn:9,fur:1.1,white:true,eye:'#4fb0ff',desc:'Ice-blue eyes, loves to run'},
+ beagle:{n:'BEAGLE',c:'#c98a48',d:'#2e2622',l:'#fffaf2',ear:'flop',earC:'#9a6030',tail:'whip',bl:20,bh:12,leg:12,hr:11,sn:8,fur:.5,saddle:true,white:true,desc:'Super sniffer nose'},
+ cat:{sp:'cat',n:'CAT',c:'#f0a050',d:'#c07030',l:'#fff4e6',bl:20,bh:11,leg:12,hr:11,sn:4,fur:0,desc:'Purrs, naps, loves a cushion'},
+ chicken:{sp:'chicken',n:'CHICKEN',c:'#fff8ec',d:'#e8d8c0',l:'#ffffff',bl:14,bh:13,leg:10,hr:8,sn:3,fur:0,desc:'Clucks, pecks & scratches'},
+ pig:{sp:'pig',n:'PIG',c:'#ffb0c0',d:'#e88aa0',l:'#ffd0dc',bl:24,bh:14,leg:8,hr:12,sn:5,fur:0,desc:'Oink! Loves a muddy roll'},
+ horse:{sp:'horse',n:'HORSE',c:'#8c5a32',d:'#5a3a20',l:'#c89a70',bl:28,bh:16,leg:18,hr:12,sn:8,fur:0,desc:'Gallops, neighs & loves carrots'},
+ rabbit:{sp:'rabbit',n:'RABBIT',c:'#dcdce6',d:'#b0b0c0',l:'#ffffff',bl:16,bh:12,leg:10,hr:10,sn:3,fur:0,desc:'Hops, flops ears & munches greens'},
+ collie:{n:'BORDER COLLIE',c:'#2a2630',d:'#16131a',l:'#ffffff',ear:'semi',tail:'plume',bl:22,bh:12,leg:15,hr:10,sn:9,fur:1.2,white:true,desc:'Clever! Learns tricks fast'}};
+const BKEYS=Object.keys(BREEDS).filter(k=>!BREEDS[k].sp);
+const FOODS=[
+ {id:'kibble',n:'KIBBLE',v:22},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'chicken',n:'CHICKEN',v:24,joy:6},{id:'salmon',n:'SALMON',v:22,joy:5,d:'Shiny coat'},
+ {id:'biscuit',n:'PEANUT TREAT',v:8,joy:12,plq:4,d:'Dog-safe peanut biscuit'},{id:'dental',n:'DENTAL CHEW',v:6,joy:6,plq:-30,d:'Cleans teeth!'},{id:'carrot',n:'CARROT STICK',v:10,joy:2,plq:-8,d:'Crunchy, helps teeth'}];
+const SFOODS={cat:[{id:'catbisc',n:'CAT BISCUITS',v:20},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'salmon',n:'SALMON',v:22,joy:6},{id:'chicken',n:'CHICKEN',v:24,joy:5},{id:'dental',n:'DENTAL TREAT',v:6,joy:6,plq:-30,d:'Cleans teeth!'}],
+ chicken:[{id:'corn',n:'CORN',v:20},{id:'grain',n:'MIXED GRAIN',v:24},{id:'worms',n:'MEALWORMS',v:12,joy:10,d:'Favourite snack!'},{id:'greens',n:'GREENS',v:14,joy:4}],
+ pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}],
+ horse:[{id:'hay',n:'HAY',v:24},{id:'oats',n:'OATS',v:22,joy:4},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'apple',n:'APPLE',v:14,joy:6},{n:'SUGAR LUMP',id:'sugar',v:6,joy:12}],
+ rabbit:[{id:'pellets',n:'PELLETS',v:20},{id:'hay',n:'HAY',v:18,joy:3},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'greens',n:'GREENS',v:12,joy:5},{id:'apple',n:'APPLE SLICE',v:10,joy:6}]};
+function foods(){return S.species&&SFOODS[S.species]||FOODS}
+const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},{id:'rope',n:'TUG ROPE',p:20},{id:'frisbee',n:'FRISBEE',p:30},{id:'duck',n:'PLUSH DUCK',p:40}];
+const GAMES=[{id:'fetch',n:'FETCH',d:'Tap A when the ball hits the zone'},{id:'simon',n:'MEMORY',d:'Repeat the pad pattern'},{id:'dash',n:'DASH',d:'▲▼ dodge rocks, grab hearts'}];
+const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{id:'lay',n:'LAY DOWN'},{id:'roll',n:'ROLL OVER'}];
+const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
+const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP']};
+let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}

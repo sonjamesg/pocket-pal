@@ -1,0 +1,5 @@
+#!/bin/sh
+# Keeps assets/world/farm-grid.* in sync whenever js/map-data.js or the manifest/art changes.
+if git diff --cached --name-only | grep -qE '^(js/map-data\.js|assets/world/(manifest\.json|tiles/|trees/))'; then
+  sh scripts/build.sh && git add assets/world/farm-grid.png assets/world/farm-grid.json assets/world/farm-grid.html
+fi
