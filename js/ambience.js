@@ -1,7 +1,7 @@
 // ===== ambience.js — v50 cooler pass: lighter tilt-shift, day/night + golden hour, window glow,
 // ambient life (butterflies, leaves, chimney smoke, pecking chickens), door mats/shadows, chunky HUD chrome
 const AMB={bf:[],lf:[],sm:[]};
-function dayPhase(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h} // real local clock
+function dayPhase(){const q=/[?&]hour=([\d.]+)/.exec(location.search)||/[?&]hour=([\d.]+)/.exec((parent&&parent.location&&parent.location.search)||'');if(q)return +q[1];const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h} // real local clock
 function skyTint(h){ // [r,g,b,a]
   if(h>=7&&h<17)return null;if(h>=17&&h<19.5)return[255,170,70,.16*(1-Math.abs(h-18.25)/1.25)+.04];
   if(h>=5.5&&h<7)return[255,190,120,.12];if(h>=19.5&&h<21)return[70,60,150,.22];return[30,40,110,.32]}
@@ -9,7 +9,7 @@ const isDusk=h=>h>=18||h<6.5;
 function owExtras2(t,o){if(CUR!=='ranch')return;
   // door shadows + welcome mats on each doorstep
   const mat=(X,Y,w)=>{R(X-w/2,Y-3,w,3,'#0a281440');RR(X-w/2+1,Y+1,w-2,6,2,'#c0503a','#6a2a1a');for(let i=X-w/2+4;i<X+w/2-3;i+=3)R(i,Y+3,1,2,'#f0c070')};
-  for(const [bx,by,bw,bh] of BARNS)mat(bx*TS+bw*8,(by+bh)*TS,bw%2?14:22);mat(HOME[0]*TS+24,(HOME[1]+2)*TS,14);
+  for(const [bx,by,bw,bh] of BARNS)mat(bx*TS+bw*8,(by+bh)*TS+8,bw%2?14:22);mat(HOME[0]*TS+24,(HOME[1]+2)*TS+2,14);
   // chickens pecking in the run beside the coop
   const coop=BARNS.find(b=>b[4]==='coop');if(coop)for(let i=0;i<3;i++){const X=(coop[0]-2)*TS+40+i*22+Math.sin(t/90+i*2)*6,Y=(coop[1]+coop[3]+3)*TS+6+i*5,pk=((t/12+i*7)|0)%20<4;
     E(X,Y+6,5,2,'#0003');E(X,Y+1,5,4,i===1?'#a0582a':'#fff8ee');E(X+(pk?4:3),Y-(pk?-1:3),3,3,i===1?'#a0582a':'#fff8ee');R(X+(pk?6:5),Y-(pk?-1:3),2,1,'#f0a020');R(X+(pk?4:3),Y-(pk?1:5),2,1,'#e03030')}}

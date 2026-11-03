@@ -1,0 +1,5 @@
+<body><iframe id=f src="/index.html" width=480 height=720></iframe><script>
+setTimeout(()=>{const w=f.contentWindow,P=w.__pp;const D=P.DB;D.avatar='boy';D.playerName='T';D.introDone=true;P.openMap();
+setTimeout(()=>{const r=[];const t=(m,x,y)=>{w.setMap(m);Object.assign(P.ow,{map:m,x,y,px:x*16,py:y*16,mv:null,dir:'down'});P.owTry('up');r.push(m+' '+x+','+y+'='+(w.S&&w.S.scene||'')+'/'+P.ow.map)};
+for(const [x,y] of [[54,24],[53,24],[65,24],[78,24],[52,45],[62,45],[25,44],[34,44],[43,8]])t('ranch',x,y);t('outer',43,6);
+document.body.insertAdjacentHTML('beforeend','<h1>'+r.join(' | ')+'</h1>')},800)},1500)</script>

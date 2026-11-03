@@ -24,8 +24,16 @@ class C:
   def shadow(s):
     sh=Image.new('RGBA',s.im.size,(0,0,0,0)); ImageDraw.Draw(sh).ellipse(s.S([2,s.h-7,s.w-2,s.h]),fill=(30,40,30,110))
     sh=sh.filter(ImageFilter.GaussianBlur(2*K)); sh.alpha_composite(s.im); s.im=sh; s.d=ImageDraw.Draw(s.im)
-  def save(s,p):
+  def save(s,p,split=None,grow=0):
     im=s.im.resize((s.w,s.h),Image.LANCZOS)
+    if split and grow:  # v51 TALLER: repeat a plain wall row under the eave so the building stands taller (door/bottom anchor unchanged)
+      band=im.crop((0,split,s.w,split+1)); t=Image.new('RGBA',(s.w,s.h+grow),(0,0,0,0)); t.paste(im.crop((0,0,s.w,split)),(0,0))
+      for i in range(grow): t.paste(band,(0,split+i))
+      t.paste(im.crop((0,split,s.w,s.h)),(0,split+grow))
+      sh=Image.new('RGBA',t.size,(0,0,0,0)); d=ImageDraw.Draw(sh)
+      for i in range(6): d.line([(0,split+i),(s.w,split+i)],fill=(40,20,60,int(110*(1-i/6))))   # deep eave shadow
+      a=t.split()[3]; sh.putalpha(Image.composite(sh.split()[3],Image.new('L',t.size,0),a)); t.alpha_composite(sh)
+      im=t; s.h=t.size[1]
     px=im.load()
     for y in range(s.h):
       for x in range(s.w):
@@ -78,7 +86,7 @@ def farmhouse():
   c.rr(24,56,16,2,1,hx('e86a4a'),shade=False)
   door(c,26,58,12,16,hx('d0503a'))
   flowers(c,8,62,4); flowers(c,44,62,4)
-  c.save('buildings/farmhouse.png')
+  c.save('buildings/farmhouse.png',46,16)
 def barn(name,w,col,roofc,label=None):
   c=C(w,80); c.shadow(); cx=w/2
   wall(c,5,36,w-10,38,col,boards=True)
@@ -89,7 +97,7 @@ def barn(name,w,col,roofc,label=None):
   if w>=90: win(c,12,46); win(c,w-21,46)
   door(c,cx-11,48,22,26,mix(col,(255,255,255),.1),barn=True,arch=False)
   if label: c.rr(cx-10,40,20,6,3,hx('fff6dc'))
-  c.save(name)
+  c.save(name,47,16)
 def coop():
   c=C(64,80); c.shadow()
   for xx in (10,50): c.rr(xx,66,4,10,1,hx('8a5a3a'))
@@ -101,14 +109,14 @@ def coop():
   c.d.line(c.S([38,68,52,78]),fill=hx('b07a4a'),width=2*K)
   c.ell(53,20,3,3,hx('ffffff'),ol=True); c.ell(55,20,1.5,1,hx('ffb020'))  # tiny chicken on roof
   c.ell(53,16.5,1,1.2,hx('ee3a3a'))
-  c.save('buildings/coop.png')
+  c.save('buildings/coop.png',44,14)
 def shed(name,wallc,roofc,acc,w=48,h=64,planks=True,boards=False,doorc=None):
   c=C(w,h); c.shadow(); wt=h-34
   wall(c,5,h-wt-6,w-10,wt,wallc,planks=planks,boards=boards)
   roof(c,5,h-wt-24,w-10,19,roofc,over=3)
   win(c,9,h-wt+1,8,7)
   door(c,w-22,h-wt+1,13,wt-7,doorc or acc,barn=True,arch=False)
-  c.save(name); return c
+  c.save(name,h-wt-2,12); return c
 def sty():
   c=C(64,80); c.shadow()
   wall(c,6,42,52,30,hx('f2b8a8'),planks=True)
@@ -117,7 +125,7 @@ def sty():
   for xx in range(2,64,8): c.rr(xx,66,3,10,1,hx('fff6e6'),shade=False)
   c.rr(1,69,62,2,1,hx('fff6e6'),shade=False)
   c.ell(14,36,4,3,hx('ffb0c0'),ol=True)
-  c.save('buildings/sty.png')
+  c.save('buildings/sty.png',47,14)
 def doghouse():
   c=C(48,48); c.shadow()
   wall(c,8,22,32,22,hx('ff8a3a'),planks=True)
@@ -134,7 +142,7 @@ def petstore():
   c.rr(8,4,32,10,4,hx('fff6dc')); c.ell(18,9,2.5,2.2,hx('ff5a8b')); c.ell(30,9,2.5,2.2,hx('ff5a8b'))
   c.poly([(22,9),(24,7),(26,9),(24,11)],hx('ffb020'),ol=False)
   win(c,7,37,12,10); door(c,28,40,12,20,hx('ffb020'))
-  c.save('buildings/petstore.png')
+  c.save('buildings/petstore.png',35,12)
 def farmshop():
   c=C(48,48); c.shadow()
   c.rr(6,26,36,18,2,hx('c8844a'),)

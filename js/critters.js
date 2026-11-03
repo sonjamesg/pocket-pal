@@ -64,7 +64,11 @@ const VAR_MAP={cat_tabby:{'232,160,72':[176,146,108],'200,120,48':[96,76,56]},ca
 const _varC={};function varImg(im,sv){const M=VAR_MAP[sv];if(!M||!im)return im;const k=sv+im.src;if(_varC[k])return _varC[k];
  const c=document.createElement('canvas');c.width=im.naturalWidth||im.width;c.height=im.naturalHeight||im.height;const x=c.getContext('2d');x.drawImage(im,0,0);
  let d;try{d=x.getImageData(0,0,c.width,c.height)}catch(e){return im}const a=d.data;
- for(let i=0;i<a.length;i+=4){if(a[i+3]<10)continue;const m=M[a[i]+','+a[i+1]+','+a[i+2]];if(m){a[i]=m[0];a[i+1]=m[1];a[i+2]=m[2]}}
+ const ks=Object.keys(M).map(k=>[k.split(',').map(Number),M[k]]).filter(([f])=>f[0]+f[1]+f[2]>200);
+ for(let i=0;i<a.length;i+=4){if(a[i+3]<10)continue;const ex=M[a[i]+','+a[i+1]+','+a[i+2]];if(ex){a[i]=ex[0];a[i+1]=ex[1];a[i+2]=ex[2];continue}
+  // v51 toy sprites are shaded: recolour anything near a key colour, keeping its light/dark ratio
+  let best=null,bd=1e9;for(const [f,t] of ks){const d=Math.abs(a[i]-f[0])+Math.abs(a[i+1]-f[1])+Math.abs(a[i+2]-f[2]);if(d<bd){bd=d;best=[f,t]}}
+  if(best&&bd<90){const [f,t]=best,l=(a[i]+a[i+1]+a[i+2]+1)/(f[0]+f[1]+f[2]+1);a[i]=Math.min(255,t[0]*l);a[i+1]=Math.min(255,t[1]*l);a[i+2]=Math.min(255,t[2]*l)}}
  x.putImageData(d,0,0);
  if(sv==='chicken_rooster'){x.fillStyle='#e8302a';x.fillRect(10,0,2,2);x.fillRect(9,1,1,1);x.fillRect(12,6,1,2);x.fillStyle='#1e4a3a';x.fillRect(1,3,2,3);x.fillRect(0,4,1,3);x.fillStyle='#e8a020';x.fillRect(10,5,1,1)}
  return _varC[k]=c}

@@ -78,10 +78,10 @@ def ptex(x,y,st):
   return PATHL if h==0 else PATHD if h==7 else mix(PATH,PATHL,.25) if (x+y)%7==0 else PATH
 autotile('tiles/path-auto.png',PATH,hx('b47a3c'),ptex)
 SAND=hx('f6e2a6')
-autotile('tiles/sand-auto.png',SAND,hx('d8b870'),lambda x,y,s:hx('fff0c0') if (x*13+y*7)%19==0 else SAND)
+autotile('tiles/sand-auto.png',SAND,hx('9ad858'),lambda x,y,s:hx('fff0c0') if (x*13+y*7)%19==0 else SAND)
 for f in range(2):
   W1=hx('46a8f0');W2=hx('6cc4ff')
-  autotile(f'tiles/water-auto{f}.png',W1,hx('2a6ab0'),lambda x,y,s:hx('d8f4ff') if (y in (4,12) and (x+f*4)%16 in (2,3,4)) else W2 if (x-y+f*3)%16 in (0,1) else W1,foam=hx('e8f8ff'))
+  autotile(f'tiles/water-auto{f}.png',W1,hx('3a88d8'),lambda x,y,s:hx('d8f4ff') if (y in (4,12) and (x+f*4)%16 in (2,3,4)) else W2 if (x-y+f*3)%16 in (0,1) else W1,foam=hx('e8f8ff'))
 im=img(16,16,hx('46a8f0')); d=ImageDraw.Draw(im); d.line([(3,5),(7,5)],fill=hx('d8f4ff')); d.line([(9,11),(13,11)],fill=hx('d8f4ff')); im.save(P('tiles/water.png'))
 im=img(16,16,hx('46a8f0')); d=ImageDraw.Draw(im); d.rectangle([0,0,15,3],fill=hx('e8f8ff')); d.rectangle([0,4,15,4],fill=hx('2a6ab0')); im.save(P('tiles/water-edge.png'))
 im=img(16,16,PATH); [im.putpixel((x,y),ptex(x,y,0)) for x in range(16) for y in range(16)]; im.save(P('tiles/path.png'))
