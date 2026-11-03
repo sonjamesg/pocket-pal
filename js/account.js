@@ -48,7 +48,7 @@ const _finishNameA=finishName;finishName=function(n){if(!ui.nameAcct)return _fin
   ui.acctName=n;if(ui.acctMode==='login'){openPin('login');return}ACC.busy=true;accCall({action:'check_name',name:n}).then(r=>{ACC.busy=false;if(!r.ok){ui.aerr=ERR[r.err]||ERR.server;return}if(r.taken){ui.aerr=ERR.taken;return}openPin('create')})};
 const _modalInputA=modalInput;modalInput=function(k){const m=ui.modal;if(ui.nameAcct&&m&&m.type==='name'){if(k==='b'&&!m.name){ui.modal=null;ui.nameAcct=null;return}}
   if(m&&m.type==='confirm'&&m.no&&(k==='a'||k==='start')&&m.k===1){ui.modal=null;m.no();return}return _modalInputA(k)};
-const _drawModalA=drawModal;drawModal=function(t){_drawModalA(t);if(ui.nameAcct&&ui.modal&&ui.modal.type==='name'){R(18,6,W-36,16,'#5b4b8a');txt(ui.acctMode==='login'?'YOUR USERNAME':'PICK A USERNAME',W/2,18,'#fff',10)}};
+const _drawModalA=drawModal;drawModal=function(t){_drawModalA(t);if(ui.nameAcct&&ui.modal&&ui.modal.type==='name'){R(18,6,W-36,16,'#5b4b8a');txt('YOUR NAME',W/2,18,'#fff',10)}};
 function acctInput(k){if(ACC.busy)return;if(k==='up'||k==='down')ui.asel^=1;if(k==='b'){S={scene:'title'};ui.tsel=0;return}
   if(k==='a'||k==='start'){sfx&&sfx('click');ui.acctMode=ui.asel===0?'create':'login';ui.aerr='';askName()}}
 function drawAcct(t){bg(false);otxt('PET FARM',W/2,34,'#ffe36a',24);txt('Play with your own name & code',W/2,54,'#2b2440',10);
@@ -62,3 +62,33 @@ const _input0A=input0;input0=function(k){au&&au();
   return _input0A(k)};
 const _frameA=frame;frame=function(){try{frame0()}catch(e){console.error(e);requestAnimationFrame(frame)}};function frame0(){const sc=S.scene;if(sc!=='acct'&&sc!=='pin'){_frameA();if(sc==='title'&&ACC.name){RR(W/2-70,100,140,16,8,'#fffd','#2b2440');txt('Player: '+ACC.name,W/2,112,'#5b4b8a',10)}return}
   ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(sc==='acct')drawAcct(t);else drawPin(t);if(ui.msgT>0){ui.msgT--;drawMsg(H-40)}if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
+// ===== v36 flow: CONTINUE / SWITCH ACCOUNT; username → code; username = in-game name =====
+try{const t=localStorage.getItem('pf_tok'),n=localStorage.getItem('pf_name');if(!ACC.token&&t){ACC.token=t;ACC.name=n}}catch(e){}
+const _accSetB=accSet;accSet=function(n,t){_accSetB(n,t);try{localStorage.setItem('pf_tok',t);localStorage.setItem('pf_name',n)}catch(e){}};
+const _accLogoutB=accLogout;accLogout=function(){_accLogoutB();try{localStorage.removeItem('pf_tok');localStorage.removeItem('pf_name');localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60,coinsMerged:1,missions:{}}};
+titleItems=function(){return ACC.token?['CONTINUE','SWITCH ACCOUNT']:['PLAY']};
+function freshDB(){DB={v:9,pets:{},lastId:null,wallet:60,coinsMerged:1,missions:{}};try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}window.__pp&&(window.__pp.DB=DB)}
+function acctGo(){if(ACC.name)DB.playerName=ACC.name;if(!DB.avatar){avatarOpen();return}saveDB();continueGame()}
+// one username box: name exists → login code, new → create code
+function askName(){S={scene:'acct'};ui.nameAcct=1;ui.acctMode='any';ui.modal={type:'name',name:'',k:0}}
+finishName=(function(prev){return function(n){if(!ui.nameAcct)return prev(n);ui.nameAcct=null;ui.modal=null;n=(n||'').trim().toUpperCase();
+  if(!/[A-Z]/.test(n)){ui.aerr='Use at least 1 letter';askName();return}ui.acctName=n;ACC.busy=true;
+  accCall({action:'check_name',name:n}).then(r=>{ACC.busy=false;if(!r.ok){ui.aerr=ERR[r.err]||ERR.server;askName();return}openPin(r.taken?'login':'create')})}})(_finishNameA);
+pinOK=(function(){return function(){const P=ui.pin;if(P.code.length<4){ui.aerr='Type 4 numbers';return}
+  if(P.mode==='create'&&!P.first){P.first=P.code;P.code='';ui.aerr='';return}
+  if(P.mode==='create'&&P.first!==P.code){P.first=null;P.code='';ui.aerr='Codes did not match — try again';return}
+  ACC.busy=true;accCall({action:P.mode==='create'?'register':'login',name:ui.acctName,pin:P.code}).then(r=>{ACC.busy=false;
+    if(!r.ok){P.code='';ui.aerr=(ERR[r.err]||ERR.server)+(r.err==='wrong_pin'&&r.left?' ('+r.left+' tries left)':'');return}
+    accSet(r.name,r.token);sfx&&sfx('fanfare');
+    if(P.mode==='create'){freshDB();DB.playerName=r.name;cloudDirty=true;cloudFlush();avatarOpen();say('Hi '+r.name+'! Pick your rancher.',200);return}
+    if(r.save&&r.save.pets)applyCloud(r.save,false);else freshDB();acctGo();say('Welcome back, '+r.name+'!',200)})}})();
+const _pinInputB=pinInput;pinInput=function(k){if(k==='b'&&ui.pin&&!ui.pin.code&&!ACC.busy){askName();return}return _pinInputB(k)};
+// avatar: no second name screen when logged in
+const _avatarKeyB=avatarKey;avatarKey=function(k){if(ACC.name&&(k==='a'||k==='start')){DB.avatar=ui.sel?'girl':'boy';DB.look={hair:AV_HK[ui.ah],eyes:AV_EK[ui.ae]};DB.playerName=ACC.name;saveDB();startIntro();return}
+  if(ACC.name&&k==='b'){S={scene:'title'};ui.tsel=0;return}return _avatarKeyB(k)};
+const _input0B=input0;input0=function(k){
+  if(S.scene==='title'&&!ui.modal&&(k==='a'||k==='start')){const it=titleItems(),c=it[ui.tsel%it.length];au&&au();
+    if(c==='PLAY'){ui.aerr='';askName();return}if(c==='CONTINUE'){acctGo();return}if(c==='SWITCH ACCOUNT'){accLogout();askName();return}}
+  if(S.scene==='acct'&&!ui.modal){if(k==='b'){S={scene:'title'};ui.tsel=0}else askName();return}
+  return _input0B(k)};
+drawAcct=function(t){bg(false);otxt('PET FARM',W/2,40,'#ffe36a',24);if(ACC.busy)txt('Checking…',W/2,110,'#2b2440',12);else if(ui.aerr)txt(ui.aerr,W/2,110,'#e8402a',11)};
