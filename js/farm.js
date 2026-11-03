@@ -3,7 +3,7 @@ const CROPC='CWUc',HOSES=[[9,16,'CORN'],[25,16,'WHEAT'],[9,32,'PUMPKIN']],HOSE_L
 const POO_ZONES=[[61,24,8,2],[74,24,8,2]]; // in front of COW BARN + HORSE STABLE
 function isCropT(x,y){const c=OWBASE[y]&&OWBASE[y][x];return CROPC.includes(c)||c==='Y'}
 // tile art: dry soil until watered; real crop only when READY
-function cropTile(c,x,y){const e=grows()[wetKey(x,y)];return e&&growP(e)>=1?{U:'pumpkin',C:'corn',W:'wheat',c:'corn'}[c]:'field'}
+function cropTile(c,x,y){const e=grows()[wetKey(x,y)];if(!e)return 'field';const p=growP(e);return p>=1?{U:'pumpkin',C:'corn',W:'wheat',c:'corn'}[c]:p<.35?'fieldwet':'sprout'}
 function hoseAt(x,y){return HOSES.findIndex(h=>h[0]===x&&h[1]===y)}
 function pooL(){if(!DB.poo)DB.poo={l:[],t:now()};const P=DB.poo;
   while(P.l.length<POO_MAX&&now()-P.t>=POO_MS){P.t+=POO_MS;const z=POO_ZONES[Math.floor(Math.random()*2)],x=z[0]+Math.floor(Math.random()*z[2]),y=z[1]+Math.floor(Math.random()*z[3]);if(!P.l.some(p=>p[0]===x&&p[1]===y))P.l.push([x,y])}
@@ -39,7 +39,7 @@ owUpdate=function(){_u();const o=ui.ow;if(ui.hose!=null&&o){const h=HOSES[ui.hos
 owExtras=function(t,o){_x(t,o);if(CUR!=='ranch')return;
   for(const k in grows()){const e=grows()[k];if(!e.f)continue;const [x,y]=k.split(',').map(Number);if(growP(e)<1){R(x*TS+2,y*TS+2,2,2,'#6a4020');R(x*TS+12,y*TS+3,2,2,'#6a4020')}}
   pooL().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+11;E(X,Y+2,6,2,'#0003');E(X,Y,5,3,'#6a4020');E(X,Y-3,3.5,2.5,'#7a4a24');E(X,Y-5,2,1.5,'#8a5a2c');if((t>>4)%3===0){R(X-4,Y-10,1,1,'#5a8a30');R(X+3,Y-12,1,1,'#5a8a30')}});
-  HOSES.forEach(([x,y],i)=>{const X=x*TS,Y=y*TS;E(X+8,Y+14,7,2,'#0003');R(X+3,Y+2,2,12,'#6a4020');R(X+11,Y+2,2,12,'#6a4020');E(X+8,Y+8,6,6,'#2a9a40');E(X+8,Y+8,4,4,'#40c060');E(X+8,Y+8,1.5,1.5,'#1a5a28');
+  HOSES.forEach(([x,y],i)=>{const X=x*TS,Y=y*TS;if(IMG.p_hose&&IMG.p_hose.naturalWidth){g.drawImage(IMG.p_hose,X,Y);if(ui.hose!==i)R(X+13,Y+9,3,2,'#2fb050');return}E(X+8,Y+14,7,2,'#0003');R(X+3,Y+2,2,12,'#6a4020');R(X+11,Y+2,2,12,'#6a4020');E(X+8,Y+8,6,6,'#2a9a40');E(X+8,Y+8,4,4,'#40c060');E(X+8,Y+8,1.5,1.5,'#1a5a28');
     if(ui.hose!==i){R(X+12,Y+9,3,2,'#2a9a40')}});
   if(ui.hose!=null){const [hx,hy]=HOSES[ui.hose];g.strokeStyle='#2a9a40';g.lineWidth=2;g.beginPath();g.moveTo(hx*TS+14,hy*TS+9);const mx=(hx*TS+o.px)/2+8,my=Math.max(hy*TS,o.py)+14;g.quadraticCurveTo(mx,my,o.px+12,o.py+6);g.stroke();
     const [dx,dy]=DV[o.dir];for(let i=0;i<6;i++){const s=((t*2+i*9)%24)/24;R(o.px+8+dx*(4+s*20)+(i%3-1)*s*6,o.py+6+dy*(4+s*20)+((i>>1)%3-1)*s*6,2,2,'#9ad8ff')}}};

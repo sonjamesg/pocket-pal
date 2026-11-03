@@ -59,6 +59,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
       else drawLean(im,X,Y)}});
   drawStore(false);drawHome(false);drawBig(false);owExtras(t,o);
   const AVS=avImg('s'),FS=DB.avatar==='girl'&&ok('farmergirl')?'farmergirl':'farmer';if(AVS||ok(FS)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16)-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);drawBig(true);drawStore(true);drawHome(true);drawFences(true);drawTrees(true);g.restore();
+  tiltShift();
   R(0,0,W,16,'#2b2440cc');txt(CUR==='ranch'?'PET FARM':MAPS.outer.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy);
   if(ui.msgT>0){}
@@ -69,3 +70,8 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   else if(th&&CUR==='ranch'&&(th.weed||owHint(th))){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':owHint(th),W/2,H-19,'#2b2440',8)}
   else if(th&&th.store){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: enter PET SHOP',W/2,H-19,'#2b2440',8)}
   else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}
+
+// v48: Link's Awakening tilt-shift — soft blur at the top & bottom of the view + warm/cool depth haze
+function tiltShift(){const cv=g.canvas,k=cv.width/W;if(!g.filter&&g.filter!=='')return;g.save();g.setTransform(1,0,0,1,0,0);
+  [[0,30,1.6],[0,18,2.4],[H-26,26,1.4],[H-14,14,2.2]].forEach(([y,h,b])=>{g.filter='blur('+(b*k/2)+'px)';g.drawImage(cv,0,y*k,cv.width,h*k,0,y*k,cv.width,h*k)});
+  g.filter='none';let gr=g.createLinearGradient(0,0,0,cv.height);gr.addColorStop(0,'rgba(255,250,220,.16)');gr.addColorStop(.25,'rgba(255,250,220,0)');gr.addColorStop(.8,'rgba(20,30,60,0)');gr.addColorStop(1,'rgba(20,30,60,.14)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height);g.restore()}
