@@ -1,4 +1,4 @@
-# Pocket Pal (v7 — dogs first)
+# Pet Farm (v10 — farm map)
 
 A slow, wholesome browser Tamagotchi for phones (portrait or landscape) with Game Boy Advance-style controls.
 Play: https://sonjamesg.github.io/pocket-pal/

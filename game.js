@@ -1,4 +1,4 @@
-// ===== Pocket Pal v9 — farm map, cat/chicken/pig + dogs =====
+// ===== Pet Farm v9 — farm map, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
 const RATE={hunger:6,happy:3,coat:100/(12*24),plaque:100/(8*24)};
@@ -539,7 +539,7 @@ function drawWalk(t){const m=ui.mg;walkTick();const x=m.x;
 function promptBox(a,b){RR(30,34,180,38,10,'#fff','#2b2440');txt(a,W/2,50,'#2b2440',10);txt(b,W/2,64,'#e0457b',9)}
 function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
   const sc=S.scene;
-  if(sc==='title'){bg(false);otxt('POCKET PAL',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore();
+  if(sc==='title'){bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore();
     const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
     const lp=DB.pets[DB.lastId];if(lp&&it[ui.tsel]==='CONTINUE')txt(lp.name+' • '+stageName(lp.stage,spOf(lp)),W/2,206,'#fff',9);else txt(petList().length+' pet'+(petList().length===1?'':'s')+' saved on this device',W/2,206,'#fff',9)}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
