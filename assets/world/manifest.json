@@ -1,0 +1,13 @@
+{
+  "rev": 1,
+  "images": {
+    "tree": "trees/tree.png",
+    "grass": "tiles/grass.png",
+    "path": "tiles/path.png",
+    "water": "tiles/water.png",
+    "field": "tiles/field.png",
+    "fence": "tiles/fence.png",
+    "sign": "tiles/sign.png",
+    "farmer": "player/farmer.png"
+  }
+}
