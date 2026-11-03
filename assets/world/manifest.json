@@ -1,5 +1,5 @@
 {
-  "rev": 6,
+  "rev": 7,
   "images": {
     "tree": "trees/tree.png",
     "grass": "tiles/grass.png",
@@ -34,6 +34,7 @@
     "pine2": "trees/pine2x2.png",
     "bridge": "tiles/bridge.png",
     "rock": "tiles/rock.png",
-    "gatepost": "tiles/gatepost.png"
+    "gatepost": "tiles/gatepost.png",
+    "farmergirl": "player/farmer-girl.png"
   }
 }

@@ -9,7 +9,7 @@ src = open(os.path.join(ROOT, 'js', 'map-data.js'), encoding='utf-8').read()
 L = json.loads(re.search(r'/\*JSON-START\*/(.*?)/\*JSON-END\*/', src, re.S).group(1))
 OUTER = len(sys.argv) > 1 and sys.argv[1] == 'outer'
 PFX = 'world-grid' if OUTER else 'farm-grid'
-if OUTER: L = dict(L['outer'], tileSize=L['tileSize'], houseSlots=[], locks=[], petStore=None)
+if OUTER: L = dict(L['outer'], tileSize=L['tileSize'], houseSlots=[], locks=[])
 TS, MW, MH, rows = L['tileSize'], L['width'], L['height'], L['rows']
 assert len(rows) == MH and all(len(r) == MW for r in rows), 'rows must be width x height'
 def col(x):
@@ -35,6 +35,10 @@ for hx, hy, n in L['locks']:
             cells[name(hx+dx, hy+dy)].update(kind='locked', feature=n)
     locked.append({'name': n, 'origin': [hx, hy], 'grid': name(hx, hy)})
 store = None
+if L.get('home'):
+    hx, hy = L['home']
+    for dy in range(2):
+        for dx in range(3): cells[name(hx+dx, hy+dy)].update(kind='player_house', feature='YOUR HOUSE')
 if L.get('petStore'):
     sx, sy = L['petStore']
     for dy in range(2):
@@ -77,7 +81,8 @@ def box(hx, hy, fill, label):
     d.text((X+3*S/2, Y+S), label, fill='#fff', font=small, anchor='mm')
 for s in slots: box(*s['origin'], '#c0503a', f"HOUSE {s['slot']}")
 for l in locked: box(*l['origin'], '#7a7090', l['name'])
-if store: box(*store['origin'], '#e08a20', 'PET STORE')
+if store: box(*store['origin'], '#e08a20', 'PET SHOP')
+if L.get('home'): box(*L['home'], '#3a86e8', 'YOUR HOUSE')
 for x in range(MW + 1): d.line([M + x*S, M, M + x*S, M + MH*S], fill=(0, 0, 0, 90))
 for y in range(MH + 1): d.line([M, M + y*S, M + MW*S, M + y*S], fill=(0, 0, 0, 90))
 for x in range(MW): d.text((M + x*S + S/2, M/2), col(x), fill='#ffd84a', font=font, anchor='mm')

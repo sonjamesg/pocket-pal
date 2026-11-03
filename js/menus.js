@@ -1,10 +1,10 @@
 // ===== menus.js — title/pause items, naming & confirm modals =====
 const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','HOME'];
 function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS']:['START']}
-function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
+function openMap(){if(!DB.avatar){S={scene:'avatar'};ui.sel=0;ui.msgT=0;return}if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
 // v16: no starter pet — pets are bought at the PET STORE on the farm map
-function newPet(){openMap();say('Visit the PET STORE to get a pet!',200)}
+function newPet(){openMap();say('PET SHOP: out the south GATE',240)}
 function openStore(){S={scene:'store'};ui.sel=0;ui.msgT=0}
 function buyDog(b){const p=priceOf(b);if(DB.wallet<p){say('Need '+p+' coins — you have '+DB.wallet);return}ui.buy=b;ui.modal={type:'name',name:'',k:0}}
 function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';const b=ui.buy;ui.buy=null;if(!b){S={scene:'species',name:n};ui.sel=0;return}

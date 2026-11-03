@@ -57,3 +57,4 @@ Drop the PNG in `assets/world/<folder>/`, add/keep its key in `assets/world/mani
 - Ranch is 56×44 (was 30×24); gate **AB44–AC44** (bottom fence) leads to the 80×60 **WILD WOODS** outer world (`outer` in js/map-data.js, gate AN1–AO1). Walk onto a gate (or B in the woods) to switch maps.
 - `scripts/gen-maps.py` lays out both maps procedurally (organic blob lakes, meandering river, bridges, beaches); `scripts/gen-art.py` makes multi-tone grass variants, tall grass, flowers, rocks, 2×2 trees/pines, bridge, gate posts and 4-quadrant autotile atlases (water-auto0/1, path-auto, sand-auto) for rounded shorelines.
 - `scripts/build.sh` now also regenerates `assets/world/world-grid.*`.
+- Onboarding: first map open asks **BOY / GIRL** (`DB.avatar`, sprites `player/farmer.png` / `player/farmer-girl.png`). You start at your blue **ranch house** (`home` AD5, door AE6). No starter pet; the **PET SHOP** moved off the ranch to the Wild Woods (`outer.petStore` AS31, door AT32).

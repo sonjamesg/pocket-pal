@@ -45,7 +45,7 @@ for x in (7,14,21,35,42,49): rect(M,x,10,x,12,'p')
 HS=[[6,8],[13,8],[20,8],[34,8],[41,8],[48,8]]
 LK=[[34,15,'COW BARN'],[42,15,'STABLE']]
 rect(M,35,17,35,19,'p');rect(M,43,17,43,19,'p')
-STORE=[20,33]; rect(M,21,35,21,36,'p'); rect(M,21,36,26,36,'p')
+HOME=[29,4]; rect(M,29,4,31,6,'g'); rect(M,29,7,30,7,'p')
 M[19][26]='s'; M[RH-3][26]='s'
 # fields
 for (x0,y0,x1,y1,c) in [(4,24,12,30,'C'),(15,24,23,30,'W')]:
@@ -54,7 +54,7 @@ rect(M,8,22,8,22,'p');rect(M,19,22,19,22,'p')
 blob(M,11,37,7,3.6,'w',1); blob(M,45,31,7.5,5.5,'w',2); blob(M,50,38,3,2.5,'w',3)
 blob(M,45,31,1.6,1.2,'g',4)   # little island
 deco(M,26,5,'F'); deco(M,22,6,'h')
-keep=[(h[0],h[1],h[0]+2,h[1]+1) for h in HS]+[(l[0],l[1],l[0]+2,l[1]+1) for l in LK]+[(STORE[0],STORE[1],STORE[0]+2,STORE[1]+1)]
+keep=[(h[0],h[1],h[0]+2,h[1]+1) for h in HS]+[(l[0],l[1],l[0]+2,l[1]+1) for l in LK]+[(28,3,32,7)]
 for x in range(1,RW-2,2):
     if rnd.random()<.75: tree(M,x,1,rnd.random()<.3)
 for y in range(3,RH-3,3):
@@ -84,8 +84,9 @@ for x in range(0,OW_-1,2):
     for y in (0,OH-2):
         if not (37<=x<=41 and y==0): tree(O,x,y,rnd.random()<.5)
 for y in range(2,OH-2,2): tree(O,0,y,True); tree(O,OW_-2,y,True)
-scatter(O,(2,2,36,32),70,pine=.5,seed=31); scatter(O,(43,2,78,32),60,pine=.7,seed=32)
-scatter(O,(43,37,78,57),55,pine=.4,seed=33); scatter(O,(19,37,38,57),25,seed=34)
+SHOP=[44,30]; rect(O,43,29,47,33,'g'); rect(O,45,32,45,33,'p')
+scatter(O,(2,2,36,32),70,pine=.5,seed=31); scatter(O,(48,2,78,32),60,pine=.7,seed=32)
+scatter(O,(48,37,78,57),55,pine=.4,seed=33); scatter(O,(19,37,38,57),25,seed=34)
 O[33][38]='s'; O[1][38]='s'
 for y in range(OH):
     for x in range(OW_):
@@ -95,9 +96,9 @@ legend={"g":"grass","h":"tall grass","F":"flowers (also J,K)","p":"path","b":"sa
 for gx,gy in GATE: M[gy][gx]='G'
 for gx,gy in OGATE: O[gy][gx]='G'
 L={"_doc":"SINGLE SOURCE OF TRUTH for the overworld. Top level = the RANCH; 'outer' = the world beyond the ranch gate. Edit, then run scripts/build.sh to regenerate assets/world/farm-grid.* and world-grid.*. houseSlots/locks/petStore are [x,y] top-left tiles (0-based; x=0 is column A, y=0 is row 1) and are 3x2 (door = middle of bottom row). Trees (T/P) are 2x2 with 'x' body cells. Walking onto a G gate tile switches maps.",
- "legend":legend,"tileSize":16,"width":RW,"height":RH,"houseSlots":HS,"petStore":STORE,"locks":LK,"gate":GATE,"start":[27,24],
+ "legend":legend,"tileSize":16,"width":RW,"height":RH,"houseSlots":HS,"petStore":None,"home":HOME,"locks":LK,"gate":GATE,"start":[30,6],
  "rows":rows(M),
- "outer":{"name":"WILD WOODS","width":OW_,"height":OH,"gate":OGATE,"legend":legend,"rows":rows(O)}}
+ "outer":{"name":"WILD WOODS","width":OW_,"height":OH,"gate":OGATE,"petStore":SHOP,"legend":legend,"rows":rows(O)}}
 p=os.path.join(ROOT,'js','map-data.js'); s=open(p).read()
 s=re.sub(r'/\*JSON-START\*/.*?/\*JSON-END\*/','/*JSON-START*/'+json.dumps(L,indent=1).replace('\\','\\\\')+'/*JSON-END*/',s,flags=re.S)
 open(p,'w').write(s); print('maps written',RW,RH,OW_,OH)

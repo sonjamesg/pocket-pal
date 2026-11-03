@@ -12,6 +12,7 @@ function input0(k){
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
     if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
   else if(sc==='map')owInput(k);
+  else if(sc==='avatar'){if(k==='left'||k==='right')ui.sel=1-ui.sel;if(k==='a'||k==='start'){DB.avatar=ui.sel?'girl':'boy';saveDB();ui.ow=null;openMap();say('Welcome home! PET SHOP: out the south GATE',260)}if(k==='b'){S={scene:'title'};ui.tsel=0}}
   else if(sc==='store'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){openMap();return}if(k==='a')buyDog(BKEYS[ui.sel])}
   else if(sc==='breed'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'){S.scene='species';ui.sel=0}
     if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
