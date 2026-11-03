@@ -42,9 +42,9 @@ for hx,hy in HS: claim(hx,hy,3,2,1); rect(hx+1,hy+2,hx+1,13,'p')
 BARNS=[[52,21,4,3,'coop','CHICKEN COOP'],[62,21,6,3,'cowbarn','COW BARN'],[75,21,6,3,'stable','HORSE STABLE'],
        [50,42,4,3,'sheepshed','SHEEP SHED'],[60,42,4,3,'sty','PIG STY'],[24,42,3,2,'feedshed','FEED SHED'],[33,42,3,2,'toolshed','TOOL SHED']]
 for bx,by,bw,bh,_,_n in BARNS:
-    claim(bx,by-1,bw,bh+1,2); dx=bx+bw//2
-    if by<33: rect(dx,by+bh,dx,32,'p')
-    else: rect(dx,35,dx,by-1,'p')
+    claim(bx,by-1,bw,bh+1,2); dx=bx+bw//2; d0=dx-1 if bw%2==0 else dx   # even width: 2-wide door path
+    if by<33: rect(d0,by+bh,dx,32,'p')
+    else: rect(d0,by+bh,bx+bw,by+bh,'p'); rect(bx+bw,35,bx+bw,by+bh,'p')   # path from door round the side to barn road
 # yards: chicken run, horse paddock, sheep pasture, pig mud
 frame(49,26,58,31); M[26][54]='p'; M[31][54]='p'
 frame(71,25,85,31); M[25][78]='p'; M[31][78]='p'                 # horse paddock (gap = gate by stable door)

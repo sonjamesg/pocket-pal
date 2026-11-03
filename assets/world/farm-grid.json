@@ -13436,8 +13436,8 @@
     "BB25": {
       "x": 53,
       "y": 24,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC25": {
       "x": 54,
@@ -13502,8 +13502,8 @@
     "BM25": {
       "x": 64,
       "y": 24,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN25": {
       "x": 65,
@@ -13580,8 +13580,8 @@
     "BZ25": {
       "x": 77,
       "y": 24,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA25": {
       "x": 78,
@@ -13964,8 +13964,8 @@
     "BB26": {
       "x": 53,
       "y": 25,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC26": {
       "x": 54,
@@ -14030,8 +14030,8 @@
     "BM26": {
       "x": 64,
       "y": 25,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN26": {
       "x": 65,
@@ -14558,8 +14558,8 @@
     "BM27": {
       "x": 64,
       "y": 26,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN27": {
       "x": 65,
@@ -14636,8 +14636,8 @@
     "BZ27": {
       "x": 77,
       "y": 26,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA27": {
       "x": 78,
@@ -15020,8 +15020,8 @@
     "BB28": {
       "x": 53,
       "y": 27,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC28": {
       "x": 54,
@@ -15086,8 +15086,8 @@
     "BM28": {
       "x": 64,
       "y": 27,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN28": {
       "x": 65,
@@ -15164,8 +15164,8 @@
     "BZ28": {
       "x": 77,
       "y": 27,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA28": {
       "x": 78,
@@ -15548,8 +15548,8 @@
     "BB29": {
       "x": 53,
       "y": 28,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC29": {
       "x": 54,
@@ -15614,8 +15614,8 @@
     "BM29": {
       "x": 64,
       "y": 28,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN29": {
       "x": 65,
@@ -15692,8 +15692,8 @@
     "BZ29": {
       "x": 77,
       "y": 28,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA29": {
       "x": 78,
@@ -16076,8 +16076,8 @@
     "BB30": {
       "x": 53,
       "y": 29,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC30": {
       "x": 54,
@@ -16142,8 +16142,8 @@
     "BM30": {
       "x": 64,
       "y": 29,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN30": {
       "x": 65,
@@ -16220,8 +16220,8 @@
     "BZ30": {
       "x": 77,
       "y": 29,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA30": {
       "x": 78,
@@ -16604,8 +16604,8 @@
     "BB31": {
       "x": 53,
       "y": 30,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC31": {
       "x": 54,
@@ -16670,8 +16670,8 @@
     "BM31": {
       "x": 64,
       "y": 30,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN31": {
       "x": 65,
@@ -16748,8 +16748,8 @@
     "BZ31": {
       "x": 77,
       "y": 30,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA31": {
       "x": 78,
@@ -17198,8 +17198,8 @@
     "BM32": {
       "x": 64,
       "y": 31,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN32": {
       "x": 65,
@@ -17660,8 +17660,8 @@
     "BB33": {
       "x": 53,
       "y": 32,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC33": {
       "x": 54,
@@ -17726,8 +17726,8 @@
     "BM33": {
       "x": 64,
       "y": 32,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN33": {
       "x": 65,
@@ -17804,8 +17804,8 @@
     "BZ33": {
       "x": 77,
       "y": 32,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "CA33": {
       "x": 78,
@@ -19076,8 +19076,8 @@
     "Z36": {
       "x": 25,
       "y": 35,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA36": {
       "x": 26,
@@ -19088,8 +19088,8 @@
     "AB36": {
       "x": 27,
       "y": 35,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC36": {
       "x": 28,
@@ -19130,8 +19130,8 @@
     "AI36": {
       "x": 34,
       "y": 35,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ36": {
       "x": 35,
@@ -19142,8 +19142,8 @@
     "AK36": {
       "x": 36,
       "y": 35,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL36": {
       "x": 37,
@@ -19238,8 +19238,8 @@
     "BA36": {
       "x": 52,
       "y": 35,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB36": {
       "x": 53,
@@ -19250,8 +19250,8 @@
     "BC36": {
       "x": 54,
       "y": 35,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD36": {
       "x": 55,
@@ -19298,8 +19298,8 @@
     "BK36": {
       "x": 62,
       "y": 35,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL36": {
       "x": 63,
@@ -19310,8 +19310,8 @@
     "BM36": {
       "x": 64,
       "y": 35,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN36": {
       "x": 65,
@@ -19604,8 +19604,8 @@
     "Z37": {
       "x": 25,
       "y": 36,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA37": {
       "x": 26,
@@ -19616,8 +19616,8 @@
     "AB37": {
       "x": 27,
       "y": 36,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC37": {
       "x": 28,
@@ -19658,8 +19658,8 @@
     "AI37": {
       "x": 34,
       "y": 36,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ37": {
       "x": 35,
@@ -19670,8 +19670,8 @@
     "AK37": {
       "x": 36,
       "y": 36,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL37": {
       "x": 37,
@@ -19766,8 +19766,8 @@
     "BA37": {
       "x": 52,
       "y": 36,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB37": {
       "x": 53,
@@ -19778,8 +19778,8 @@
     "BC37": {
       "x": 54,
       "y": 36,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD37": {
       "x": 55,
@@ -19826,8 +19826,8 @@
     "BK37": {
       "x": 62,
       "y": 36,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL37": {
       "x": 63,
@@ -19838,8 +19838,8 @@
     "BM37": {
       "x": 64,
       "y": 36,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN37": {
       "x": 65,
@@ -20132,8 +20132,8 @@
     "Z38": {
       "x": 25,
       "y": 37,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA38": {
       "x": 26,
@@ -20144,8 +20144,8 @@
     "AB38": {
       "x": 27,
       "y": 37,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC38": {
       "x": 28,
@@ -20186,8 +20186,8 @@
     "AI38": {
       "x": 34,
       "y": 37,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ38": {
       "x": 35,
@@ -20198,8 +20198,8 @@
     "AK38": {
       "x": 36,
       "y": 37,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL38": {
       "x": 37,
@@ -20294,8 +20294,8 @@
     "BA38": {
       "x": 52,
       "y": 37,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB38": {
       "x": 53,
@@ -20306,8 +20306,8 @@
     "BC38": {
       "x": 54,
       "y": 37,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD38": {
       "x": 55,
@@ -20354,8 +20354,8 @@
     "BK38": {
       "x": 62,
       "y": 37,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL38": {
       "x": 63,
@@ -20366,8 +20366,8 @@
     "BM38": {
       "x": 64,
       "y": 37,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN38": {
       "x": 65,
@@ -20660,8 +20660,8 @@
     "Z39": {
       "x": 25,
       "y": 38,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA39": {
       "x": 26,
@@ -20672,8 +20672,8 @@
     "AB39": {
       "x": 27,
       "y": 38,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC39": {
       "x": 28,
@@ -20714,8 +20714,8 @@
     "AI39": {
       "x": 34,
       "y": 38,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ39": {
       "x": 35,
@@ -20726,8 +20726,8 @@
     "AK39": {
       "x": 36,
       "y": 38,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL39": {
       "x": 37,
@@ -20822,8 +20822,8 @@
     "BA39": {
       "x": 52,
       "y": 38,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB39": {
       "x": 53,
@@ -20834,8 +20834,8 @@
     "BC39": {
       "x": 54,
       "y": 38,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD39": {
       "x": 55,
@@ -20882,8 +20882,8 @@
     "BK39": {
       "x": 62,
       "y": 38,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL39": {
       "x": 63,
@@ -20894,8 +20894,8 @@
     "BM39": {
       "x": 64,
       "y": 38,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN39": {
       "x": 65,
@@ -21188,8 +21188,8 @@
     "Z40": {
       "x": 25,
       "y": 39,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA40": {
       "x": 26,
@@ -21200,8 +21200,8 @@
     "AB40": {
       "x": 27,
       "y": 39,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC40": {
       "x": 28,
@@ -21242,8 +21242,8 @@
     "AI40": {
       "x": 34,
       "y": 39,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ40": {
       "x": 35,
@@ -21254,8 +21254,8 @@
     "AK40": {
       "x": 36,
       "y": 39,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL40": {
       "x": 37,
@@ -21350,8 +21350,8 @@
     "BA40": {
       "x": 52,
       "y": 39,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB40": {
       "x": 53,
@@ -21362,8 +21362,8 @@
     "BC40": {
       "x": 54,
       "y": 39,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD40": {
       "x": 55,
@@ -21410,8 +21410,8 @@
     "BK40": {
       "x": 62,
       "y": 39,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL40": {
       "x": 63,
@@ -21422,8 +21422,8 @@
     "BM40": {
       "x": 64,
       "y": 39,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN40": {
       "x": 65,
@@ -21716,8 +21716,8 @@
     "Z41": {
       "x": 25,
       "y": 40,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA41": {
       "x": 26,
@@ -21728,8 +21728,8 @@
     "AB41": {
       "x": 27,
       "y": 40,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC41": {
       "x": 28,
@@ -21770,8 +21770,8 @@
     "AI41": {
       "x": 34,
       "y": 40,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ41": {
       "x": 35,
@@ -21782,8 +21782,8 @@
     "AK41": {
       "x": 36,
       "y": 40,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL41": {
       "x": 37,
@@ -21878,8 +21878,8 @@
     "BA41": {
       "x": 52,
       "y": 40,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB41": {
       "x": 53,
@@ -21890,8 +21890,8 @@
     "BC41": {
       "x": 54,
       "y": 40,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD41": {
       "x": 55,
@@ -21938,8 +21938,8 @@
     "BK41": {
       "x": 62,
       "y": 40,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL41": {
       "x": 63,
@@ -21950,8 +21950,8 @@
     "BM41": {
       "x": 64,
       "y": 40,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN41": {
       "x": 65,
@@ -22244,8 +22244,8 @@
     "Z42": {
       "x": 25,
       "y": 41,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AA42": {
       "x": 26,
@@ -22256,8 +22256,8 @@
     "AB42": {
       "x": 27,
       "y": 41,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC42": {
       "x": 28,
@@ -22298,8 +22298,8 @@
     "AI42": {
       "x": 34,
       "y": 41,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ42": {
       "x": 35,
@@ -22310,8 +22310,8 @@
     "AK42": {
       "x": 36,
       "y": 41,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL42": {
       "x": 37,
@@ -22406,8 +22406,8 @@
     "BA42": {
       "x": 52,
       "y": 41,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB42": {
       "x": 53,
@@ -22418,8 +22418,8 @@
     "BC42": {
       "x": 54,
       "y": 41,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD42": {
       "x": 55,
@@ -22466,8 +22466,8 @@
     "BK42": {
       "x": 62,
       "y": 41,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "BL42": {
       "x": 63,
@@ -22478,8 +22478,8 @@
     "BM42": {
       "x": 64,
       "y": 41,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN42": {
       "x": 65,
@@ -22784,8 +22784,8 @@
     "AB43": {
       "x": 27,
       "y": 42,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC43": {
       "x": 28,
@@ -22838,8 +22838,8 @@
     "AK43": {
       "x": 36,
       "y": 42,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL43": {
       "x": 37,
@@ -22946,8 +22946,8 @@
     "BC43": {
       "x": 54,
       "y": 42,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD43": {
       "x": 55,
@@ -23006,8 +23006,8 @@
     "BM43": {
       "x": 64,
       "y": 42,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN43": {
       "x": 65,
@@ -23312,8 +23312,8 @@
     "AB44": {
       "x": 27,
       "y": 43,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC44": {
       "x": 28,
@@ -23366,8 +23366,8 @@
     "AK44": {
       "x": 36,
       "y": 43,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL44": {
       "x": 37,
@@ -23474,8 +23474,8 @@
     "BC44": {
       "x": 54,
       "y": 43,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD44": {
       "x": 55,
@@ -23534,8 +23534,8 @@
     "BM44": {
       "x": 64,
       "y": 43,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN44": {
       "x": 65,
@@ -23828,20 +23828,20 @@
     "Z45": {
       "x": 25,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AA45": {
       "x": 26,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AB45": {
       "x": 27,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AC45": {
       "x": 28,
@@ -23882,20 +23882,20 @@
     "AI45": {
       "x": 34,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AJ45": {
       "x": 35,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AK45": {
       "x": 36,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AL45": {
       "x": 37,
@@ -24002,8 +24002,8 @@
     "BC45": {
       "x": 54,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD45": {
       "x": 55,
@@ -24062,8 +24062,8 @@
     "BM45": {
       "x": 64,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN45": {
       "x": 65,
@@ -24512,26 +24512,26 @@
     "AZ46": {
       "x": 51,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BA46": {
       "x": 52,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BB46": {
       "x": 53,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BC46": {
       "x": 54,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BD46": {
       "x": 55,
@@ -24572,26 +24572,26 @@
     "BJ46": {
       "x": 61,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BK46": {
       "x": 62,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BL46": {
       "x": 63,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BM46": {
       "x": 64,
       "y": 45,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BN46": {
       "x": 65,

@@ -66,7 +66,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   else if(th&&(th.pet||th.empty)){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.pet?'A: visit '+th.pet.name:'Empty plot — buy a pet at the PET STORE',W/2,H-19,'#2b2440',8)}
   else if(th&&th.gate){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(CUR==='ranch'?'Walk on: leave for the WILD WOODS':'Walk on: back to the RANCH',W/2,H-19,'#2b2440',8)}
   else if(th&&th.home){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: go inside your ranch house',W/2,H-19,'#2b2440',8)}
-  else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'A: go inside the ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
+  else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'Walk in: ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
   else if(th&&CUR==='ranch'&&(th.weed||owHint(th))){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':owHint(th),W/2,H-19,'#2b2440',8)}
   else if(th&&th.store){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: enter PET SHOP',W/2,H-19,'#2b2440',8)}
   else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}

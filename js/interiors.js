@@ -94,3 +94,11 @@ function drawInt(t){owUpdate();const o=ui.ow,m=MAPS.int,cx=MW*TS<=W?(MW*TS-W)/2:
   R(0,0,W,16,'#2b2440cc');txt(m.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.obj?'A: look':th&&th.exit?'Walk out the door':null;
   if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A look  B leave',W/2,H-4,'#fff',7)}
+
+// walk-in doors: bumping into a door (barn/house/pet store) enters it — no A needed
+{const _try=owTry;owTry=function(d){const o=ui.ow;if(o.mv||ui.modal)return _try(d);const [dx,dy]=DV[d],nx=o.x+dx,ny=o.y+dy;
+  if(d==='up'&&(CUR==='ranch'||CUR==='outer')){const th=owThing(nx,ny);
+    if(th&&th.barn&&th.door&&INT[th.barn[4]]){o.dir=d;intEnter(th.barn[4],o.x,o.y);return}
+    if(th&&th.home){o.dir=d;intEnter('house',o.x,o.y);return}
+    if(th&&th.store&&typeof shopEnter==='function'){o.dir=d;shopEnter();return}}
+  return _try(d)};if(window.__pp)window.__pp.owTry=owTry}
