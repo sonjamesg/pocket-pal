@@ -73,7 +73,7 @@ function owExtras(t,o){if(CUR==='ranch')for(const k in grows()){const e=grows()[
   const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0,sv:p.breed});g.restore()}}}
 // screen-space HUD: bucket + current job tracker (the full list lives only on the JOB BOARD)
 function owHud(t){if(DB.bucket>0){RR(W-96,1,36,14,4,'#9ad8ff','#2b2440');R(W-92,4,7,7,'#3a86e8');R(W-93,3,9,1,'#2b2440');txt('×'+DB.bucket,W-74,12,'#2b2440',9)}
-  const nx=nextThing();RR(3,18,W-6,17,6,'#2b2440e8','#ffe36a');txt('▶ '+nx.t,W/2,30,'#ffe36a',9);drawGoalArrow(t,nx)}
+  const nx=nextThing();RR(3,18,W-6,18,6,'#8a5a2e','#4a2c14');RR(6,20,W-12,13,5,'#fff3d6');R(8,21,W-16,1,'#ffffff');txt('▶ '+nx.t,W/2,30,'#5a3418',9);drawGoalArrow(t,nx)}
 // ---- JOB BOARD scene ----
 const JOBS={more:{n:'MORE WOOL',d:'Shear 2 more full fleeces.',rew:30,unl:()=>wm().step>=6,ready:j=>(DB.woolBales||0)>=j.base+2,base:()=>DB.woolBales||0,hint:'Grow & SHEAR wool'},
   dog:{n:'DOG BUDDY',d:'Get a dog at the PET SHOP and teach it SIT.',rew:30,unl:()=>wm().step>=6,ready:()=>petList().some(p=>p.species==='dog'&&p.tricks&&p.tricks.sit>=TUNE.trickNeed),base:()=>0,hint:'Get a dog & teach SIT'},
