@@ -1,5 +1,5 @@
 const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=14';
-// ===== Pet Farm v9 — farm map, cat/chicken/pig + dogs =====
+// ===== Pet Farm v15 — walkable overworld, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
 const RATE={hunger:6,happy:3,coat:100/(12*24),plaque:100/(8*24)};
@@ -83,7 +83,7 @@ function hearts(n,x=ui.dx,y=120){for(let j=0;j<n;j++)ui.fx.push({x:x-20+j*10,y,v
 function setPose(p,t){ui.pose=p;ui.poseT=t}
 const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','NEW PET','HOME'];
 function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS','NEW PET']:['NEW PET']}
-function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;const L=petList(),i=L.findIndex(p=>p.id===ui.mapBack);ui.msel=Math.max(0,i)}
+function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
 function newPet(){S={scene:'title'};ui.msgT=0;ui.modal={type:'name',name:'',k:0}}
 function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';S={scene:'species',name:n};ui.sel=0}
@@ -159,9 +159,7 @@ function input0(k){
     if(k==='a'){const c=PAUSE[ui.sel];S.scene='main';if(c==='FARM MAP'){openMap();return}if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
     if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
-  else if(sc==='map'){const L=petList(),n=L.length+1;if(k==='left'||k==='up')ui.msel=(ui.msel+n-1)%n;if(k==='right'||k==='down')ui.msel=(ui.msel+1)%n;
-    if(k==='b'){if(ui.mapBack&&DB.pets[ui.mapBack])loadPet(ui.mapBack);else{S={scene:'title'};ui.tsel=0}}
-    if(k==='a'||k==='start'){if(ui.msel>=L.length)newPet();else loadPet(L[ui.msel].id)}}
+  else if(sc==='map')owInput(k);
   else if(sc==='breed'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'){S.scene='species';ui.sel=0}
     if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
   else if(sc==='egg'){if(k==='a'){ui.hatch++;ui.shake=12;for(let i=0;i<4;i++)ui.fx.push({x:W/2+Math.random()*30-15,y:100,vx:Math.random()*2-1,vy:-Math.random()*2,t:25,ch:'shell'});
@@ -169,7 +167,7 @@ function input0(k){
   else if(sc==='main'){
     if(S.sleep){if(k==='start'){S.scene='pause';ui.sel=0;return}if(k==='a'||k==='b'){S.sleep=false;say('Good morning!');save()}return}
     const n=ACTIONS.length;if(k==='left')ui.menu=(ui.menu+n-1)%n;if(k==='right')ui.menu=(ui.menu+1)%n;
-    if(k==='a')openAct(ui.menu);if(k==='b'){ui.menu=0;openAct(0)}
+    if(k==='a')openAct(ui.menu);if(k==='b'){if(ui.menu===0){openMap();return}ui.menu=0;openAct(0)}
     if(k==='select')askConfirm('Start '+S.name+' again as a new egg? Other pets stay saved.',()=>{Object.assign(S,{stage:undefined,xp:0,tricks:{},best:{},sleep:false});fix(S);S.scene='egg';ui.hatch=0;save()});
     if(k==='start'){S.scene='pause';ui.sel=0}}
   else if(sc==='food')gridIn(k,foods().length,()=>feed(foods()[ui.sel]));
@@ -253,10 +251,63 @@ function otxt(t,x,y,c,s,al='center'){g.font=`800 ${s}px system-ui,sans-serif`;g.
 function heartS(x,y,s=1,c='#ff4f8b'){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=c;g.beginPath();g.moveTo(0,3);g.bezierCurveTo(-7,-3,-3,-8,0,-4);g.bezierCurveTo(3,-8,7,-3,0,3);g.fill();g.restore()}
 function star(x,y,r,c){g.fillStyle=c;g.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,rr=i%2?r*.45:r;g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}g.fill()}
 function mix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+// ===== Overworld (v15) — walkable top-down farm =====
+const TS=16,MW=30,MH=24,HSLOT=[[3,3],[9,3],[15,3],[3,9],[9,9],[15,9]],LOCKS=[[22,3,'COW BARN'],[22,9,'STABLE']];
+const OWBASE=(()=>{const m=[];for(let y=0;y<MH;y++){const r=[];for(let x=0;x<MW;x++){let c='g';
+  if(x===0||y===0||x===MW-1||y===MH-1)c='f';
+  else if(y===7||y===13||x===13||x===27&&y<20)c='p';
+  if((x===2&&y>15&&y<22))c='t';if(y===MH-2&&x>1&&x<12&&x%3===0)c='t';
+  r.push(c)}m.push(r)}
+  for(let y=16;y<21;y++)for(let x=3;x<10;x++)if((x-6)**2/9+(y-18)**2/4<=1.1)m[y][x]='w';
+  for(let y=16;y<21;y++)for(let x=16;x<26;x++)m[y][x]='c';
+  [[6,1],[12,1],[20,1],[25,1],[28,5],[28,10],[19,15],[11,15],[1,14]].forEach(([x,y])=>{if(m[y])m[y][x]='t'});
+  m[7][0]='p';m[13][MW-1]='f';m[12][13]='s';return m})();
+function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x];if(c==='f'||c==='t'||c==='w'||c==='s')return true;
+  for(const [hx,hy] of HSLOT.concat(LOCKS))if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return true;return false}
+function owThing(x,y){const L=petList().slice(0,6);for(let i=0;i<6;i++){const [hx,hy]=HSLOT[i];if(y===hy+1&&x===hx+1)return L[i]?{pet:L[i]}:{empty:true};if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{wall:1}}
+  for(const [hx,hy,n] of LOCKS)if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{lock:n};if(OWBASE[y]&&OWBASE[y][x]==='s')return{sign:1};if(OWBASE[y]&&OWBASE[y][x]==='c')return{crop:1};if(OWBASE[y]&&OWBASE[y][x]==='w')return{water:1};return null}
+const held={};const IMG={};let ART_REV=0;const ART_DEV=/[?&]dev=1/.test(location.search)||(()=>{try{return localStorage.PETFARM_DEV==='1'}catch(e){return false}})()||/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
+function loadArt(force){return fetch('assets/world/manifest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(m=>{if(!force&&m.rev===ART_REV)return;ART_REV=m.rev;
+  for(const k in m.images){const im=new Image();im.onload=()=>{IMG[k]=im};im.src='assets/world/'+m.images[k]+'?r='+m.rev+(ART_DEV?'.'+Date.now():'')}}).catch(()=>{})}
+loadArt(true);if(ART_DEV)setInterval(()=>loadArt(false),2000);
+const DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+function owAt(id){const i=petList().slice(0,6).findIndex(p=>p.id===id);if(i<0)return null;const [hx,hy]=HSLOT[i];return{x:hx+1,y:hy+2,dir:'down'}}
+function owInit(back){const a=back&&owAt(back);if(a){ui.ow=Object.assign({px:a.x*TS,py:a.y*TS,step:0},a)}else if(!ui.ow)ui.ow={x:13,y:15,dir:'up',px:13*TS,py:15*TS,step:0};ui.ow.mv=null}
+function owTry(d){const o=ui.ow;if(o.mv)return;o.dir=d;const [dx,dy]=DV[d],nx=o.x+dx,ny=o.y+dy;if(!owSolid(nx,ny)){o.mv={tx:nx,ty:ny,t:0};o.step++}}
+function owUpdate(){const o=ui.ow;if(!o)return;if(o.mv){o.mv.t+=1/8;const k=Math.min(1,o.mv.t);o.px=(o.x+(o.mv.tx-o.x)*k)*TS;o.py=(o.y+(o.mv.ty-o.y)*k)*TS;
+    if(k>=1){o.x=o.mv.tx;o.y=o.mv.ty;o.mv=null}}
+  if(!o.mv&&!ui.modal){for(const d of ['up','down','left','right'])if(held[d]){owTry(d);break}}}
+function owInput(k){const o=ui.ow;if(k==='select'){loadArt(true);say('Art reloaded');return}if(DV[k]){if(!o.mv)owTry(k);return}
+  if(k==='a'&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(!th)return;
+    if(th.pet){loadPet(th.pet.id);return}if(th.empty){say('An empty plot. Adopt a pet!');newPet();return}
+    if(th.lock)say(th.lock+' — coming soon!');else if(th.sign)say('NORTH: Homes  EAST: Barns  S: Field');else if(th.crop)say('Crops coming soon!');else if(th.water)say('A shiny pond.');else if(th.wall)say('Go round to the door!')}
+  if(k==='b'){if(ui.mapBack&&DB.pets[ui.mapBack])loadPet(ui.mapBack);else{S={scene:'title'};ui.tsel=0}}
+  if(k==='start'){S={scene:'title'};ui.tsel=0}}
+function farmer(x,y,dir,step,moving){g.save();g.translate(Math.round(x),Math.round(y));const b=moving&&step%2?1:0;E(8,15,5,2,'#0003');
+  R(4,9,8,5,'#3a6ad8');R(4+(b?1:0),13,3,3,'#5a3a20');R(9-(b?1:0),13,3,3,'#5a3a20');R(3,9,2,4,'#ffd0a0');R(11,9,2,4,'#ffd0a0');
+  R(4,2,8,7,'#ffd0a0');R(3,1,10,3,'#e8402a');R(3,3,dir==='up'?10:2,2,'#e8402a');if(dir==='left')R(1,3,4,1,'#c83020');if(dir==='right')R(11,3,4,1,'#c83020');if(dir==='down')R(3,4,10,1,'#c83020');
+  if(dir!=='up'){const ex=dir==='left'?-1:dir==='right'?1:0;R(6+ex,6,1,1,'#222');R(9+ex,6,1,1,'#222')}else R(4,4,8,5,'#7a4a20');g.restore()}
+function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(MW*TS-W,o.px+8-W/2)),cy=Math.max(0,Math.min(MH*TS-H,o.py+8-H/2+10));
+  g.save();g.translate(-Math.round(cx),-Math.round(cy));
+  g.imageSmoothingEnabled=false;const ok=n=>IMG[n]&&IMG[n].naturalWidth;
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){const c=OWBASE[y][x],X=x*TS,Y=y*TS;
+    if(ok('grass'))g.drawImage(IMG.grass,X,Y);else R(X,Y,TS,TS,'#78c858');
+    const n={p:'path',w:'water',c:'field',f:'fence',t:'tree',s:'sign'}[c];
+    if(n==='water'&&ok('water'))g.drawImage(IMG.water,X+((t>>4)%2?0:0),Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{path:'#e8d8a0',water:'#4888e8',field:'#986838',fence:'#b07038',tree:'#307030',sign:'#c89a60'}[n])}
+  txt('FIELD — soon',21*TS,16*TS-3,'#fff',7);
+  const L=petList().slice(0,6);
+  HSLOT.forEach(([hx,hy],i)=>{const p=L[i],X=hx*TS+24,Y=hy*TS+32;if(p){const sp=spOf(p);house(sp,X,Y,.66,false,p.name);R(X-4,Y-1,8,2,'#5a3a20')}
+    else{g.fillStyle='#0001';g.fillRect(hx*TS+2,hy*TS+2,44,28);txt('EMPTY',X,Y-12,'#ffffffaa',6)}});
+  LOCKS.forEach(([hx,hy,n])=>lockedHouse(n,hx*TS+24,hy*TS+30,.66));
+  if(ok('farmer')){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;g.drawImage(IMG.farmer,fr*16,row*16,16,16,Math.round(o.px),Math.round(o.py)-4-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0),16,16)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);g.restore();
+  R(0,0,W,16,'#2b2440cc');txt('PET FARM',6,12,'#fff',9,'left');txt('● '+petList().reduce((a,p)=>a+(p.coins||0),0),W-6,12,'#ffd84a',8,'right');
+  const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy);
+  if(th&&(th.pet||th.empty)){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.pet?'A: visit '+th.pet.name:'A: adopt a pet here',W/2,H-19,'#2b2440',8)}
+  else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7)}
 // ===== controls =====
 document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;
-  b.addEventListener('pointerdown',e=>{e.preventDefault();b.classList.add('pressed');input(k);navigator.vibrate&&navigator.vibrate(8)});
-  ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>b.classList.remove('pressed')));
+  b.addEventListener('pointerdown',e=>{e.preventDefault();b.classList.add('pressed');held[k]=1;input(k);navigator.vibrate&&navigator.vibrate(8)});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{b.classList.remove('pressed');held[k]=0}));
   b.addEventListener('contextmenu',e=>e.preventDefault())});
 document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault());
@@ -269,7 +320,8 @@ addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('chan
 if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 addEventListener('pagehide',()=>save(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true)});
 const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',z:'b',x:'a',Enter:'start',Shift:'select',Escape:'start',Backspace:'select'};
-addEventListener('keydown',e=>{if(ui.modal&&ui.modal.type==='name'&&!e.ctrlKey&&!e.metaKey){const m=ui.modal;if(/^[a-zA-Z]$/.test(e.key)){e.preventDefault();if(m.name.length<8)m.name+=e.key.toUpperCase();return}if(e.key==='Backspace'){e.preventDefault();m.name=m.name.slice(0,-1);return}if(e.key==='Enter'){e.preventDefault();finishName(m.name);return}if(e.key==='Escape'){e.preventDefault();ui.modal=null;S={scene:'title'};ui.tsel=0;return}}const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
+addEventListener('keyup',e=>{const k=KM[e.key]||KM[(e.key||'').toLowerCase()];if(k)held[k]=0});addEventListener('blur',()=>{for(const k in held)held[k]=0});
+addEventListener('keydown',e=>{if(ui.modal&&ui.modal.type==='name'&&!e.ctrlKey&&!e.metaKey){const m=ui.modal;if(/^[a-zA-Z]$/.test(e.key)){e.preventDefault();if(m.name.length<8)m.name+=e.key.toUpperCase();return}if(e.key==='Backspace'){e.preventDefault();m.name=m.name.slice(0,-1);return}if(e.key==='Enter'){e.preventDefault();finishName(m.name);return}if(e.key==='Escape'){e.preventDefault();ui.modal=null;S={scene:'title'};ui.tsel=0;return}}const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();held[k]=1;if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 // ===== dog art =====
 function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,o);
@@ -574,7 +626,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     BKEYS.forEach((k,i)=>E(W/2-28+i*8,210,2.5,2.5,i===ui.sel?'#ff5a8b':'#fff'))}
   else if(sc==='egg'){bg(false);otxt(S.name+"'S EGG",W/2,28,'#fff',15);if(ui.shake>0)ui.shake--;egg(W/2,112,BREEDS[S.breed].d,ui.shake>0||t%100<12,ui.hatch);
     otxt('TAP A TO HATCH',W/2,172,'#fff',12);for(let i=0;i<TUNE.hatchTaps;i++)heartS(W/2-(TUNE.hatchTaps-1)*7+i*14,192,1,i<ui.hatch?'#ff4f8b':'#fff8')}
-  else if(sc==='map')drawMap(t);
+  else if(sc==='map')drawOverworld(t);
   else if(sc==='game')drawGame(t);
   else if(sc==='walk')drawWalk(t);
   else if(sc==='groom')drawGroom(t);
@@ -638,10 +690,10 @@ function drawGame(t){const m=ui.mg;gameTick();
   chromeGame(m);if(m.resT>0)otxt(m.res,W/2,64,'#fff',18);
   if(m.over){R(0,0,W,H,'#0008');panel(30,60,W-60,90,'DONE!');txt('Score '+m.score,W/2,100,'#2b2440',16);txt('Best '+Math.max(m.score,S.best[m.id]||0),W/2,120,'#8a80a8',10);txt('A to collect joy & coins',W/2,140,'#e0457b',10)}}
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
-window.__pp={openMap,input,get S(){return S},set S(v){S=v},ui,DB,save,loadPet,startWalk,careAct};
+window.__pp={loadArt,IMG,openMap,owTry,get ow(){return ui.ow},input,get S(){return S},set S(v){S=v},ui,DB,save,loadPet,startWalk,careAct};
 fit();frame();
 
-const GAME_VER=14;
+const GAME_VER=15;
 function hardReload(){const go=()=>{const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
 try{const p=[];if(window.caches)p.push(caches.keys().then(k=>Promise.all(k.map(x=>caches.delete(x)))));if(navigator.serviceWorker)p.push(navigator.serviceWorker.getRegistrations().then(r=>Promise.all(r.map(x=>x.unregister()))));Promise.all(p).then(go,go);setTimeout(go,1500)}catch(e){go()}}
 fetch('version.json?check='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v>GAME_VER){const b=document.createElement('div');b.textContent='New version — tap here to update';b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99;background:#ffd84a;color:#222;font:bold 14px sans-serif;text-align:center;padding:10px';b.onclick=hardReload;document.body.appendChild(b)}}).catch(()=>{});
