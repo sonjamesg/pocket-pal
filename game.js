@@ -1,4 +1,4 @@
-// ===== Pocket Pal v7 — dogs first, slow real-time care =====
+// ===== Pocket Pal v9 — farm map, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
 const RATE={hunger:6,happy:3,coat:100/(12*24),plaque:100/(8*24)};
@@ -7,7 +7,11 @@ const STAGES=['egg','puppy','youngster','teen','adult','senior'];
 const STAGE_N={egg:'EGG',puppy:'PUPPY',youngster:'YOUNGSTER',teen:'TEEN',adult:'ADULT',senior:'SENIOR'};
 // real days in stage + care XP (max 14 XP/day) — Adult ≈ 6 weeks, Senior ≈ 4 months of caring
 const GROW={puppy:{days:7,xp:60},youngster:{days:14,xp:120},teen:{days:21,xp:180},adult:{days:75,xp:600}};
-const SPECIES=[{id:'dog',n:'DOG',ok:true},{id:'cat',n:'CAT'},{id:'horse',n:'HORSE'},{id:'rabbit',n:'RABBIT'}];
+const SPECIES=[{id:'dog',n:'DOG',ok:true},{id:'cat',n:'CAT',ok:true},{id:'chicken',n:'CHICKEN',ok:true},{id:'pig',n:'PIG',ok:true},
+ {id:'cow',n:'COW'},{id:'sheep',n:'SHEEP'},{id:'horse',n:'HORSE'},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'rabbit',n:'RABBIT'},{id:'bird',n:'BIRD'}];
+const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'}};
+const spOf=p=>(p&&p.species&&SP[p.species])?p.species:'dog';
+function stageName(st,sp){return st==='puppy'?SP[sp||'dog'].baby:STAGE_N[st||'egg']}
 const BREEDS={
  lab:{n:'LABRADOR',c:'#e9c47e',d:'#c99a50',l:'#f7e6c0',ear:'flop',tail:'otter',bl:22,bh:13,leg:14,hr:11,sn:8,fur:.6,desc:'Loyal, loves food & swimming'},
  frenchie:{n:'FRENCH BULLDOG',c:'#dcc6a4',d:'#3a2e2a',l:'#f1e6d2',ear:'bat',tail:'stub',bl:17,bh:13,leg:10,hr:12,sn:4,fur:.4,mask:true,desc:'Big bat ears, little snorts'},
@@ -16,35 +20,45 @@ const BREEDS={
  corgi:{n:'CORGI',c:'#e38b3a',d:'#b0602a',l:'#fff6ea',ear:'pointy',tail:'stub',bl:24,bh:12,leg:7,hr:11,sn:8,fur:.8,white:true,desc:'Short legs, huge smile'},
  husky:{n:'HUSKY',c:'#6d7484',d:'#3e4452',l:'#f4f6fa',ear:'pointy',tail:'curl',bl:23,bh:13,leg:15,hr:11,sn:9,fur:1.1,white:true,eye:'#4fb0ff',desc:'Ice-blue eyes, loves to run'},
  beagle:{n:'BEAGLE',c:'#c98a48',d:'#2e2622',l:'#fffaf2',ear:'flop',earC:'#9a6030',tail:'whip',bl:20,bh:12,leg:12,hr:11,sn:8,fur:.5,saddle:true,white:true,desc:'Super sniffer nose'},
+ cat:{sp:'cat',n:'CAT',c:'#f0a050',d:'#c07030',l:'#fff4e6',bl:20,bh:11,leg:12,hr:11,sn:4,fur:0,desc:'Purrs, naps, loves a cushion'},
+ chicken:{sp:'chicken',n:'CHICKEN',c:'#fff8ec',d:'#e8d8c0',l:'#ffffff',bl:14,bh:13,leg:10,hr:8,sn:3,fur:0,desc:'Clucks, pecks & scratches'},
+ pig:{sp:'pig',n:'PIG',c:'#ffb0c0',d:'#e88aa0',l:'#ffd0dc',bl:24,bh:14,leg:8,hr:12,sn:5,fur:0,desc:'Oink! Loves a muddy roll'},
  collie:{n:'BORDER COLLIE',c:'#2a2630',d:'#16131a',l:'#ffffff',ear:'semi',tail:'plume',bl:22,bh:12,leg:15,hr:10,sn:9,fur:1.2,white:true,desc:'Clever! Learns tricks fast'}};
-const BKEYS=Object.keys(BREEDS);
+const BKEYS=Object.keys(BREEDS).filter(k=>!BREEDS[k].sp);
 const FOODS=[
  {id:'kibble',n:'KIBBLE',v:22},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'chicken',n:'CHICKEN',v:24,joy:6},{id:'salmon',n:'SALMON',v:22,joy:5,d:'Shiny coat'},
  {id:'biscuit',n:'PEANUT TREAT',v:8,joy:12,plq:4,d:'Dog-safe peanut biscuit'},{id:'dental',n:'DENTAL CHEW',v:6,joy:6,plq:-30,d:'Cleans teeth!'},{id:'carrot',n:'CARROT STICK',v:10,joy:2,plq:-8,d:'Crunchy, helps teeth'}];
+const SFOODS={cat:[{id:'catbisc',n:'CAT BISCUITS',v:20},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'salmon',n:'SALMON',v:22,joy:6},{id:'chicken',n:'CHICKEN',v:24,joy:5},{id:'dental',n:'DENTAL TREAT',v:6,joy:6,plq:-30,d:'Cleans teeth!'}],
+ chicken:[{id:'corn',n:'CORN',v:20},{id:'grain',n:'MIXED GRAIN',v:24},{id:'worms',n:'MEALWORMS',v:12,joy:10,d:'Favourite snack!'},{id:'greens',n:'GREENS',v:14,joy:4}],
+ pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}]};
+function foods(){return S.species&&SFOODS[S.species]||FOODS}
 const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},{id:'rope',n:'TUG ROPE',p:20},{id:'frisbee',n:'FRISBEE',p:30},{id:'duck',n:'PLUSH DUCK',p:40}];
 const GAMES=[{id:'fetch',n:'FETCH',d:'Tap A when the ball hits the zone'},{id:'simon',n:'MEMORY',d:'Repeat the pad pattern'},{id:'dash',n:'DASH',d:'▲▼ dodge rocks, grab hearts'}];
 const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{id:'lay',n:'LAY DOWN'},{id:'roll',n:'ROLL OVER'}];
 const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
-const ACTIONS=['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'];
+const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP']};
+let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}
 const cv=document.getElementById('screen'),g=cv.getContext('2d');
-const SAVE='pocketpal_v7';
+const SAVE='pocketpal_v9';
 const now=()=>Date.now(),clamp=v=>Math.max(0,Math.min(100,v)),rnd=a=>a[Math.floor(Math.random()*a.length)];
 const STAGE_MAP={baby:'puppy',toddler:'youngster',teen:'teen',adult:'adult',old:'senior'};
 let DB=loadDB();
 function loadDB(){let d=null;try{d=JSON.parse(localStorage.getItem(SAVE))}catch(e){}
-  if(d&&d.pets)return d;d={v:7,pets:{},lastId:null};
+  if(d&&d.pets)return d;d={v:9,pets:{},lastId:null};
+  try{const o=JSON.parse(localStorage.getItem('pocketpal_v7'));if(o&&o.pets){Object.values(o.pets).forEach(p=>{p.species=p.species||'dog';d.pets[p.id]=p});d.lastId=o.lastId;localStorage.setItem(SAVE,JSON.stringify(d));return d}}catch(e){}
   try{const o=JSON.parse(localStorage.getItem('pocketpal_v3'));if(o&&o.pets){Object.values(o.pets).forEach(p=>{const q=migrate(p);d.pets[q.id]=q});d.lastId=o.lastId}}catch(e){}
   try{localStorage.setItem(SAVE,JSON.stringify(d))}catch(e){}return d}
 function migrate(p){p=Object.assign({},p);if(p.species&&p.species!=='dog')p.wasSpecies=p.species;p.species='dog';p.breed=p.breed||'lab';
   if(p.stage)p.stage=STAGE_MAP[p.stage]||p.stage;p.stageStart=now();p.xp=0;p.coat=20;p.plaque=10;p.last=now();return fix(p)}
-function fix(s){s.tricks=s.tricks||{};TRICKS.forEach(t=>{if(s.tricks[t.id]==null)s.tricks[t.id]=0});s.best=s.best||{};
+function fix(s){s.species=SP[s.species]?s.species:'dog';if(s.species!=='dog')s.breed=s.species;s.tricks=s.tricks||{};TRICKS.forEach(t=>{if(s.tricks[t.id]==null)s.tricks[t.id]=0});s.best=s.best||{};
   s.toys=s.toys||['ball'];if(s.coins==null)s.coins=20;if(s.coat==null)s.coat=10;if(s.plaque==null)s.plaque=5;if(s.xp==null)s.xp=0;
   if(s.scene&&!['egg','title','species','breed'].includes(s.scene))s.scene='main';return s}
+function syncActs(){ACTIONS=ACTS[spOf(S)];if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}
 function petList(){return Object.values(DB.pets).sort((a,b)=>(b.lastPlayed||0)-(a.lastPlayed||0))}
 function save(quiet){if(S.id&&S.breed){S.lastPlayed=now();const c=Object.assign({},S);if(!['egg','main'].includes(c.scene))c.scene=c.stage?'main':'egg';c.hatch=ui.hatch;DB.pets[S.id]=c;DB.lastId=S.id}
   try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}if(!quiet)flashSave()}
 let saveFlash=0;function flashSave(){saveFlash=90}
-function loadPet(id){const p=DB.pets[id];if(!p)return;S=fix(JSON.parse(JSON.stringify(p)));ui.hatch=p.hatch||0;ui.menu=0;ui.dx=110;ui.idle={k:'sit',t:60};
+function loadPet(id){const p=DB.pets[id];if(!p)return;S=fix(JSON.parse(JSON.stringify(p)));ui.hatch=p.hatch||0;ui.menu=0;ui.dx=110;ui.idle={k:'sit',t:60};syncActs();
   if(S.scene==='main'){timeTick();checkGrow()}DB.lastId=id;save(true)}
 let S={scene:'title'};
 let ui={tsel:0,psel:0,sel:0,menu:0,anim:0,msg:'',msgT:0,fx:[],hatch:0,shake:0,pose:'idle',poseT:0,mg:null,dx:110,dir:1,idle:{k:'sit',t:60},warnI:0};
@@ -54,20 +68,21 @@ function timeTick(){const n=now();if(!S.last){S.last=n;return}const hrs=Math.min
   if(S.sleep&&(new Date().getHours()>=7&&new Date().getHours()<20)&&hrs>8)S.sleep=false;
   const sen=S.stage==='senior'?1.15:1;S.hunger=clamp(S.hunger-RATE.hunger*hrs*(S.sleep?.4:1)*sen);
   let hd=RATE.happy*(S.sleep?.3:1);if(S.hunger<30)hd+=3;if(S.coat>=TUNE.matAt)hd+=6;if(S.plaque>=TUNE.plaqueBad)hd+=3;
-  S.happy=clamp(S.happy-hd*hrs);S.coat=Math.min(100,S.coat+RATE.coat*hrs*(BREEDS[S.breed].curly?1.3:1));S.plaque=Math.min(100,S.plaque+RATE.plaque*hrs)}
-setInterval(()=>{if(S.stage&&!['title','list','species','breed','egg'].includes(S.scene)){timeTick();checkGrow();if(ui.anim%10===0)save(true)}},1000);
+  S.happy=clamp(S.happy-hd*hrs);if(S.species==='dog')S.coat=Math.min(100,S.coat+RATE.coat*hrs*(BREEDS[S.breed].curly?1.3:1));else S.coat=5;if(S.species==='dog'||S.species==='cat')S.plaque=Math.min(100,S.plaque+RATE.plaque*hrs);else S.plaque=0}
+setInterval(()=>{if(S.stage&&!['title','list','species','breed','egg','map'].includes(S.scene)){timeTick();checkGrow();if(ui.anim%10===0)save(true)}},1000);
 setInterval(()=>{if(S.stage)save(true)},30000);
 function addXP(n){const d=new Date().toDateString();if(S.xpDay!==d){S.xpDay=d;S.xpToday=0}const a=Math.min(n,TUNE.xpPerDay-(S.xpToday||0));if(a>0){S.xp+=a;S.xpToday+=a}}
 function growProg(){const r=GROW[S.stage];if(!r)return 1;return Math.min(1,(now()-S.stageStart)/DAY/r.days,S.xp/r.xp)}
 function daysLeft(){const r=GROW[S.stage];if(!r)return 0;const a=r.days-(now()-S.stageStart)/DAY,b=(r.xp-S.xp)/TUNE.xpPerDay;return Math.max(0,Math.ceil(Math.max(a,b)))}
 function checkGrow(){const r=GROW[S.stage];if(!r)return;
   if((now()-S.stageStart)/DAY>=r.days&&S.xp>=r.xp&&S.hunger>30&&S.happy>40){S.stage=STAGES[STAGES.indexOf(S.stage)+1];S.xp=0;S.stageStart=now();
-    say(S.name+' is now '+(S.stage==='adult'?'an ':'a ')+STAGE_N[S.stage]+'!',200);sparkle(30);save()}}
+    say(S.name+' is now '+(S.stage==='adult'?'an ':'a ')+stageName(S.stage,S.species)+'!',200);sparkle(30);save()}}
 function sparkle(n,x=W/2,y=110){for(let i=0;i<n;i++)ui.fx.push({x:x+Math.random()*60-30,y,vx:Math.random()*3-1.5,vy:-Math.random()*3-.5,t:50,ch:'star'})}
 function hearts(n,x=ui.dx,y=120){for(let j=0;j<n;j++)ui.fx.push({x:x-20+j*10,y,vx:Math.random()-.5,vy:-.8,t:50,ch:'heart'})}
 function setPose(p,t){ui.pose=p;ui.poseT=t}
-const PAUSE=['RESUME','SAVE','MY PETS','NEW PET','HOME'];
-function titleItems(){return petList().length?['CONTINUE','MY PETS','NEW PET']:['NEW PET']}
+const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','NEW PET','HOME'];
+function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS','NEW PET']:['NEW PET']}
+function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;const L=petList(),i=L.findIndex(p=>p.id===ui.mapBack);ui.msel=Math.max(0,i)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
 function newPet(){S={scene:'title'};ui.msgT=0;ui.modal={type:'name',name:'',k:0}}
 function finishName(n){ui.modal=null;n=(n||'').trim().slice(0,8).toUpperCase()||'PIP';S={scene:'species',name:n};ui.sel=0}
@@ -82,7 +97,7 @@ function modalInput(k){const m=ui.modal;
 function drawModal(t){const m=ui.modal;R(0,0,W,H,'#2b244099');
   if(m.type==='confirm'){panel(24,62,W-48,92,'ARE YOU SURE?');const words=m.q.split(' ');let line='',y=88;words.forEach(w=>{if((line+w).length>26){txt(line,W/2,y,'#2b2440',10);y+=13;line=''}line+=w+' '});txt(line,W/2,y,'#2b2440',10);
     ['YES','NO'].forEach((l,i)=>{const x=W/2-62+i*66,on=m.k===i;RR(x,128,58,18,9,on?'#ff5a8b':'#fff',on?'#fff':'#5b4b8a');txt(l,x+29,141,on?'#fff':'#5b4b8a',10)});return}
-  panel(12,14,W-24,H-26,'NAME YOUR PUPPY');
+  panel(12,14,W-24,H-26,'NAME YOUR PET');
   RR(40,28,W-80,24,8,'#efe6ff','#5b4b8a');const nm=m.name+(m.name.length<8&&t%40<20?'_':'');txt(nm||'',W/2,46,'#5b4b8a',15);if(!m.name)txt(t%40<20?'_':'',W/2,46,'#5b4b8a',15);
   txt(m.name.length+'/8',W-46,62,'#8a80a8',8,'right');
   const C=7,cw=26,ch=20,x0=(W-C*cw)/2+1,y0=66;
@@ -135,29 +150,32 @@ function endGame(){const m=ui.mg;const joy=Math.min(35,8+m.score*3);S.happy=clam
 function input0(k){
   const sc=S.scene;
   if(sc==='title'){const it=titleItems(),n=it.length;if(k==='up')ui.tsel=(ui.tsel+n-1)%n;if(k==='down')ui.tsel=(ui.tsel+1)%n;
-    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
+    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='FARM MAP')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
   else if(sc==='list'){const L=petList(),n=L.length+1;if(k==='up')ui.psel=(ui.psel+n-1)%n;if(k==='down')ui.psel=(ui.psel+1)%n;if(k==='b'){S={scene:'title'};ui.tsel=0;ui.msgT=0}
     if(k==='a'||k==='start'){if(ui.psel===L.length)newPet();else loadPet(L[ui.psel].id)}
     if(k==='select'&&L[ui.psel]){const id=L[ui.psel].id;askConfirm('Say goodbye to '+L[ui.psel].name+' forever? Other pets stay safe.',()=>{delete DB.pets[id];if(DB.lastId===id)DB.lastId=null;save(true);ui.psel=0})}}
   else if(sc==='pause'){const n=PAUSE.length;if(k==='up')ui.sel=(ui.sel+n-1)%n;if(k==='down')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){S.scene='main';return}
-    if(k==='a'){const c=PAUSE[ui.sel];S.scene='main';if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
+    if(k==='a'){const c=PAUSE[ui.sel];S.scene='main';if(c==='FARM MAP'){openMap();return}if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
-    if(k==='a'||k==='start'){if(SPECIES[ui.sel].ok){S.scene='breed';ui.sel=0}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
+    if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
+  else if(sc==='map'){const L=petList(),n=L.length+1;if(k==='left'||k==='up')ui.msel=(ui.msel+n-1)%n;if(k==='right'||k==='down')ui.msel=(ui.msel+1)%n;
+    if(k==='b'){if(ui.mapBack&&DB.pets[ui.mapBack])loadPet(ui.mapBack);else{S={scene:'title'};ui.tsel=0}}
+    if(k==='a'||k==='start'){if(ui.msel>=L.length)newPet();else loadPet(L[ui.msel].id)}}
   else if(sc==='breed'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'){S.scene='species';ui.sel=0}
-    if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
+    if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
   else if(sc==='egg'){if(k==='a'){ui.hatch++;ui.shake=12;for(let i=0;i<4;i++)ui.fx.push({x:W/2+Math.random()*30-15,y:100,vx:Math.random()*2-1,vy:-Math.random()*2,t:25,ch:'shell'});
-    save(true);if(ui.hatch>=TUNE.hatchTaps){Object.assign(S,{scene:'main',stage:'puppy',hunger:75,happy:80,xp:0,coat:5,plaque:0,stageStart:now(),born:now(),last:now(),sleep:false});ui.dx=110;sparkle(30);say("It's a "+BREEDS[S.breed].n.toLowerCase()+' puppy!',200);save()}}}
+    save(true);if(ui.hatch>=TUNE.hatchTaps){Object.assign(S,{scene:'main',stage:'puppy',hunger:75,happy:80,xp:0,coat:5,plaque:0,stageStart:now(),born:now(),last:now(),sleep:false});ui.dx=110;syncActs();ui.menu=0;sparkle(30);say(S.species==='dog'?"It's a "+BREEDS[S.breed].n.toLowerCase()+' puppy!':"It's a "+SP[S.species].baby.toLowerCase()+'!',200);save()}}}
   else if(sc==='main'){
     if(S.sleep){if(k==='start'){S.scene='pause';ui.sel=0;return}if(k==='a'||k==='b'){S.sleep=false;say('Good morning!');save()}return}
     const n=ACTIONS.length;if(k==='left')ui.menu=(ui.menu+n-1)%n;if(k==='right')ui.menu=(ui.menu+1)%n;
     if(k==='a')openAct(ui.menu);if(k==='b'){ui.menu=0;openAct(0)}
     if(k==='select')askConfirm('Start '+S.name+' again as a new egg? Other pets stay saved.',()=>{Object.assign(S,{stage:undefined,xp:0,tricks:{},best:{},sleep:false});fix(S);S.scene='egg';ui.hatch=0;save()});
     if(k==='start'){S.scene='pause';ui.sel=0}}
-  else if(sc==='food')gridIn(k,FOODS.length,()=>feed(FOODS[ui.sel]));
+  else if(sc==='food')gridIn(k,foods().length,()=>feed(foods()[ui.sel]));
   else if(sc==='toys')gridIn(k,TOYS.length,()=>toy(TOYS[ui.sel]));
   else if(sc==='games'){if(k==='up')ui.sel=(ui.sel+2)%3;if(k==='down')ui.sel=(ui.sel+1)%3;if(k==='b')S.scene='main';
     if(k==='a'){if(S.hunger<12){say('Too hungry to play!');S.scene='main';return}startGame(GAMES[ui.sel].id)}}
-  else if(sc==='care'){if(k==='up')ui.sel=(ui.sel+2)%3;if(k==='down')ui.sel=(ui.sel+1)%3;if(k==='b')S.scene='main';if(k==='a')careAct(CARE[ui.sel].id)}
+  else if(sc==='care'){const n=careList().length;if(k==='up')ui.sel=(ui.sel+n-1)%n;if(k==='down')ui.sel=(ui.sel+1)%n;if(k==='b')S.scene='main';if(k==='a')careAct(careList()[ui.sel].id)}
   else if(sc==='game')gameInput(k);
   else if(sc==='walk')walkInput(k);
   else if(sc==='groom')groomInput(k);
@@ -170,9 +188,9 @@ function gridIn(k,n,go){if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.se
 function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='FEED')S.scene='food';if(a==='PLAY')S.scene='games';if(a==='TRICKS')S.scene='tricks';if(a==='TOYS')S.scene='toys';if(a==='CARE')S.scene='care';
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
-  if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
+  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
-  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd(['*wag wag*','*licks your face*','Belly rubs!','Love you!']));save()}
+  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
   if(id==='groom'){S.scene='groom';ui.mg={ph:S.coat<15?'short':'intro',snips:0,t:0,start:S.coat,mat:S.coat>=TUNE.matAt,brush:0,last:null}}}
 function feed(f){if(S.hunger>=97&&!f.plq){say('Too full!');return}
@@ -186,7 +204,8 @@ function endGame(){const m=ui.mg;const joy=Math.min(30,8+m.score*3),coins=Math.m
   const b=S.best[m.id]||0;if(m.score>b)S.best[m.id]=m.score;ui.mg=null;S.scene='main';setPose('happy',60);hearts(4);say('Joy +'+joy+'  ● +'+coins+(m.score>b?' NEW BEST':''));checkGrow();save()}
 // ---- idle life ----
 function pickIdle(){const I=ui.idle,sad=S.happy<35||S.coat>=TUNE.matAt||S.plaque>=TUNE.plaqueBad||S.hunger<25;
-  const o=sad?['sit','lay','walk','sit','nap']:['walk','walk','hop','sit','sniff','nap','zoom','roll','walk'].concat(S.toys.length?['play','play','play']:[]);
+  const sp=S.species;let o=sad?['sit','lay','walk','sit','nap']:['walk','walk','hop','sit','sniff','nap','zoom','roll','walk'].concat(S.toys.length?['play','play','play']:[]);
+  if(!sad&&sp==='cat')o=['walk','sit','nap','nap','hop','sniff','play','walk'];if(!sad&&sp==='chicken')o=['walk','walk','sniff','sniff','hop','sit','zoom'];if(!sad&&sp==='pig')o=['walk','sniff','sniff','lay','nap','roll','walk'];
   I.k=rnd(o);I.t={walk:360,zoom:160,hop:100,sit:200,sniff:150,nap:480,lay:300,roll:60,play:300}[I.k];
   if(I.k==='walk')I.tx=50+Math.random()*120;if(I.k==='zoom')I.tx=ui.dx<110?170:50;if(I.k==='play')I.toy=rnd(S.toys)}
 function idleTick(){const I=ui.idle;if(--I.t<=0)pickIdle();
@@ -252,7 +271,7 @@ const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',z:'b
 addEventListener('keydown',e=>{if(ui.modal&&ui.modal.type==='name'&&!e.ctrlKey&&!e.metaKey){const m=ui.modal;if(/^[a-zA-Z]$/.test(e.key)){e.preventDefault();if(m.name.length<8)m.name+=e.key.toUpperCase();return}if(e.key==='Backspace'){e.preventDefault();m.name=m.name.slice(0,-1);return}if(e.key==='Enter'){e.preventDefault();finishName(m.name);return}if(e.key==='Escape'){e.preventDefault();ui.modal=null;S={scene:'title'};ui.tsel=0;return}}const k=KM[e.key]||KM[e.key.toLowerCase()];if(!k)return;e.preventDefault();if(e.repeat)return;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();input(k)},{capture:true});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 // ===== dog art =====
-function dog(cx,cy,bid,stage,o={}){
+function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,o);
   const B=BREEDS[bid]||BREEDS.lab,T=ui.anim,pose=o.pose||'idle',coat=o.coat||0,mood=o.mood||'ok',plq=o.plaque||0,pt=o.pt||0;
   let c=B.c,d=B.d,l=B.l;const sen=stage==='senior';
   const sz={puppy:.62,youngster:.75,teen:.88,adult:1,senior:1}[stage]||1,hk={puppy:1.38,youngster:1.22,teen:1.1,adult:1,senior:1}[stage]||1;
@@ -356,6 +375,14 @@ function foodIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
   if(id==='salmon'){E(0,1,10,5,'#ff8a6a');for(let i=-6;i<=6;i+=3){g.strokeStyle='#ffd0c0';g.lineWidth=1;g.beginPath();g.moveTo(i,-3);g.lineTo(i+2,5);g.stroke()}}
   if(id==='biscuit'){R(-7,-2,14,5,'#d9a05b');[[-8,-3],[-8,3],[8,-3],[8,3]].forEach(([a,b])=>E(a,b,3.5,3.5,'#d9a05b'));E(0,0,3,1.5,'#8a5020')}
   if(id==='dental'){g.save();g.rotate(-.5);RR(-10,-2.5,20,5,2.5,'#6fd08a');for(let i=-8;i<9;i+=4)R(i,-2.5,1.4,5,'#4aa868');g.restore()}
+  if(id==='catbisc'){bowl('#c88a50');[[-5,0],[0,-1],[5,0],[-2,1]].forEach(([a,b])=>{g.fillStyle='#e8a060';g.beginPath();g.moveTo(a-2,b+1);g.lineTo(a,b-2);g.lineTo(a+2,b+1);g.fill()})}
+  if(id==='corn'){E(0,0,4,9,'#ffd84a');for(let i=-6;i<7;i+=3)R(-3,i,6,1,'#e8b020');E(-4,3,3,7,'#7ac04a',.3);E(4,3,3,7,'#7ac04a',-.3)}
+  if(id==='grain'){bowl('#e8c070');[[-5,-1],[-1,0],[3,-1],[6,0],[-3,1],[1,1]].forEach(([a,b],i)=>E(a,b-1,1.4,1,i%2?'#c09040':'#f0d890'))}
+  if(id==='worms'){bowl('#8a6038');g.strokeStyle='#e8b080';g.lineWidth=2;[-5,0,5].forEach(a=>{g.beginPath();g.moveTo(a-3,0);g.quadraticCurveTo(a,-4,a+3,0);g.stroke()})}
+  if(id==='greens'){E(-3,0,6,4,'#5ac04a',.4);E(3,-1,6,4,'#7ad05a',-.4);E(0,2,5,3,'#4aa83a')}
+  if(id==='slop'){E(0,5,12,4,'#7a7a8a');R(-12,0,24,5,'#9a9aaa');E(0,0,12,3,'#a07040');E(-4,-1,2,1,'#c09060');E(3,0,2,1,'#c09060')}
+  if(id==='apple'){E(0,1,7,7,'#e83a3a');E(-2,-1,2,2,'#ff8a8a');R(-.5,-9,1.5,4,'#7a5030');E(3,-7,3,1.5,'#5ac04a',-.4)}
+  if(id==='veg'){E(-4,1,5,4,'#7ad05a');E(4,0,4,4,'#ff9a3a');E(0,3,4,3,'#c84a8a')}
   if(id==='carrot'){g.fillStyle='#f38a24';g.beginPath();g.moveTo(-3,-5);g.lineTo(3,-5);g.lineTo(0,9);g.fill();E(-2,-7,2,4,'#4caf50',-.4);E(2,-7,2,4,'#4caf50',.4)}
   g.restore()}
 function toyIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
@@ -377,21 +404,80 @@ function bg(night){const sky=g.createLinearGradient(0,0,0,150);
   const gr=g.createLinearGradient(0,140,0,H);gr.addColorStop(0,night?'#2f5a3e':'#9de07a');gr.addColorStop(1,night?'#1f3a2a':'#6cbf50');g.fillStyle=gr;g.fillRect(0,140,W,H-140);
   for(let x=4;x<W;x+=14){g.strokeStyle=night?'#26492f':'#5aa848';g.lineWidth=1;g.beginPath();g.moveTo(x,150+(x%7));g.lineTo(x+2,145+(x%7));g.lineTo(x+4,150+(x%7));g.stroke()}
   // kennel
-  RR(190,128,44,38,3,night?'#7a3a3a':'#d65a4a');g.fillStyle=night?'#5a2a2a':'#a83a30';g.beginPath();g.moveTo(184,130);g.lineTo(212,108);g.lineTo(240,130);g.fill();RR(203,142,18,24,9,'#3a2020');
-  if(S.name){RR(198,132,28,8,3,'#fff8');txt(S.name.slice(0,6),212,139,'#a83a30',6)}
+  house(spOf(S),212,166,1,night,S.name);if(S.species==='pig')E(120,196,40,7,night?'#3a2a1a':'#8a6038');
   // bowl
   E(26,182,12,4,'#2b6cc4');R(14,176,24,6,'#3a86e8');E(26,176,12,3,S.hunger>40?'#a6683a':'#1e4a90')}
+function house(sp,x,y,s,night,name){g.save();g.translate(x,y);g.scale(s,s);const dk=c=>night?mix(c,'#1b1d4a',.4):c;
+  if(sp==='dog'){RR(-22,-38,44,38,3,dk('#d65a4a'));g.fillStyle=dk('#a83a30');g.beginPath();g.moveTo(-28,-36);g.lineTo(0,-58);g.lineTo(28,-36);g.fill();RR(-9,-24,18,24,9,'#3a2020')}
+  if(sp==='cat'){RR(-20,-34,40,34,12,dk('#b48ad8'));E(0,-36,22,8,dk('#8a5ab8'));E(0,-12,11,12,'#3a2848');E(0,-1,13,4,dk('#ffd84a'));star(0,-42,4,'#ffe36a')}
+  if(sp==='chicken'){R(-22,-34,44,30,dk('#e8c070'));for(let i=-20;i<22;i+=6)R(i,-34,1,30,dk('#c89a50'));g.fillStyle=dk('#c0402a');g.beginPath();g.moveTo(-27,-32);g.lineTo(0,-52);g.lineTo(27,-32);g.fill();
+    R(-20,-4,3,4,'#7a5030');R(17,-4,3,4,'#7a5030');RR(-6,-24,12,14,6,'#3a2020');g.strokeStyle=dk('#a0a0a0');g.lineWidth=1.5;g.beginPath();g.moveTo(6,-10);g.lineTo(20,0);g.stroke()}
+  if(sp==='pig'){E(0,-2,32,6,dk('#7a5030'));RR(-24,-28,34,24,2,dk('#d8a070'));R(-26,-32,38,5,dk('#8a5a3a'));RR(-10,-20,10,16,3,'#3a2020');
+    for(let i=-30;i<34;i+=8)R(i,-12,3,12,dk('#b08050'));R(-30,-10,64,2,dk('#b08050'))}
+  if(name){RR(-15,-30+(sp==='pig'?-8:0),30,9,3,'#fff8');txt(name.slice(0,6),0,-23+(sp==='pig'?-8:0),'#5b4b8a',6)}
+  g.restore()}
+function lockedHouse(n,x,y,s){g.save();g.globalAlpha=.55;g.translate(x,y);g.scale(s,s);R(-24,-30,48,30,'#b0a8c0');g.fillStyle='#8a80a8';g.beginPath();g.moveTo(-28,-28);g.lineTo(0,-46);g.lineTo(28,-28);g.fill();g.globalAlpha=1;lock(0,-16);g.restore();txt(n,x,y+8*s,'#fff',6);txt('coming soon',x,y+15*s,'#ffffffaa',5)}
+function drawMap(t){const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#8fd06e');sky.addColorStop(1,'#6cbf50');g.fillStyle=sky;g.fillRect(0,0,W,H);
+  for(let i=0;i<40;i++){const x=(i*67)%W,y=30+(i*41)%180;g.strokeStyle='#5aa848';g.lineWidth=1;g.beginPath();g.moveTo(x,y);g.lineTo(x+2,y-4);g.lineTo(x+4,y);g.stroke()}
+  // paths
+  g.strokeStyle='#e8d8a8';g.lineWidth=10;g.lineCap='round';g.beginPath();g.moveTo(0,120);g.lineTo(W,120);g.moveTo(120,24);g.lineTo(120,H);g.stroke();
+  // field (later) + pond
+  R(150,128,84,40,'#a07848');for(let y=132;y<166;y+=6)R(152,y,80,2,'#8a6038');txt('FIELD — soon',192,178,'#fff',7);
+  E(36,192,26,12,'#5ab0ff');E(30,189,10,4,'#8ad0ff');
+  for(let i=0;i<5;i++){E(8+i*14,30,8,9,'#4a9a3a')}
+  R(0,0,W,22,'#2b2440cc');txt('FARM MAP',8,15,'#fff',10,'left');txt('● '+petList().reduce((a,p)=>a+(p.coins||0),0),W-8,15,'#ffd84a',9,'right');
+  const L=petList(),slots=[[30,92],[78,92],[166,92],[214,92],[78,170],[30,150]];
+  const pets=L.slice(0,6);if(ui.msel>L.length)ui.msel=0;
+  pets.forEach((p,i)=>{const [x,y]=slots[i],on=ui.msel===i,sp=spOf(p);if(on){E(x,y+2,28,7,'#ffe36a');}
+    house(sp,x,y,.8,false,p.name);if(p.stage){g.save();g.translate(x+16,y+6);g.scale(.32,.32);dog(0,0,p.breed,p.stage,{pose:on?'hop':'sit',mood:'happy',coat:p.coat});g.restore()}
+    });
+  if(L.length>6)txt('+'+(L.length-6)+' more in MY PETS',W/2,206,'#fff',7);
+  lockedHouse('COW BARN',190,212,.6);lockedHouse('STABLE',230,212,.5);
+  const ny=[78,166][0],newOn=ui.msel>=L.length;RR(96,96,48,16,8,newOn?'#ff5a8b':'#fffc','#2b2440');txt('+ NEW',120,107,newOn?'#fff':'#5b4b8a',8);
+  const cur=L[ui.msel];RR(10,26,W-20,16,8,'#fffe','#2b2440');
+  txt(cur?cur.name+' — '+SP[spOf(cur)].house+' • '+stageName(cur.stage,spOf(cur))+'  (A visit)':'Adopt a new pet (A)',W/2,37,'#2b2440',8);
+  txt('✚ choose  A go  B back',W/2,H-3,'#fff',7)}
+// ===== critters (cat / chicken / pig) =====
+function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok';const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1;
+  const sleep=pose==='sleep'||pose==='lay'||pose==='nap',eat=pose==='eat'||pose==='sniff';
+  let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*12;if(pose==='walk'||pose==='trot'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;
+  g.save();g.translate(cx,cy);E(0,1,20*sz,4*sz,'#0003');g.translate(0,dy);g.scale(sz*(o.dir||1),sz);if(pose==='roll')g.rotate(Math.sin(T/8)*.6);
+  const sw=(pose==='walk'||pose==='trot'||pose==='play')?Math.sin(T/5)*3:0,blink=T%170<6||sleep;
+  const eye=(x,y,r=2.2)=>{if(blink){g.strokeStyle='#2b2020';g.lineWidth=1.3;g.beginPath();g.arc(x,y,r,.2,Math.PI-.2);g.stroke()}else{E(x,y,r,r*1.15,'#2b2020');E(x+.7,y-.8,.8,.8,'#fff')}};
+  if(sp==='cat'){const c='#f0a050',d='#c07030';const by=sleep?-8:-16;
+    // tail
+    g.strokeStyle=c;g.lineWidth=4;g.lineCap='round';g.beginPath();g.moveTo(-14,by);g.quadraticCurveTo(-26,by-6+Math.sin(T/12)*4,-22,by-20);g.stroke();
+    if(!sleep){[[-10,0],[-4,0],[8,0],[13,0]].forEach(([x],i)=>RR(x-2,by+4,4,-by-3+(i%2?sw:-sw)*.3,2,i<2?d:c))}
+    E(0,by,17,sleep?8:10,c);for(let i=-8;i<12;i+=6)R(i,by-9,2,6,d);E(4,by+5,10,4,'#fff4e6');
+    const hx=sleep?16:14,hy=sleep?-10:by-12+(eat?8:0);
+    g.fillStyle=c;[[-7,-1],[3,1]].forEach(([a])=>{g.beginPath();g.moveTo(hx+a-1,hy-6);g.lineTo(hx+a+2,hy-16);g.lineTo(hx+a+6,hy-6);g.fill()});
+    E(hx,hy,10,9,c);E(hx+4,hy+3,5,3.5,'#fff4e6');E(hx+6,hy+1.5,1.4,1,'#ff8aa0');eye(hx-1,hy-2);eye(hx+5,hy-2,1.8);
+    g.strokeStyle='#5a4030';g.lineWidth=.6;for(const k of [-1,1]){g.beginPath();g.moveTo(hx+7,hy+3);g.lineTo(hx+15,hy+3+k*2);g.stroke()}}
+  if(sp==='chicken'){const peck=eat?Math.abs(Math.sin(T/4))*8:0;
+    if(!sleep){g.strokeStyle='#f0a020';g.lineWidth=2;[[-3,sw],[3,-sw]].forEach(([x,s])=>{g.beginPath();g.moveTo(x,-8);g.lineTo(x+s*.4,0);g.lineTo(x+s*.4+3,0);g.stroke()})}
+    const by=sleep?-9:-16;E(-12,by-4,6,8,'#f0e8d8',-.5);E(0,by,13,11,'#fff8ec');E(-2,by+1,7,5,'#efe2cc',.3);
+    const hx=9,hy=by-12+peck;E(hx,hy,7,7,'#fff8ec');[0,3,6].forEach(i=>E(hx-3+i,hy-7,2,2.6,'#e83a3a'));
+    g.fillStyle='#f0a020';g.beginPath();g.moveTo(hx+6,hy-1);g.lineTo(hx+11,hy+1);g.lineTo(hx+6,hy+3);g.fill();E(hx+6,hy+5,1.6,2.4,'#e83a3a');eye(hx+2,hy-1,1.6)}
+  if(sp==='pig'){const c='#ffb0c0',d='#e88aa0',by=sleep?-9:-15;
+    g.strokeStyle=d;g.lineWidth=2;g.beginPath();g.arc(-21,by-3,3,0,Math.PI*1.6+Math.sin(T/6));g.stroke();
+    if(!sleep)[[-12,1],[-6,-1],[8,1],[13,-1]].forEach(([x,s])=>RR(x-2.5,by+6,5,-by-5+s*sw*.3,2,d));
+    E(0,by,21,12,c);if(o.coat>0||S.species==='pig'&&(S.dirt||0)>0)E(-6,by+6,8,4,'#7a5030aa');
+    const hx=18,hy=by-2+(eat?6:0);E(hx,hy,11,10,c);g.fillStyle=d;g.beginPath();g.moveTo(hx-6,hy-7);g.lineTo(hx-2,hy-15);g.lineTo(hx+1,hy-7);g.fill();
+    E(hx+9,hy+2,4,4.5,d);E(hx+8,hy+1,.9,1.3,'#7a3a4a');E(hx+10.5,hy+1,.9,1.3,'#7a3a4a');eye(hx+2,hy-3,1.8);
+    if(mood==='happy'||pose==='happy'){g.strokeStyle='#7a3a4a';g.lineWidth=1;g.beginPath();g.arc(hx+5,hy+5,2.5,.2,Math.PI-.4);g.stroke()}}
+  if(mood==='sad'&&!sleep&&T%90<60)E(cx?0:0,-30,0,0,'#0000');
+  g.restore()}
 // ===== UI pieces =====
 function panel(x,y,w,h,title){RR(x+2,y+3,w,h,8,'#0004');RR(x,y,w,h,8,'#fff8ee','#2b2440');if(title){RR(x+8,y-7,title.length*6.4+14,14,7,'#5b4b8a');txt(title,x+15,y+4,'#fff',9,'left')}}
 function bar(x,y,w,v,col){RR(x,y,w,9,4.5,'#2b2440');const ww=Math.max(0,(w-4)*v/100);if(ww>1)RR(x+2,y+2,ww,5,2.5,col)}
 function chrome(){R(0,0,W,30,'#ffffffdd');R(0,30,W,1,'#2b244033');
   foodIcon('kibble',9,8,.5);bar(17,4,60,S.hunger,S.hunger<25?'#ff5a7a':'#ffa53f');heartS(9,21,.8);bar(17,17,60,S.happy,S.happy<25?'#ff5a7a':'#5ad07a');
-  const cl=S.coat,cc=cl>=TUNE.matAt?'#ff4f7b':cl>=TUNE.longAt?'#ffb03a':'#a07cff';txt('✂',87,12,cc,9);bar(93,4,40,cl,cc);
-  const pq=S.plaque,pc=pq>=TUNE.plaqueBad?'#ff4f7b':pq>=40?'#e0c040':'#5ab0ff';toothI(87,21,pq);bar(93,17,40,pq,pc);
-  txt(S.name,W-6,12,'#5b4b8a',10,'right');txt('● '+S.coins,W-6,26,'#d89a10',8,'right');RR(140,17,50,10,5,'#ff5a8b');txt(STAGE_N[S.stage],165,25,'#fff',7);
+  const cl=S.coat,cc=cl>=TUNE.matAt?'#ff4f7b':cl>=TUNE.longAt?'#ffb03a':'#a07cff';if(S.species==='dog'){txt('✂',87,12,cc,9);bar(93,4,40,cl,cc)}
+  const pq=S.plaque,pc=pq>=TUNE.plaqueBad?'#ff4f7b':pq>=40?'#e0c040':'#5ab0ff';if(S.species==='dog'||S.species==='cat'){toothI(87,21,pq);bar(93,17,40,pq,pc)}
+  txt(S.name,W-6,12,'#5b4b8a',10,'right');txt('● '+S.coins,W-6,26,'#d89a10',8,'right');RR(140,17,50,10,5,'#ff5a8b');txt(stageName(S.stage,S.species),165,25,'#fff',7);
   R(0,31,W,3,'#0001');R(0,31,W*growProg(),3,'#a07cff')}
 function toothI(x,y,p){g.fillStyle=mix('#ffffff','#d8b040',Math.min(1,p/90));g.strokeStyle='#2b2440';g.lineWidth=.8;g.beginPath();g.moveTo(x-3.5,y-4);g.lineTo(x+3.5,y-4);g.lineTo(x+3,y+1);g.lineTo(x+1.5,y+4);g.lineTo(x,y+1);g.lineTo(x-1.5,y+4);g.lineTo(x-3,y+1);g.closePath();g.fill();g.stroke()}
-function warnings(){const w=[];if(S.coat>=TUNE.matAt)w.push(['OUCH! Matted fur — go to Tara\'s!',1]);else if(S.coat>=TUNE.longAt)w.push(['Coat getting long — groom soon',0]);
+function warnings(){const w=[];if(S.species!=='dog'){}else if(S.coat>=TUNE.matAt)w.push(['OUCH! Matted fur — go to Tara\'s!',1]);else if(S.coat>=TUNE.longAt)w.push(['Coat getting long — groom soon',0]);
   if(S.plaque>=TUNE.plaqueBad)w.push(['Ouch, my teeth! Brush them',1]);if(S.hunger<25)w.push(['Hungry… feed me',1]);if(S.happy<30&&!w.length)w.push(['Lonely… play with me',0]);return w}
 function mood(){return(S.hunger<30||S.happy<30||S.coat>=TUNE.matAt||S.plaque>=TUNE.plaqueBad)?'sad':(S.hunger>55&&S.happy>60)?'happy':'ok'}
 function dogAt(x,y,s,pose,pt,dir){g.save();g.translate(x,y);g.scale(s,s);dog(0,0,S.breed,S.stage,{pose,pt,mood:mood(),coat:S.coat,plaque:S.plaque,dir});g.restore()}
@@ -455,18 +541,19 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
   const sc=S.scene;
   if(sc==='title'){bg(false);otxt('POCKET PAL',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore();
     const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
-    const lp=DB.pets[DB.lastId];if(lp&&it[ui.tsel]==='CONTINUE')txt(lp.name+' • '+STAGE_N[lp.stage||'egg'],W/2,206,'#fff',9);else txt(petList().length+' pet'+(petList().length===1?'':'s')+' saved on this device',W/2,206,'#fff',9)}
+    const lp=DB.pets[DB.lastId];if(lp&&it[ui.tsel]==='CONTINUE')txt(lp.name+' • '+stageName(lp.stage,spOf(lp)),W/2,206,'#fff',9);else txt(petList().length+' pet'+(petList().length===1?'':'s')+' saved on this device',W/2,206,'#fff',9)}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
     rows.slice(top,top+5).forEach((p,ii)=>{const i=ii+top,y=32+ii*32,on=i===ui.psel;RR(14,y,W-28,28,8,on?'#ffe0ec':'#fffd',on?'#ff5a8b':'#d8d0e8');
       if(!p){txt('+ NEW PET',W/2,y+18,'#e0457b',11);return}
-      g.save();g.translate(36,y+25);g.scale(.5,.5);if(p.stage)dog(0,0,p.breed,p.stage,{mood:'happy',coat:p.coat,pose:on?'walk':'idle'});else egg(0,-24,BREEDS[p.breed||'lab'].d,false,0);g.restore();
-      txt(p.name,62,y+13,'#2b2440',11,'left');txt((BREEDS[p.breed]||BREEDS.lab).n+' • '+STAGE_N[p.stage||'egg']+(p.wasSpecies?' (was '+p.wasSpecies+')':''),62,y+24,'#8a80a8',7,'left');
+      g.save();g.translate(36,y+25);g.scale(.5,.5);if(p.stage)dog(0,0,p.breed||'lab',p.stage,{mood:'happy',coat:p.coat,pose:on?'walk':'idle'});else egg(0,-24,BREEDS[p.breed||'lab'].d,false,0);g.restore();
+      txt(p.name,62,y+13,'#2b2440',11,'left');txt((BREEDS[p.breed]||BREEDS.lab).n+' • '+stageName(p.stage,spOf(p))+(p.wasSpecies?' (was '+p.wasSpecies+')':''),62,y+24,'#8a80a8',7,'left');
       if(p.stage){RR(W-58,y+7,34,5,2,'#0002');RR(W-58,y+7,34*(p.hunger||0)/100,5,2,'#ffa53f');RR(W-58,y+16,34,5,2,'#0002');RR(W-58,y+16,34*(p.happy||0)/100,5,2,'#5ad07a')}});
     txt('A load  B back  SELECT goodbye',W/2,208,'#fff',9)}
   else if(sc==='species'){bg(false);otxt('CHOOSE YOUR PET',W/2,24,'#fff',15);
-    SPECIES.forEach((sp,i)=>{const x=33+i*58,on=i===ui.sel;RR(x-26,40,52,118,10,on?'#fffc':'#fff6',on?'#ff5a8b':null);
-      if(sp.ok){g.save();g.translate(x,118);g.scale(.85,.85);dog(0,0,'beagle','puppy',{pose:on?'hop':'sit',mood:'happy'});g.restore()}else{egg(x,96,'#888',false,0,true);lock(x,100);txt('COMING',x,136,'#8a80a8',7);txt('SOON',x,145,'#8a80a8',7)}
+    const off=Math.max(0,Math.min(ui.sel-1,SPECIES.length-4));SPECIES.slice(off,off+4).forEach((sp,ii)=>{const i=ii+off,x=33+ii*58,on=i===ui.sel;RR(x-26,40,52,118,10,on?'#fffc':'#fff6',on?'#ff5a8b':null);
+      if(sp.ok){g.save();g.translate(x,118);g.scale(.85,.85);dog(0,0,sp.id==='dog'?'beagle':sp.id,'puppy',{pose:on?'hop':'sit',mood:'happy'});g.restore();house(sp.id,x,150,.45,false)}else{egg(x,96,'#888',false,0,true);lock(x,100);txt('COMING',x,136,'#8a80a8',7);txt('SOON',x,145,'#8a80a8',7)}
       otxt(sp.n,x,172,on?'#ff5a8b':'#fff',10)});
+    if(off>0)otxt('◀',6,104,'#fff',12);if(off+4<SPECIES.length)otxt('▶',W-6,104,'#fff',12);
     otxt(SPECIES[ui.sel].ok?'◀ ▶ choose   A select':'More pets coming soon!',W/2,198,'#fff',11)}
   else if(sc==='breed'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b];otxt('PICK YOUR DOG',W/2,22,'#fff',15);
     RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
@@ -475,6 +562,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     BKEYS.forEach((k,i)=>E(W/2-28+i*8,210,2.5,2.5,i===ui.sel?'#ff5a8b':'#fff'))}
   else if(sc==='egg'){bg(false);otxt(S.name+"'S EGG",W/2,28,'#fff',15);if(ui.shake>0)ui.shake--;egg(W/2,112,BREEDS[S.breed].d,ui.shake>0||t%100<12,ui.hatch);
     otxt('TAP A TO HATCH',W/2,172,'#fff',12);for(let i=0;i<TUNE.hatchTaps;i++)heartS(W/2-(TUNE.hatchTaps-1)*7+i*14,192,1,i<ui.hatch?'#ff4f8b':'#fff8')}
+  else if(sc==='map')drawMap(t);
   else if(sc==='game')drawGame(t);
   else if(sc==='walk')drawWalk(t);
   else if(sc==='groom')drawGroom(t);
@@ -490,16 +578,16 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     if(pose==='sleep')[0,1,2].forEach(i=>{const p=((t+i*30)%90)/90;g.globalAlpha=1-p;otxt('Z',ui.dx+20+p*20+i*4,130-p*40,'#fff',9+i*3);g.globalAlpha=1});
     chrome();
     if(sc==='main'){const w=warnings();if(w.length&&!S.sleep&&ui.msgT<=0){const cur=w[Math.floor(t/180)%w.length];if(t%180<140){RR(26,40,W-52,17,8,cur[1]?'#ff4f7b':'#fff',cur[1]?'#fff':'#2b2440');txt(cur[0],W/2,52,cur[1]?'#fff':'#5b4b8a',8)}}
-      R(0,H-24,W,24,'#2b2440');ACTIONS.forEach((a,i)=>{const x=17+i*34.3;if(i===ui.menu)RR(x-17,H-22,34,20,6,'#ff5a8b');txt(a,x,H-9,'#fff',a.length>5?6.5:7.5)})}
-    if(sc==='food'){panel(10,46,W-20,H-56,'DOG FOOD');FOODS.forEach((f,i)=>{const x=20+(i%4)*52,y=56+Math.floor(i/4)*60,on=i===ui.sel;
+      R(0,H-24,W,24,'#2b2440');const bw=W/ACTIONS.length;ACTIONS.forEach((a,i)=>{const x=bw/2+i*bw;if(i===ui.menu)RR(x-bw/2+1,H-22,bw-2,20,6,'#ff5a8b');txt(a,x,H-9,'#fff',a.length>5?6.5:7.5)})}
+    if(sc==='food'){const FOODS=foods();panel(10,46,W-20,H-56,SP[spOf(S)].food);FOODS.forEach((f,i)=>{const x=20+(i%4)*52,y=56+Math.floor(i/4)*60,on=i===ui.sel;
         RR(x,y,46,52,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');foodIcon(f.id,x+23,y+20,on?1.3+Math.sin(t/6)*.08:1.15);txt('+'+f.v,x+23,y+46,f.plq<0?'#2a9a50':'#5b4b8a',9)});
-      const f=FOODS[ui.sel];txt(f.n+(f.d?' — '+f.d:''),W/2,184,'#2b2440',9);txt('✚ choose  A feed  B back',W/2,200,'#8a80a8',9)}
+      const f=FOODS[ui.sel]||FOODS[0];txt(f.n+(f.d?' — '+f.d:''),W/2,184,'#2b2440',9);txt('✚ choose  A feed  B back',W/2,200,'#8a80a8',9)}
     if(sc==='toys'){panel(10,46,W-20,H-56,'TOYS');TOYS.forEach((ty,i)=>{const x=20+(i%4)*52,y=56+Math.floor(i/4)*60,on=i===ui.sel,own=S.toys.includes(ty.id);
         RR(x,y,46,52,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');toyIcon(ty.id,x+23,y+22,on?1.4:1.2);txt(own?'OWNED':'● '+ty.p,x+23,y+46,own?'#2a9a50':'#d89a10',8)});
       const ty=TOYS[ui.sel],own=S.toys.includes(ty.id);txt(ty.n+(own?' — A to give':' — A to buy'),W/2,184,'#2b2440',9);txt('You have ● '+S.coins+'   B back',W/2,200,'#8a80a8',9)}
     if(sc==='games'){panel(16,50,W-32,H-62,'PLAY');GAMES.forEach((gm,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');gameIcon(gm.id,46,y+17);txt(gm.n,66,y+15,'#2b2440',11,'left');txt(gm.d,66,y+28,'#8a80a8',8,'left');txt('★'+(S.best[gm.id]||0),W-34,y+15,'#e0a020',9,'right')});
       txt('▲▼ choose  A play  B back',W/2,H-16,'#8a80a8',10)}
-    if(sc==='care'){panel(16,50,W-32,H-62,'CARE');CARE.forEach((c,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
+    if(sc==='care'){panel(16,50,W-32,H-62,'CARE');careList().forEach((c,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
         if(c.id==='cuddle')heartS(44,y+17,1.6);if(c.id==='teeth')toothI(44,y+17,S.plaque);if(c.id==='groom')txt('✂',44,y+22,'#e0457b',14);
         txt(c.n,60,y+15,'#2b2440',c.n.length>12?9:11,'left');const info=c.id==='teeth'?'Plaque '+Math.round(S.plaque)+'%':c.id==='groom'?'Coat '+Math.round(S.coat)+'% — '+c.d:c.d;txt(info,60,y+28,'#8a80a8',8,'left')});
       txt('▲▼ choose  A go  B back',W/2,H-16,'#8a80a8',10)}
@@ -538,5 +626,5 @@ function drawGame(t){const m=ui.mg;gameTick();
   chromeGame(m);if(m.resT>0)otxt(m.res,W/2,64,'#fff',18);
   if(m.over){R(0,0,W,H,'#0008');panel(30,60,W-60,90,'DONE!');txt('Score '+m.score,W/2,100,'#2b2440',16);txt('Best '+Math.max(m.score,S.best[m.id]||0),W/2,120,'#8a80a8',10);txt('A to collect joy & coins',W/2,140,'#e0457b',10)}}
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
-window.__pp={get S(){return S},set S(v){S=v},ui,DB,save,loadPet,startWalk,careAct};
+window.__pp={openMap,input,get S(){return S},set S(v){S=v},ui,DB,save,loadPet,startWalk,careAct};
 fit();frame();
