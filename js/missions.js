@@ -42,7 +42,7 @@ owInput=function(k){const o=ui.ow;
       if(th.sheepP){sfx('baa');loadPet(th.sheepP.id);return}
       if(th.bed||th.crop){const e=grows()[wetKey(tx,ty)];if(e&&growP(e)>=1){harvest(tx,ty);return}waterTile(tx,ty);return}
       if(th.water){say('Pond water is muddy! Fetch clean water from the WELL.',170);return}}}
-  if(k==='a'&&!o.mv&&CUR==='shop'&&wm().step===1){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.lady){openStore();say('Wool farm job? Flick ▶ to the SHEEP — one is FREE!',260);return}}
+  if(k==='a'&&!o.mv&&CUR==='shop'&&wm().step===1){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.lady){openStore();say('Wool farm job? Tap SHEEP — one is FREE!',260);return}}
   return _owInputM(k)};
 const _owUpdateM=owUpdate;owUpdate=function(){_owUpdateM();const o=ui.ow;if(!o)return;
   const tr=ui.trail||(ui.trail=[]),l=tr[tr.length-1];if(!l||l[0]!==o.px||l[1]!==o.py){tr.push([o.px,o.py,o.dir,CUR]);if(tr.length>40)tr.shift()}
