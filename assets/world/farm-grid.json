@@ -1,4 +1,5 @@
 {
+  "generatedFrom": "js/map-data.js",
   "width": 30,
   "height": 24,
   "tileSize": 16,
@@ -60,17 +61,17 @@
     23,
     24
   ],
-  "howTo": "Caller says e.g. B2 \u2192 look up cells[\"B2\"]. Letters = columns left\u2192right starting A=x0. Numbers = rows top\u2192bottom starting 1=y0.",
+  "howTo": "Caller says e.g. B2 → look up cells[\"B2\"]. Letters = columns left→right starting A=x0. Numbers = rows top→bottom starting 1=y0.",
   "legend": {
     "g": "grass",
     "p": "path",
     "f": "fence",
     "t": "tree",
     "w": "water",
-    "c": "field",
     "C": "corn",
     "W": "wheat",
     "s": "sign",
+    "c": "field",
     "H": "house",
     "L": "locked"
   },
@@ -85,7 +86,8 @@
         4,
         4
       ],
-      "grid": "D4"
+      "grid": "D4",
+      "doorGrid": "E5"
     },
     {
       "slot": 2,
@@ -97,7 +99,8 @@
         10,
         4
       ],
-      "grid": "J4"
+      "grid": "J4",
+      "doorGrid": "K5"
     },
     {
       "slot": 3,
@@ -109,7 +112,8 @@
         16,
         4
       ],
-      "grid": "P4"
+      "grid": "P4",
+      "doorGrid": "Q5"
     },
     {
       "slot": 4,
@@ -121,7 +125,8 @@
         4,
         10
       ],
-      "grid": "D10"
+      "grid": "D10",
+      "doorGrid": "E11"
     },
     {
       "slot": 5,
@@ -133,7 +138,8 @@
         10,
         10
       ],
-      "grid": "J10"
+      "grid": "J10",
+      "doorGrid": "K11"
     },
     {
       "slot": 6,
@@ -145,7 +151,8 @@
         16,
         10
       ],
-      "grid": "P10"
+      "grid": "P10",
+      "doorGrid": "Q11"
     }
   ],
   "locked": [
@@ -861,22 +868,22 @@
       "x": 22,
       "y": 3,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "X4": {
       "x": 23,
       "y": 3,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "Y4": {
       "x": 24,
       "y": 3,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "Z4": {
       "x": 25,
@@ -1062,22 +1069,22 @@
       "x": 22,
       "y": 4,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "X5": {
       "x": 23,
       "y": 4,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "Y5": {
       "x": 24,
       "y": 4,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "COW BARN"
     },
     "Z5": {
       "x": 25,
@@ -1983,22 +1990,22 @@
       "x": 22,
       "y": 9,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "X10": {
       "x": 23,
       "y": 9,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "Y10": {
       "x": 24,
       "y": 9,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "Z10": {
       "x": 25,
@@ -2184,22 +2191,22 @@
       "x": 22,
       "y": 10,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "X11": {
       "x": 23,
       "y": 10,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "Y11": {
       "x": 24,
       "y": 10,
       "tile": "g",
-      "kind": "locked_barn",
-      "feature": "L"
+      "kind": "locked",
+      "feature": "STABLE"
     },
     "Z11": {
       "x": 25,
@@ -2804,32 +2811,32 @@
     "F15": {
       "x": 5,
       "y": 14,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "G15": {
       "x": 6,
       "y": 14,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "H15": {
       "x": 7,
       "y": 14,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "I15": {
       "x": 8,
       "y": 14,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "J15": {
       "x": 9,
       "y": 14,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "K15": {
       "x": 10,
@@ -2984,32 +2991,32 @@
     "F16": {
       "x": 5,
       "y": 15,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "G16": {
       "x": 6,
       "y": 15,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "H16": {
       "x": 7,
       "y": 15,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "I16": {
       "x": 8,
       "y": 15,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "J16": {
       "x": 9,
       "y": 15,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "K16": {
       "x": 10,
