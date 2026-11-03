@@ -1,5 +1,5 @@
 {
-  "rev": 9,
+  "rev": 10,
   "images": {
     "tree": "trees/tree.png",
     "grass": "tiles/grass.png",
@@ -42,6 +42,14 @@
     "pcowboy": "portraits/cowboy.png",
     "pcowgirl": "portraits/cowgirl.png",
     "scowboy": "player/cowboy.png",
-    "scowgirl": "player/cowgirl.png"
+    "scowgirl": "player/cowgirl.png",
+    "b_coop": "buildings/coop.png",
+    "b_cowbarn": "buildings/cowbarn.png",
+    "b_stable": "buildings/stable.png",
+    "b_sheepshed": "buildings/sheepshed.png",
+    "b_sty": "buildings/sty.png",
+    "b_feedshed": "buildings/feedshed.png",
+    "b_toolshed": "buildings/toolshed.png",
+    "b_doghouse": "buildings/doghouse.png"
   }
 }

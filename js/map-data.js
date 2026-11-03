@@ -1,7 +1,7 @@
 // ===== map-data.js — farm overworld layout (single source of truth) =====
 // Pure JSON object between the markers; scripts/build-farm-grid.py parses it. Edit, then run scripts/build.sh.
 const MAP_LAYOUT=/*JSON-START*/{
- "_doc": "SINGLE SOURCE OF TRUTH for the overworld. Top level = the RANCH; 'outer' = the world beyond the ranch gate. Edit, then run scripts/build.sh to regenerate assets/world/farm-grid.* and world-grid.*. houseSlots/locks/petStore are [x,y] top-left tiles (0-based; x=0 is column A, y=0 is row 1) and are 3x2 (door = middle of bottom row). Trees (T/P) are 2x2 with 'x' body cells. Walking onto a G gate tile switches maps.",
+ "_doc": "SINGLE SOURCE OF TRUTH for the overworld. Top level = the RANCH; 'outer' = the world beyond the ranch gate. Edit, then run scripts/build.sh to regenerate assets/world/farm-grid.* and world-grid.*. houseSlots/locks/petStore are [x,y] top-left tiles (0-based; x=0 is column A, y=0 is row 1) and are 3x2 (door = middle of bottom row). Trees (T/P) are 2x2 with 'x' body cells. Walking onto a G gate tile switches maps. barns = [x,y,w,h,imageId,name] buildings (door = bottom-middle tile, press A facing it).",
  "legend": {
   "g": "grass",
   "h": "tall grass",
@@ -54,18 +54,7 @@ const MAP_LAYOUT=/*JSON-START*/{
   29,
   4
  ],
- "locks": [
-  [
-   34,
-   15,
-   "COW BARN"
-  ],
-  [
-   42,
-   15,
-   "STABLE"
-  ]
- ],
+ "locks": [],
  "gate": [
   [
    27,
@@ -93,14 +82,14 @@ const MAP_LAYOUT=/*JSON-START*/{
   "fTxggggggggggggggggggggggggppgggggggggggKFFggggggggggTxf",
   "fxxggggpggFFFhpggggggpgggggppggggKJpggggKgpggggggpgggxxf",
   "fgghhhhpggKJggpggggggpgggggppggggggpggggFgpggggggpgggggf",
-  "fTxhpppppppppppppppppppppppppppppppppppppppppppppppppPxf",
-  "fxxggFJJggggggggggghhggggggppgggggggggggTxgggggggggggxxf",
-  "fggggJggggTxPxggggggTxgggggppgggggggggggxxggggggggggghhf",
-  "fPxgggggggxxxxggggggxxgggggpphFhgggggggggggggggggggTxPxf",
-  "fxxggggggggggggggTxggggggggppgFggggggggFKFggggggTxgxxxxf",
-  "fgggggggggTxgggggxxgggggggFppFgFJFgpgggFgggpggggxxgggggf",
-  "fPxgggggggxxgggggggggggggggppggJJKgpgggJgPxpgggggggggTxf",
-  "fxxgggggggggggggggggggggggsppghJJFgpgggggxxpgggggggggxxf",
+  "fTxhpppppppppppppppppppppppppppppppppppppppppppppppppggf",
+  "fxxggFJJggggggggggghhggggggppggggggggggggggggggggggggggf",
+  "fggggJggggTxPxggggggTxgggggppggggggggggggggggggggggggghf",
+  "fPxgggggggxxxxggggggxxgggggppggggggggggggggggggggggggggf",
+  "fxxggggggggggggggTxggggggggppggggggggggggggggggggggggggf",
+  "fgggggggggTxgggggxxgggggggFppggggggpgggggggpgfffffffffgf",
+  "fPxgggggggxxgggggggggggggggppggggggpgggggggpgfgghgghgfgf",
+  "fxxgggggggggggggggggggggggsppggggggpgggggggpgfghgghggggf",
   "fgppppppppppppppppppppppppppppppppppppppppppppppppppppgf",
   "fgppppppppppppppppppppppppppppppppppppppppppppppppppppgf",
   "fgggggggpggggggggggpgggggggppggggggggggggggggggggggggggf",
@@ -224,9 +213,73 @@ const MAP_LAYOUT=/*JSON-START*/{
    "gJFgPxTxPxTxTxPxTxTxPxTxPxTxPxTxPxTxPxPxTxhhggggPxTxJgggwwwgPxTxTxTxPxPxPxTxPxTx",
    "gFFKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxgJJKKgxxxxggwwwgggxxxxxxxxxxxxxxxxxxxx"
   ]
- }
+ },
+ "barns": [
+  [
+   30,
+   13,
+   4,
+   3,
+   "coop",
+   "CHICKEN COOP"
+  ],
+  [
+   35,
+   13,
+   6,
+   3,
+   "cowbarn",
+   "COW BARN"
+  ],
+  [
+   42,
+   13,
+   6,
+   3,
+   "stable",
+   "HORSE STABLE"
+  ],
+  [
+   49,
+   13,
+   4,
+   3,
+   "sheepshed",
+   "SHEEP SHED"
+  ],
+  [
+   30,
+   17,
+   4,
+   3,
+   "sty",
+   "PIG STY"
+  ],
+  [
+   36,
+   17,
+   3,
+   2,
+   "feedshed",
+   "FEED SHED"
+  ],
+  [
+   41,
+   17,
+   3,
+   2,
+   "toolshed",
+   "TOOL SHED"
+  ]
+ ],
+ "paddock": [
+  45,
+  17,
+  9,
+  3
+ ]
 }/*JSON-END*/;
-const TS=MAP_LAYOUT.tileSize,HSLOT=MAP_LAYOUT.houseSlots,LOCKS=MAP_LAYOUT.locks,STORE=MAP_LAYOUT.outer.petStore,HOME=MAP_LAYOUT.home;
+const TS=MAP_LAYOUT.tileSize,HSLOT=MAP_LAYOUT.houseSlots,LOCKS=MAP_LAYOUT.locks,STORE=MAP_LAYOUT.outer.petStore,HOME=MAP_LAYOUT.home,BARNS=MAP_LAYOUT.barns||[];
 const MAPS={ranch:{name:'RANCH',w:MAP_LAYOUT.width,h:MAP_LAYOUT.height,gate:MAP_LAYOUT.gate,rows:MAP_LAYOUT.rows.map(r=>r.split(''))},
   outer:{name:MAP_LAYOUT.outer.name,w:MAP_LAYOUT.outer.width,h:MAP_LAYOUT.outer.height,gate:MAP_LAYOUT.outer.gate,rows:MAP_LAYOUT.outer.rows.map(r=>r.split(''))}};
 let CUR='ranch',OWBASE=MAPS.ranch.rows,MW=MAPS.ranch.w,MH=MAPS.ranch.h;

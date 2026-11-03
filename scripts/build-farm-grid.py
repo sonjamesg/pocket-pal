@@ -48,7 +48,7 @@ if L.get('petStore'):
 out = {'generatedFrom': 'js/map-data.js', 'width': MW, 'height': MH, 'tileSize': TS,
        'cols': [col(x) for x in range(MW)], 'rows': list(range(1, MH+1)),
        'howTo': 'Caller says e.g. B2 → look up cells["B2"]. Letters = columns left→right starting A=x0. Numbers = rows top→bottom starting 1=y0.',
-       'legend': legend, 'houseSlots': slots, 'locked': locked, 'petStore': store, 'cells': cells}
+       'legend': legend, 'buildings': [{'name': b[5], 'origin': [b[0], b[1]], 'size': [b[2], b[3]], 'grid': name(b[0], b[1]), 'doorGrid': name(b[0]+b[2]//2, b[1]+b[3]-1)} for b in L.get('barns', [])], 'houseSlots': slots, 'locked': locked, 'petStore': store, 'cells': cells}
 json.dump(out, open(os.path.join(W_DIR, PFX+'.json'), 'w'), indent=2, ensure_ascii=False)
 # --- PNG ---
 man = json.load(open(os.path.join(W_DIR, 'manifest.json')))['images']
@@ -83,6 +83,10 @@ for s in slots: box(*s['origin'], '#c0503a', f"HOUSE {s['slot']}")
 for l in locked: box(*l['origin'], '#7a7090', l['name'])
 if store: box(*store['origin'], '#e08a20', 'PET SHOP')
 if L.get('home'): box(*L['home'], '#3a86e8', 'YOUR HOUSE')
+for bx, by, bw, bh, bid, bn in L.get('barns', []):
+    bi = img('b_'+bid); X, Y = M + bx*S, M + (by-1)*S
+    if bi: im.alpha_composite(bi.resize((bw*S, (bh+1)*S), Image.NEAREST), (X, max(0, Y)))
+    d.text((X + bw*S/2, M + (by+bh)*S - 6), bn, fill='#fff', font=small, anchor='mm', stroke_width=2, stroke_fill='#2b2440')
 for x in range(MW + 1): d.line([M + x*S, M, M + x*S, M + MH*S], fill=(0, 0, 0, 90))
 for y in range(MH + 1): d.line([M, M + y*S, M + MW*S, M + y*S], fill=(0, 0, 0, 90))
 for x in range(MW): d.text((M + x*S + S/2, M/2), col(x), fill='#ffd84a', font=font, anchor='mm')

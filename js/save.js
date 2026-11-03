@@ -5,7 +5,9 @@ const now=()=>Date.now(),clamp=v=>Math.max(0,Math.min(100,v)),rnd=a=>a[Math.floo
 const STAGE_MAP={baby:'puppy',toddler:'youngster',teen:'teen',adult:'adult',old:'senior'};
 let DB=loadDB();if(DB.wallet==null)DB.wallet=60;
 function saveDB(){try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}}
-const DOG_PRICE={lab:40,frenchie:50,dachshund:35,poodle:45,corgi:45,husky:50,beagle:30,collie:40};const priceOf=b=>DOG_PRICE[b]||40;
+const DOG_PRICE={beagle:25,dachshund:30,lab:35,collie:40,poodle:45,corgi:55,husky:60,frenchie:75};
+// economy (v22): starter 60, chores 5-12 each, Grandpa 30/day. Future: SPECIES_PRICE mid 40-60, premium 70-100; SLOT_PRICE ranch slot upgrades > a pet
+const SPECIES_PRICE={cat:40,rabbit:40,chicken:45,pig:55,sheep:60,cow:80,horse:100},SLOT_PRICE=[0,0,0,120,160,220];const priceOf=b=>DOG_PRICE[b]||40;
 function loadDB(){let d=null;try{d=JSON.parse(localStorage.getItem(SAVE))}catch(e){}
   if(d&&d.pets)return d;d={v:9,pets:{},lastId:null};
   try{const o=JSON.parse(localStorage.getItem('pocketpal_v7'));if(o&&o.pets){Object.values(o.pets).forEach(p=>{p.species=p.species||'dog';d.pets[p.id]=p});d.lastId=o.lastId;localStorage.setItem(SAVE,JSON.stringify(d));return d}}catch(e){}

@@ -128,6 +128,99 @@
     "H": "house",
     "L": "locked"
   },
+  "buildings": [
+    {
+      "name": "CHICKEN COOP",
+      "origin": [
+        30,
+        13
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "grid": "AE14",
+      "doorGrid": "AG16"
+    },
+    {
+      "name": "COW BARN",
+      "origin": [
+        35,
+        13
+      ],
+      "size": [
+        6,
+        3
+      ],
+      "grid": "AJ14",
+      "doorGrid": "AM16"
+    },
+    {
+      "name": "HORSE STABLE",
+      "origin": [
+        42,
+        13
+      ],
+      "size": [
+        6,
+        3
+      ],
+      "grid": "AQ14",
+      "doorGrid": "AT16"
+    },
+    {
+      "name": "SHEEP SHED",
+      "origin": [
+        49,
+        13
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "grid": "AX14",
+      "doorGrid": "AZ16"
+    },
+    {
+      "name": "PIG STY",
+      "origin": [
+        30,
+        17
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "grid": "AE18",
+      "doorGrid": "AG20"
+    },
+    {
+      "name": "FEED SHED",
+      "origin": [
+        36,
+        17
+      ],
+      "size": [
+        3,
+        2
+      ],
+      "grid": "AK18",
+      "doorGrid": "AL19"
+    },
+    {
+      "name": "TOOL SHED",
+      "origin": [
+        41,
+        17
+      ],
+      "size": [
+        3,
+        2
+      ],
+      "grid": "AP18",
+      "doorGrid": "AQ19"
+    }
+  ],
   "houseSlots": [
     {
       "slot": 1,
@@ -208,24 +301,7 @@
       "doorGrid": "AX10"
     }
   ],
-  "locked": [
-    {
-      "name": "COW BARN",
-      "origin": [
-        34,
-        15
-      ],
-      "grid": "AI16"
-    },
-    {
-      "name": "STABLE",
-      "origin": [
-        42,
-        15
-      ],
-      "grid": "AQ16"
-    }
-  ],
+  "locked": [],
   "petStore": null,
   "cells": {
     "A1": {
@@ -4659,14 +4735,14 @@
     "BB13": {
       "x": 53,
       "y": 12,
-      "tile": "P",
-      "kind": "pine 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC13": {
       "x": 54,
       "y": 12,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD13": {
       "x": 55,
@@ -4917,14 +4993,14 @@
     "AO14": {
       "x": 40,
       "y": 13,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "AP14": {
       "x": 41,
       "y": 13,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ14": {
       "x": 42,
@@ -4995,14 +5071,14 @@
     "BB14": {
       "x": 53,
       "y": 13,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC14": {
       "x": 54,
       "y": 13,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD14": {
       "x": 55,
@@ -5253,14 +5329,14 @@
     "AO15": {
       "x": 40,
       "y": 14,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AP15": {
       "x": 41,
       "y": 14,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ15": {
       "x": 42,
@@ -5331,8 +5407,8 @@
     "BB15": {
       "x": 53,
       "y": 14,
-      "tile": "h",
-      "kind": "tall grass"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC15": {
       "x": 54,
@@ -5523,20 +5599,20 @@
     "AD16": {
       "x": 29,
       "y": 15,
-      "tile": "h",
-      "kind": "tall grass"
+      "tile": "g",
+      "kind": "grass"
     },
     "AE16": {
       "x": 30,
       "y": 15,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AF16": {
       "x": 31,
       "y": 15,
-      "tile": "h",
-      "kind": "tall grass"
+      "tile": "g",
+      "kind": "grass"
     },
     "AG16": {
       "x": 32,
@@ -5554,22 +5630,19 @@
       "x": 34,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AJ16": {
       "x": 35,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AK16": {
       "x": 36,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AL16": {
       "x": 37,
@@ -5605,22 +5678,19 @@
       "x": 42,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AR16": {
       "x": 43,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AS16": {
       "x": 44,
       "y": 15,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AT16": {
       "x": 45,
@@ -5661,26 +5731,26 @@
     "AZ16": {
       "x": 51,
       "y": 15,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "BA16": {
       "x": 52,
       "y": 15,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB16": {
       "x": 53,
       "y": 15,
-      "tile": "P",
-      "kind": "pine 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC16": {
       "x": 54,
       "y": 15,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD16": {
       "x": 55,
@@ -5871,8 +5941,8 @@
     "AE17": {
       "x": 30,
       "y": 16,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AF17": {
       "x": 31,
@@ -5896,22 +5966,19 @@
       "x": 34,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AJ17": {
       "x": 35,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AK17": {
       "x": 36,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "COW BARN"
+      "kind": "grass"
     },
     "AL17": {
       "x": 37,
@@ -5928,41 +5995,38 @@
     "AN17": {
       "x": 39,
       "y": 16,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AO17": {
       "x": 40,
       "y": 16,
-      "tile": "K",
-      "kind": "K"
+      "tile": "g",
+      "kind": "grass"
     },
     "AP17": {
       "x": 41,
       "y": 16,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ17": {
       "x": 42,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AR17": {
       "x": 43,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AS17": {
       "x": 44,
       "y": 16,
       "tile": "g",
-      "kind": "locked",
-      "feature": "STABLE"
+      "kind": "grass"
     },
     "AT17": {
       "x": 45,
@@ -5985,14 +6049,14 @@
     "AW17": {
       "x": 48,
       "y": 16,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "AX17": {
       "x": 49,
       "y": 16,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AY17": {
       "x": 50,
@@ -6003,26 +6067,26 @@
     "AZ17": {
       "x": 51,
       "y": 16,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BA17": {
       "x": 52,
       "y": 16,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BB17": {
       "x": 53,
       "y": 16,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC17": {
       "x": 54,
       "y": 16,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD17": {
       "x": 55,
@@ -6207,8 +6271,8 @@
     "AD18": {
       "x": 29,
       "y": 17,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AE18": {
       "x": 30,
@@ -6219,20 +6283,20 @@
     "AF18": {
       "x": 31,
       "y": 17,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AG18": {
       "x": 32,
       "y": 17,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AH18": {
       "x": 33,
       "y": 17,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AI18": {
       "x": 34,
@@ -6267,8 +6331,8 @@
     "AN18": {
       "x": 39,
       "y": 17,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AO18": {
       "x": 40,
@@ -6303,56 +6367,56 @@
     "AT18": {
       "x": 45,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AU18": {
       "x": 46,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AV18": {
       "x": 47,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AW18": {
       "x": 48,
       "y": 17,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "f",
+      "kind": "fence"
     },
     "AX18": {
       "x": 49,
       "y": 17,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "f",
+      "kind": "fence"
     },
     "AY18": {
       "x": 50,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AZ18": {
       "x": 51,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "BA18": {
       "x": 52,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "BB18": {
       "x": 53,
       "y": 17,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "BC18": {
       "x": 54,
@@ -6555,20 +6619,20 @@
     "AF19": {
       "x": 31,
       "y": 18,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AG19": {
       "x": 32,
       "y": 18,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AH19": {
       "x": 33,
       "y": 18,
-      "tile": "K",
-      "kind": "K"
+      "tile": "g",
+      "kind": "grass"
     },
     "AI19": {
       "x": 34,
@@ -6603,8 +6667,8 @@
     "AN19": {
       "x": 39,
       "y": 18,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AO19": {
       "x": 40,
@@ -6615,14 +6679,14 @@
     "AP19": {
       "x": 41,
       "y": 18,
-      "tile": "P",
-      "kind": "pine 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ19": {
       "x": 42,
       "y": 18,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR19": {
       "x": 43,
@@ -6639,8 +6703,8 @@
     "AT19": {
       "x": 45,
       "y": 18,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AU19": {
       "x": 46,
@@ -6657,8 +6721,8 @@
     "AW19": {
       "x": 48,
       "y": 18,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "h",
+      "kind": "tall grass"
     },
     "AX19": {
       "x": 49,
@@ -6675,8 +6739,8 @@
     "AZ19": {
       "x": 51,
       "y": 18,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "h",
+      "kind": "tall grass"
     },
     "BA19": {
       "x": 52,
@@ -6687,14 +6751,14 @@
     "BB19": {
       "x": 53,
       "y": 18,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "f",
+      "kind": "fence"
     },
     "BC19": {
       "x": 54,
       "y": 18,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD19": {
       "x": 55,
@@ -6885,26 +6949,26 @@
     "AE20": {
       "x": 30,
       "y": 19,
-      "tile": "h",
-      "kind": "tall grass"
+      "tile": "g",
+      "kind": "grass"
     },
     "AF20": {
       "x": 31,
       "y": 19,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AG20": {
       "x": 32,
       "y": 19,
-      "tile": "J",
-      "kind": "J"
+      "tile": "g",
+      "kind": "grass"
     },
     "AH20": {
       "x": 33,
       "y": 19,
-      "tile": "F",
-      "kind": "flowers (also J,K)"
+      "tile": "g",
+      "kind": "grass"
     },
     "AI20": {
       "x": 34,
@@ -6951,14 +7015,14 @@
     "AP20": {
       "x": 41,
       "y": 19,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ20": {
       "x": 42,
       "y": 19,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR20": {
       "x": 43,
@@ -6975,8 +7039,8 @@
     "AT20": {
       "x": 45,
       "y": 19,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "f",
+      "kind": "fence"
     },
     "AU20": {
       "x": 46,
@@ -6987,8 +7051,8 @@
     "AV20": {
       "x": 47,
       "y": 19,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "h",
+      "kind": "tall grass"
     },
     "AW20": {
       "x": 48,
@@ -7005,8 +7069,8 @@
     "AY20": {
       "x": 50,
       "y": 19,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "h",
+      "kind": "tall grass"
     },
     "AZ20": {
       "x": 51,
@@ -7023,14 +7087,14 @@
     "BB20": {
       "x": 53,
       "y": 19,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BC20": {
       "x": 54,
       "y": 19,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BD20": {
       "x": 55,
