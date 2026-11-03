@@ -37,5 +37,23 @@ function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mo
     E(0,by,12,9,c);E(-10,by+1,4,4,'#fff');const hx=10,hy=by-6+(eat?5:0);
     [[-2,0],[3,0]].forEach(([a])=>{g.fillStyle=c;g.beginPath();g.moveTo(hx+a,hy-2);g.lineTo(hx+a-1,hy-18);g.lineTo(hx+a+3,hy-2);g.fill();E(hx+a+1,hy-10,1.2,5,'#ffb0c0')});
     E(hx,hy,8,7,c);eye(hx-1,hy-1,1.5);eye(hx+3,hy-1,1.5);E(hx+2,hy+2,1.5,1,'#ff90a8')}
+  if(sp==='sheep'&&IMG.sheep0&&IMG.sheep0.naturalWidth){const wv=Math.max(0,Math.min(100,o.wool==null?60:o.wool)),st=wv<15?0:wv<50?1:wv<90?2:3,im=IMG['sheep'+st+(eat?'e':'')]||IMG['sheep'+st];
+    g.scale(1.25,1.25);g.translate(-2,-im.height+2);g.imageSmoothingEnabled=false;g.drawImage(sheepTint(im,o.sv),-im.width/2+4,0);if(wv>=100&&T%60<30){star(-14,4,4,'#ffd84a');star(16,-2,3,'#fff6a0')}g.restore();return}
+  if(sp==='sheep'){const wv=Math.max(0,Math.min(100,o.wool==null?60:o.wool))/100,by=sleep?-9:-15,fx=12+wv*7,fy=8+wv*5,wc=wv>.98?'#fffdf4':mix('#f0e6d0','#fffaf0',wv),fd=mix('#d8ccb0','#e8e0cc',wv),sk='#3a3440';
+    if(!sleep)[[-9,sw],[-4,-sw],[6,sw],[11,-sw]].forEach(([x,s])=>RR(x-1.5,by+4,3,-by-3+s*.25,1.5,sk));
+    E(0,by,fx,fy,fd);for(let i=0;i<9;i++){const a=i/9*Math.PI*2;E(Math.cos(a)*fx*.75,by+Math.sin(a)*fy*.7-1,3+wv*3,3+wv*3,wc)}E(-1,by-1,fx*.8,fy*.8,wc);
+    if(wv<.15){E(0,by,fx*.9,fy*.9,'#f4dcc8');E(-2,by-2,4,2,'#fff0e0')}
+    const hx=fx*.85,hy=by-6+(eat?6:0);E(hx-2,hy-6,4+wv*2,3+wv,wc);E(hx-5,hy-1,3,1.6,sk,-.4);E(hx+5,hy-1,3,1.6,sk,.4);E(hx,hy,5.5,6.5,sk);eye(hx-2,hy-1,1.3);eye(hx+2,hy-1,1.3);E(hx,hy+3,1.6,1,'#ff9ab0');
+    if(wv>=1&&T%60<30){star(-fx+2,by-fy,3,'#ffd84a')}}
   if(mood==='sad'&&!sleep&&T%90<60)E(cx?0:0,-30,0,0,'#0000');
   g.restore()}
+
+// v41 sheep colour types: recolour light wool pixels, cached
+const _sheepC={};function sheepTint(im,sv){const T=typeof SHEEP_TYPES!=='undefined'&&SHEEP_TYPES.find(x=>x.id===sv);if(!T||(!T.f&&!T.spot))return im;
+ const k=sv+im.src;if(_sheepC[k])return _sheepC[k];const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);
+ let d;try{d=x.getImageData(0,0,c.width,c.height)}catch(e){return im}const a=d.data,w=c.width;
+ for(let i=0;i<a.length;i+=4){if(a[i+3]<10)continue;const r=a[i],gg=a[i+1],b=a[i+2],lum=(r+gg+b)/3;if(lum<150||Math.max(r,gg,b)-Math.min(r,gg,b)>60)continue;
+  const p=i/4,px=p%w,py=(p/w)|0;
+  if(T.spot){const cx=(px/7)|0,cy=(py/7)|0,dx=px-cx*7-3.5,dy=py-cy*7-3.5;if((cx*5+cy*3)%4===0&&dx*dx+dy*dy<9){a[i]=a[i+1]=60;a[i+2]=70}}
+  else{a[i]=r*T.f[0];a[i+1]=gg*T.f[1];a[i+2]=b*T.f[2]}}
+ x.putImageData(d,0,0);return _sheepC[k]=c}

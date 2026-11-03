@@ -1,6 +1,6 @@
 // ===== animals.js — dog art, egg, food/toy icons =====
 // ===== dog art =====
-function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,o);
+function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,Object.assign({sv:bid},o));
   const B=BREEDS[bid]||BREEDS.lab,T=ui.anim,pose=o.pose||'idle',coat=o.coat||0,mood=o.mood||'ok',plq=o.plaque||0,pt=o.pt||0;
   let c=B.c,d=B.d,l=B.l;const sen=stage==='senior';
   const sz={puppy:.62,youngster:.75,teen:.88,adult:1,senior:1}[stage]||1,hk={puppy:1.38,youngster:1.22,teen:1.1,adult:1,senior:1}[stage]||1;
@@ -112,6 +112,7 @@ function foodIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
   if(id==='slop'){E(0,5,12,4,'#7a7a8a');R(-12,0,24,5,'#9a9aaa');E(0,0,12,3,'#a07040');E(-4,-1,2,1,'#c09060');E(3,0,2,1,'#c09060')}
   if(id==='apple'){E(0,1,7,7,'#e83a3a');E(-2,-1,2,2,'#ff8a8a');R(-.5,-9,1.5,4,'#7a5030');E(3,-7,3,1.5,'#5ac04a',-.4)}
   if(id==='veg'){E(-4,1,5,4,'#7ad05a');E(4,0,4,4,'#ff9a3a');E(0,3,4,3,'#c84a8a')}
+  if(id==='hay'){R(-9,-5,18,11,'#e8c860');R(-9,-5,18,2,'#f8e090');for(let i=-8;i<9;i+=3)R(i,-3,1,8,'#c8a040');R(-9,-1,18,1,'#a06830');R(-9,3,18,1,'#a06830')}
   if(id==='carrot'){g.fillStyle='#f38a24';g.beginPath();g.moveTo(-3,-5);g.lineTo(3,-5);g.lineTo(0,9);g.fill();E(-2,-7,2,4,'#4caf50',-.4);E(2,-7,2,4,'#4caf50',.4)}
   g.restore()}
 function toyIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);

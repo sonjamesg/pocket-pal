@@ -3,7 +3,7 @@
 function input0(k){
   const sc=S.scene;
   if(sc==='title'){const it=titleItems(),n=it.length;if(k==='up')ui.tsel=(ui.tsel+n-1)%n;if(k==='down')ui.tsel=(ui.tsel+1)%n;
-    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='FARM MAP')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
+    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='NEW GAME')newGame();else if(c==='FARM MAP')openMap();else if(c==='CONTINUE')continueGame();else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
   else if(sc==='list'){const L=petList(),n=L.length+1;if(k==='up')ui.psel=(ui.psel+n-1)%n;if(k==='down')ui.psel=(ui.psel+1)%n;if(k==='b'){S={scene:'title'};ui.tsel=0;ui.msgT=0}
     if(k==='a'||k==='start'){if(ui.psel===L.length)newPet();else loadPet(L[ui.psel].id)}
     if(k==='select'&&L[ui.psel]){const id=L[ui.psel].id;askConfirm('Say goodbye to '+L[ui.psel].name+' forever? Other pets stay safe.',()=>{delete DB.pets[id];if(DB.lastId===id)DB.lastId=null;save(true);ui.psel=0})}}
@@ -12,6 +12,9 @@ function input0(k){
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
     if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
   else if(sc==='map')owInput(k);
+  else if(sc==='intro'){introInput(k)}
+  else if(sc==='avatar')avatarKey(k)
+  else if(sc==='store'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){openMap();return}if(k==='a')buyDog(BKEYS[ui.sel])}
   else if(sc==='breed'){const n=BKEYS.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;if(k==='b'){S.scene='species';ui.sel=0}
     if(k==='a'||k==='start'){S.species='dog';S.breed=BKEYS[ui.sel];syncActs();S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}
   else if(sc==='egg'){if(k==='a'){ui.hatch++;ui.shake=12;for(let i=0;i<4;i++)ui.fx.push({x:W/2+Math.random()*30-15,y:100,vx:Math.random()*2-1,vy:-Math.random()*2,t:25,ch:'shell'});
@@ -39,19 +42,19 @@ function gridIn(k,n,go){if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.se
 function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='FEED')S.scene='food';if(a==='PLAY')S.scene='games';if(a==='TRICKS')S.scene='tricks';if(a==='TOYS')S.scene='toys';if(a==='CARE')S.scene='care';
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
-  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
+  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+15);if(S.species==='sheep')S.wool=Math.min(100,(S.wool||0)+8);addXP(1);hearts(4);setPose('happy',60);say('Brushed! Happy +15'+(S.species==='sheep'?'  Wool +8%':''));save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
-  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*']}[S.species]||['Love you!']));save()}
+  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*'],sheep:['*baa-aa!*','*soft baa*','*fluffy nuzzle*']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
   if(id==='groom'){S.scene='groom';ui.mg={ph:S.coat<15?'short':'intro',snips:0,t:0,start:S.coat,mat:S.coat>=TUNE.matAt,brush:0,last:null}}}
 function feed(f){if(S.hunger>=97&&!f.plq){say('Too full!');return}
   S.hunger=clamp(S.hunger+f.v);S.happy=clamp(S.happy+(f.joy||0));if(f.plq)S.plaque=clamp(S.plaque+f.plq);addXP(2);
   S.scene='main';setPose('eat',80);ui.eatFood=f.id;say(f.n+' +'+f.v+(f.plq<0?' • cleaner teeth':''));if(f.joy>5)hearts(3);checkGrow();save()}
-function toy(t){if(!S.toys.includes(t.id)){if(S.coins<t.p){say('Need '+t.p+' coins — play games & walk!');return}
-    S.coins-=t.p;S.toys.push(t.id);sparkle(16);say('Got a '+t.n+'!');save();return}
+function toy(t){if(!S.toys.includes(t.id)){if(DB.wallet<t.p){say('Need '+t.p+' coins — play games & walk!');return}
+    DB.wallet-=t.p;S.toys.push(t.id);sparkle(16);say('Got a '+t.n+'!');save();return}
   S.scene='main';S.happy=clamp(S.happy+12);addXP(2);ui.idle={k:'play',t:300,toy:t.id};ui.poseT=0;hearts(3);say(S.name+' loves the '+t.n.toLowerCase()+'!');save()}
 function perform(tr){S.scene='main';setPose(tr.id,120);S.happy=clamp(S.happy+10);S.hunger=clamp(S.hunger-2);addXP(1);sparkle(14);say(S.name+' does '+tr.n+'!');checkGrow();save()}
-function endGame(){const m=ui.mg;const joy=Math.min(30,8+m.score*3),coins=Math.min(15,2+m.score);S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-5);S.coins+=coins;addXP(2);
+function endGame(){const m=ui.mg;const joy=Math.min(30,8+m.score*3),coins=Math.min(15,2+m.score);S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-5);DB.wallet+=coins;addXP(2);
   const b=S.best[m.id]||0;if(m.score>b)S.best[m.id]=m.score;ui.mg=null;S.scene='main';setPose('happy',60);hearts(4);say('Joy +'+joy+'  ● +'+coins+(m.score>b?' NEW BEST':''));checkGrow();save()}
 // ---- idle life ----
 function pickIdle(){const I=ui.idle,sad=S.happy<35||S.coat>=TUNE.matAt||S.plaque>=TUNE.plaqueBad||S.hunger<25;
@@ -80,7 +83,7 @@ function walkTick(){const m=ui.mg;if(m.done)return;if(m.stT>0)m.stT--;
   else if(m.st==='wee'&&!m.stT){m.cur.d=true;m.st='walk';say('Wee on the lamp post!',70)}
   else if(m.st==='poo'&&!m.stT){m.cur.px=m.x+60;m.st='bagQ'}
   else if(m.st==='bagging'&&!m.stT){m.cur.d=true;m.st='walk';say('Good owner! Bagged & binned',80);sparkle(8,80,150)}}
-function endWalk(){const m=ui.mg,joy=Math.min(35,10+m.sn*4+Math.round(m.x/m.len*10)),coins=3+m.bag*2;S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-6);S.coins+=coins;addXP(3);S.lastWalk=now();
+function endWalk(){const m=ui.mg,joy=Math.min(35,10+m.sn*4+Math.round(m.x/m.len*10)),coins=3+m.bag*2;S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-6);DB.wallet+=coins;addXP(3);S.lastWalk=now();
   ui.mg=null;S.scene='main';setPose('happy',60);hearts(4);say('Lovely walk! Joy +'+joy+'  ● +'+coins);checkGrow();save()}
 // ---- teeth ----
 function teethInput(k){const m=ui.mg;if(m.done){if(k==='a'||k==='b'){S.scene='main';ui.mg=null;setPose('happy',60);save()}return}

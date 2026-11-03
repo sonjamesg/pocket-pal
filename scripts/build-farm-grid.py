@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Regenerate assets/world/farm-grid.{png,json,html} from js/map-data.js (the single
 source of truth the game also loads). Run after ANY map layout change: scripts/build.sh"""
-import json, os, re
+import json, os, re, sys
 from PIL import Image, ImageDraw, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W_DIR = os.path.join(ROOT, 'assets', 'world')
 src = open(os.path.join(ROOT, 'js', 'map-data.js'), encoding='utf-8').read()
 L = json.loads(re.search(r'/\*JSON-START\*/(.*?)/\*JSON-END\*/', src, re.S).group(1))
+OUTER = len(sys.argv) > 1 and sys.argv[1] == 'outer'
+PFX = 'world-grid' if OUTER else 'farm-grid'
+if OUTER: L = dict(L['outer'], tileSize=L['tileSize'], houseSlots=[], locks=[])
 TS, MW, MH, rows = L['tileSize'], L['width'], L['height'], L['rows']
 assert len(rows) == MH and all(len(r) == MW for r in rows), 'rows must be width x height'
 def col(x):
@@ -31,19 +34,30 @@ for hx, hy, n in L['locks']:
         for dx in range(3):
             cells[name(hx+dx, hy+dy)].update(kind='locked', feature=n)
     locked.append({'name': n, 'origin': [hx, hy], 'grid': name(hx, hy)})
+store = None
+if L.get('home'):
+    hx, hy = L['home']
+    for dy in range(2):
+        for dx in range(3): cells[name(hx+dx, hy+dy)].update(kind='player_house', feature='YOUR HOUSE')
+if L.get('petStore'):
+    sx, sy = L['petStore']
+    for dy in range(2):
+        for dx in range(3):
+            cells[name(sx+dx, sy+dy)].update(kind='pet_store', feature='PET STORE')
+    store = {'origin': [sx, sy], 'door': [sx+1, sy+1], 'grid': name(sx, sy), 'doorGrid': name(sx+1, sy+1)}
 out = {'generatedFrom': 'js/map-data.js', 'width': MW, 'height': MH, 'tileSize': TS,
        'cols': [col(x) for x in range(MW)], 'rows': list(range(1, MH+1)),
        'howTo': 'Caller says e.g. B2 → look up cells["B2"]. Letters = columns left→right starting A=x0. Numbers = rows top→bottom starting 1=y0.',
-       'legend': legend, 'houseSlots': slots, 'locked': locked, 'cells': cells}
-json.dump(out, open(os.path.join(W_DIR, 'farm-grid.json'), 'w'), indent=2, ensure_ascii=False)
+       'legend': legend, 'buildings': [{'name': b[5], 'origin': [b[0], b[1]], 'size': [b[2], b[3]], 'grid': name(b[0], b[1]), 'doorGrid': name(b[0]+b[2]//2, b[1]+b[3]-1)} for b in L.get('barns', [])], 'houseSlots': slots, 'locked': locked, 'petStore': store, 'cells': cells}
+json.dump(out, open(os.path.join(W_DIR, PFX+'.json'), 'w'), indent=2, ensure_ascii=False)
 # --- PNG ---
 man = json.load(open(os.path.join(W_DIR, 'manifest.json')))['images']
 def img(k):
     p = man.get(k)
     try: return Image.open(os.path.join(W_DIR, p)).convert('RGBA') if p else None
     except Exception: return None
-TILE = {'C':'corn','W':'wheat','p':'path','w':'water','c':'field','f':'fence','t':'tree','s':'sign'}
-FALL = {'grass':'#78c858','path':'#e8d8a0','water':'#4888e8','field':'#986838','fence':'#b07038','corn':'#d0b040','wheat':'#e8c860','tree':'#307030','sign':'#c89a60'}
+TILE = {'C':'corn','W':'wheat','p':'path','G':'path','w':'water','B':'bridge','b':'sand','c':'field','f':'fence','t':'tree','T':'tree2','P':'pine2','s':'sign','h':'tallgrass','F':'flower0','J':'flower1','K':'flower2','r':'rock'}
+FALL = {'sand':'#f0e0a8','tree2':'#307030','pine2':'#205030','bridge':'#a06830','tallgrass':'#309028','flower0':'#f05868','flower1':'#f8e048','flower2':'#ffffff','rock':'#8890a0','grass':'#78c858','path':'#e8d8a0','water':'#4888e8','field':'#986838','fence':'#b07038','corn':'#d0b040','wheat':'#e8c860','tree':'#307030','sign':'#c89a60'}
 S, M = 28, 36  # px per cell, margin for labels
 cache = {}
 def tile(k):
@@ -67,13 +81,19 @@ def box(hx, hy, fill, label):
     d.text((X+3*S/2, Y+S), label, fill='#fff', font=small, anchor='mm')
 for s in slots: box(*s['origin'], '#c0503a', f"HOUSE {s['slot']}")
 for l in locked: box(*l['origin'], '#7a7090', l['name'])
+if store: box(*store['origin'], '#e08a20', 'PET SHOP')
+if L.get('home'): box(*L['home'], '#3a86e8', 'YOUR HOUSE')
+for bx, by, bw, bh, bid, bn in L.get('barns', []):
+    bi = img('b_'+bid); X, Y = M + bx*S, M + (by-1)*S
+    if bi: im.alpha_composite(bi.resize((bw*S, (bh+1)*S), Image.NEAREST), (X, max(0, Y)))
+    d.text((X + bw*S/2, M + (by+bh)*S - 6), bn, fill='#fff', font=small, anchor='mm', stroke_width=2, stroke_fill='#2b2440')
 for x in range(MW + 1): d.line([M + x*S, M, M + x*S, M + MH*S], fill=(0, 0, 0, 90))
 for y in range(MH + 1): d.line([M, M + y*S, M + MW*S, M + y*S], fill=(0, 0, 0, 90))
 for x in range(MW): d.text((M + x*S + S/2, M/2), col(x), fill='#ffd84a', font=font, anchor='mm')
 for y in range(MH): d.text((M/2, M + y*S + S/2), str(y+1), fill='#ffd84a', font=font, anchor='mm')
-im.save(os.path.join(W_DIR, 'farm-grid.png'))
+im.save(os.path.join(W_DIR, PFX+'.png'))
 hs = ', '.join(f"#{s['slot']}={s['grid']}" for s in slots); ls = ', '.join(f"{l['name']}={l['grid']}" for l in locked)
-open(os.path.join(W_DIR, 'farm-grid.html'), 'w', encoding='utf-8').write(f'''<!DOCTYPE html>
+open(os.path.join(W_DIR, PFX+'.html'), 'w', encoding='utf-8').write(f'''<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Pet Farm grid</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>body{{margin:0;background:#1d1830;color:#eee;font-family:system-ui,sans-serif}}
@@ -82,9 +102,9 @@ p{{padding:0 16px;max-width:920px;margin:8px auto;line-height:1.45}}
 code{{background:#2a2347;padding:2px 6px;border-radius:4px}}</style></head>
 <body>
 <p><b>Pet Farm overworld grid</b> — say coordinates like <code>B2</code> or <code>P10</code>. Letters = columns left→right (<code>A</code> = x0). Numbers = rows top→bottom (<code>1</code> = y0). Each cell is one game tile. Auto-generated from <code>js/map-data.js</code>.</p>
-<img src="farm-grid.png?t={os.path.getmtime(os.path.join(W_DIR, 'farm-grid.png')):.0f}" alt="Farm grid" width="{im.width}" height="{im.height}">
-<p>Pet house origins: {hs}. Locked: {ls}.</p>
-<p>Download: <a href="farm-grid.png" style="color:#ffd84a">farm-grid.png</a> · <a href="farm-grid.json" style="color:#ffd84a">farm-grid.json</a> (agent reference).</p>
+<img src="{PFX}.png?t={os.path.getmtime(os.path.join(W_DIR, PFX+'.png')):.0f}" alt="Farm grid" width="{im.width}" height="{im.height}">
+<p>Pet house origins: {hs}. Locked: {ls}. Pet store: {store['grid'] if store else '-'} (door {store['doorGrid'] if store else '-'}).</p>
+<p>Download: <a href="{PFX}.png" style="color:#ffd84a">farm-grid.png</a> · <a href="{PFX}.json" style="color:#ffd84a">farm-grid.json</a> (agent reference).</p>
 </body></html>
 ''')
-print(f'farm-grid regenerated: {MW}x{MH}, houses {hs}; locked {ls}')
+print(f'{PFX} regenerated: {MW}x{MH}, houses {hs}; locked {ls}')

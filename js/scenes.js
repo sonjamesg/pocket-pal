@@ -4,15 +4,15 @@ function panel(x,y,w,h,title){RR(x+2,y+3,w,h,8,'#0004');RR(x,y,w,h,8,'#fff8ee','
 function bar(x,y,w,v,col){RR(x,y,w,9,4.5,'#2b2440');const ww=Math.max(0,(w-4)*v/100);if(ww>1)RR(x+2,y+2,ww,5,2.5,col)}
 function chrome(){R(0,0,W,30,'#ffffffdd');R(0,30,W,1,'#2b244033');
   foodIcon('kibble',9,8,.5);bar(17,4,60,S.hunger,S.hunger<25?'#ff5a7a':'#ffa53f');heartS(9,21,.8);bar(17,17,60,S.happy,S.happy<25?'#ff5a7a':'#5ad07a');
-  const cl=S.coat,cc=cl>=TUNE.matAt?'#ff4f7b':cl>=TUNE.longAt?'#ffb03a':'#a07cff';if(S.species==='dog'){txt('✂',87,12,cc,9);bar(93,4,40,cl,cc)}
+  const cl=S.coat,cc=cl>=TUNE.matAt?'#ff4f7b':cl>=TUNE.longAt?'#ffb03a':'#a07cff';if(S.species==='dog'){txt('✂',87,12,cc,9);bar(93,4,40,cl,cc)}if(S.species==='sheep'){const wv=S.wool||0;txt('☁',87,13,wv>=100?'#2a9a50':'#a0a0b0',9);bar(93,4,40,wv,wv>=100?'#5ad07a':'#d8d0c0')}
   const pq=S.plaque,pc=pq>=TUNE.plaqueBad?'#ff4f7b':pq>=40?'#e0c040':'#5ab0ff';if(S.species==='dog'||S.species==='cat'){toothI(87,21,pq);bar(93,17,40,pq,pc)}
-  txt(S.name,W-6,12,'#5b4b8a',10,'right');txt('● '+S.coins,W-6,26,'#d89a10',8,'right');RR(140,17,50,10,5,'#ff5a8b');txt(stageName(S.stage,S.species),165,25,'#fff',7);
+  txt(S.name,W-6,12,'#5b4b8a',10,'right');txt('● '+DB.wallet,W-6,26,'#d89a10',8,'right');RR(140,17,50,10,5,'#ff5a8b');txt(stageName(S.stage,S.species),165,25,'#fff',7);
   R(0,31,W,3,'#0001');R(0,31,W*growProg(),3,'#a07cff')}
 function toothI(x,y,p){g.fillStyle=mix('#ffffff','#d8b040',Math.min(1,p/90));g.strokeStyle='#2b2440';g.lineWidth=.8;g.beginPath();g.moveTo(x-3.5,y-4);g.lineTo(x+3.5,y-4);g.lineTo(x+3,y+1);g.lineTo(x+1.5,y+4);g.lineTo(x,y+1);g.lineTo(x-1.5,y+4);g.lineTo(x-3,y+1);g.closePath();g.fill();g.stroke()}
-function warnings(){const w=[];if(S.species!=='dog'){}else if(S.coat>=TUNE.matAt)w.push(['OUCH! Matted fur — go to Tara\'s!',1]);else if(S.coat>=TUNE.longAt)w.push(['Coat getting long — groom soon',0]);
+function warnings(){const w=[];if(S.species==='sheep'){if((S.wool||0)>=100)w.push(['Wool is FULL — SHEAR me!',0]);else if(S.hunger<WOOL.need)w.push(['Hungry! Feed me so my wool grows',1]);else if(S.happy<WOOL.need)w.push(['Cuddle or brush me — wool grows slow when sad',0]);else w.push(['Growing wool… '+Math.round(S.wool||0)+'%',0]);return w}if(S.species!=='dog'){}else if(S.coat>=TUNE.matAt)w.push(['OUCH! Matted fur — go to Tara\'s!',1]);else if(S.coat>=TUNE.longAt)w.push(['Coat getting long — groom soon',0]);
   if(S.plaque>=TUNE.plaqueBad)w.push(['Ouch, my teeth! Brush them',1]);if(S.hunger<25)w.push(['Hungry… feed me',1]);if(S.happy<30&&!w.length)w.push(['Lonely… play with me',0]);return w}
 function mood(){return(S.hunger<30||S.happy<30||S.coat>=TUNE.matAt||S.plaque>=TUNE.plaqueBad)?'sad':(S.hunger>55&&S.happy>60)?'happy':'ok'}
-function dogAt(x,y,s,pose,pt,dir){g.save();g.translate(x,y);g.scale(s,s);dog(0,0,S.breed,S.stage,{pose,pt,mood:mood(),coat:S.coat,plaque:S.plaque,dir});g.restore()}
+function dogAt(x,y,s,pose,pt,dir){g.save();g.translate(x,y);g.scale(s,s);dog(0,0,S.breed,S.stage,{pose,pt,mood:mood(),coat:S.coat,plaque:S.plaque,dir,wool:S.wool});g.restore()}
 function cecily(x,y,t,snip){g.save();g.translate(x,y);E(0,0,14,4,'#0003');
   RR(-7,-24,5,24,2,'#3a3a5a');RR(2,-24,5,24,2,'#3a3a5a');E(-5,-1,4,2,'#2b2440');E(5,-1,4,2,'#2b2440');
   RR(-12,-58,24,38,10,'#3fb8a8');RR(-9,-50,18,28,6,'#ffd6e6');txt('TSH',0,-34,'#e0457b',6);

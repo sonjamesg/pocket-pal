@@ -50,3 +50,14 @@ button:active,.pressed{filter:brightness(1.25);transform:translateY(3px)}
   padding:calc(env(safe-area-inset-top) + 6px) 6px calc(env(safe-area-inset-bottom) + 6px)}
  #padM{left:auto;right:auto;width:100%}
 }
+#screenwrap{position:relative}
+#acctov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(43,36,64,.55);z-index:20}
+#acctov[hidden]{display:none}
+#acctform{width:min(88%,420px);background:#fff;border:4px solid #5b4b8a;border-radius:18px;padding:14px 14px 12px;text-align:center;font-family:inherit;box-shadow:0 6px 0 #2b2440}
+#acctttl{background:#5b4b8a;color:#fff;font-weight:bold;font-size:20px;border-radius:10px;padding:6px}
+#accthint{color:#8a80a8;font-size:15px;margin:8px 0}
+#acctin{width:100%;box-sizing:border-box;font-size:30px;font-weight:bold;text-align:center;letter-spacing:4px;padding:10px;border:3px solid #5b4b8a;border-radius:12px;background:#efe6ff;color:#2b2440;text-transform:uppercase;outline:none}
+#acctin:focus{border-color:#ff5a8b}
+#accterr{color:#e8402a;font-size:15px;min-height:20px;margin:6px 0}
+.acctbtns{display:flex;gap:10px}.acctbtns button{flex:1;font-size:20px;font-weight:bold;padding:12px;border-radius:14px;border:3px solid #5b4b8a;background:#fff;color:#5b4b8a}
+#acctok{background:#ff5a8b;color:#fff;border-color:#fff}

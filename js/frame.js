@@ -12,9 +12,9 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       if(dip<=0.3)blink(97,[[713,276,'#f0d2c0']]);
       for(let i=0;i<4;i++){const cx=((t*0.25*(1+i*0.3)+i*90)%(W+80))-40,cy=10+i*9+Math.sin(t/60+i)*2;g.fillStyle='rgba(255,255,255,0.55)';g.beginPath();g.ellipse(cx,cy,16,5,0,0,7);g.ellipse(cx+10,cy-3,10,5,0,0,7);g.fill()}
       g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}
-    else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore()}
+    else if(!LOGO.err){g.fillStyle='#2b2440';g.fillRect(0,0,W,H);requestAnimationFrame(frame);return}else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26)}
     const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
-    const lp=DB.pets[DB.lastId];if(lp&&it[ui.tsel]==='CONTINUE')txt(lp.name+' • '+stageName(lp.stage,spOf(lp)),W/2,206,'#fff',9);else txt(petList().length+' pet'+(petList().length===1?'':'s')+' saved on this device',W/2,206,'#fff',9)}
+    const n=petList().length;if(!ACC.token)txt('New? Login with a new name to start',W/2,206,'#fff',9);else if(it[ui.tsel]==='NEW GAME')txt('Start over: new rancher & avatar',W/2,206,'#fff',9);else txt((DB.playerName||'RANCHER')+' • '+n+' pet'+(n===1?'':'s')+' • '+(DB.wallet||0)+' coins',W/2,206,'#fff',9)}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
     rows.slice(top,top+5).forEach((p,ii)=>{const i=ii+top,y=32+ii*32,on=i===ui.psel;RR(14,y,W-28,28,8,on?'#ffe0ec':'#fffd',on?'#ff5a8b':'#d8d0e8');
       if(!p){txt('+ NEW PET',W/2,y+18,'#e0457b',11);return}
@@ -28,6 +28,13 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       otxt(sp.n,x,172,on?'#ff5a8b':'#fff',10)});
     if(off>0)otxt('◀',6,104,'#fff',12);if(off+4<SPECIES.length)otxt('▶',W-6,104,'#fff',12);
     otxt(SPECIES[ui.sel].ok?'◀ ▶ choose   A select':'More pets coming soon!',W/2,198,'#fff',11)}
+  else if(sc==='intro'){drawIntro(t)}
+  else if(sc==='avatar')drawAvatar(t)
+  else if(sc==='store'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b],p=priceOf(b),can=DB.wallet>=p;otxt('PET STORE',W/2,22,'#ffe36a',15);txt('● '+DB.wallet,W-10,22,'#ffd84a',10,'right');
+    RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
+    g.save();g.translate(W/2+70,160);g.scale(.8,.8);dog(0,0,b,'puppy',{pose:'sit',mood:'happy'});g.restore();txt('puppy',W/2+70,166,'#8a80a8',7);
+    otxt('◀',22,104,'#fff',16);otxt('▶',W-22,104,'#fff',16);otxt(B.n+'  ● '+p,W/2,186,can?'#ffe36a':'#ff8a8a',14);txt(can?'A buy   B leave':'Not enough coins   B leave',W/2,200,'#2b2440',8);
+    BKEYS.forEach((k,i)=>E(W/2-28+i*8,210,2.5,2.5,i===ui.sel?'#ff5a8b':'#fff'))}
   else if(sc==='breed'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b];otxt('PICK YOUR DOG',W/2,22,'#fff',15);
     RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
     g.save();g.translate(W/2+70,160);g.scale(.8,.8);dog(0,0,b,'puppy',{pose:'sit',mood:'happy'});g.restore();txt('puppy',W/2+70,166,'#8a80a8',7);
@@ -57,7 +64,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       const f=FOODS[ui.sel]||FOODS[0];txt(f.n+(f.d?' — '+f.d:''),W/2,184,'#2b2440',9);txt('✚ choose  A feed  B back',W/2,200,'#8a80a8',9)}
     if(sc==='toys'){panel(10,46,W-20,H-56,'TOYS');TOYS.forEach((ty,i)=>{const x=20+(i%4)*52,y=56+Math.floor(i/4)*60,on=i===ui.sel,own=S.toys.includes(ty.id);
         RR(x,y,46,52,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');toyIcon(ty.id,x+23,y+22,on?1.4:1.2);txt(own?'OWNED':'● '+ty.p,x+23,y+46,own?'#2a9a50':'#d89a10',8)});
-      const ty=TOYS[ui.sel],own=S.toys.includes(ty.id);txt(ty.n+(own?' — A to give':' — A to buy'),W/2,184,'#2b2440',9);txt('You have ● '+S.coins+'   B back',W/2,200,'#8a80a8',9)}
+      const ty=TOYS[ui.sel],own=S.toys.includes(ty.id);txt(ty.n+(own?' — A to give':' — A to buy'),W/2,184,'#2b2440',9);txt('You have ● '+DB.wallet+'   B back',W/2,200,'#8a80a8',9)}
     if(sc==='games'){panel(16,50,W-32,H-62,'PLAY');GAMES.forEach((gm,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');gameIcon(gm.id,46,y+17);txt(gm.n,66,y+15,'#2b2440',11,'left');txt(gm.d,66,y+28,'#8a80a8',8,'left');txt('★'+(S.best[gm.id]||0),W-34,y+15,'#e0a020',9,'right')});
       txt('▲▼ choose  A play  B back',W/2,H-16,'#8a80a8',10)}
     if(sc==='care'){panel(16,50,W-32,H-62,'CARE');careList().forEach((c,i)=>{const y=62+i*40,on=i===ui.sel;RR(26,y,W-52,34,8,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
@@ -76,7 +83,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
   }
   ui.fx=ui.fx.filter(f=>{f.x+=f.vx;f.y+=f.vy;f.vy+=f.ch==='shell'||f.ch==='hair'?.12:0;f.t--;g.globalAlpha=Math.min(1,f.t/20);
     if(f.ch==='heart')heartS(f.x,f.y,1.2);else if(f.ch==='shell')E(f.x,f.y,3,2,'#f4e8d0');else if(f.ch==='hair')E(f.x,f.y,3,1,BREEDS[S.breed||'lab'].c,f.t/5);else if(f.ch==='bubble'){g.strokeStyle='#5ab0ff';g.lineWidth=1;g.beginPath();g.arc(f.x,f.y,2.5,0,7);g.stroke()}else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});
-  if(ui.msgT>0){ui.msgT--;const y=sc==='main'?40:H-40;RR(14,y,W-28,20,10,'#fff','#2b2440');txt(ui.msg.slice(0,40),W/2,y+14,'#2b2440',9)}
+  if(ui.msgT>0){ui.msgT--;drawMsg(sc==='main'?40:H-40)}
   if(saveFlash>0){saveFlash--;g.globalAlpha=Math.min(1,saveFlash/15);RR(W/2-24,36,48,13,6,'#5ad07a');txt('SAVED',W/2,46,'#fff',8);g.globalAlpha=1}
   if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
 function gameIcon(id,x,y){if(id==='fetch')toyIcon('ball',x,y,1.2);
@@ -99,3 +106,11 @@ function drawGame(t){const m=ui.mg;gameTick();
   chromeGame(m);if(m.resT>0)otxt(m.res,W/2,64,'#fff',18);
   if(m.over){R(0,0,W,H,'#0008');panel(30,60,W-60,90,'DONE!');txt('Score '+m.score,W/2,100,'#2b2440',16);txt('Best '+Math.max(m.score,S.best[m.id]||0),W/2,120,'#8a80a8',10);txt('A to collect joy & coins',W/2,140,'#e0457b',10)}}
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
+
+// v30: Grandpa-style speech bubble (no portrait). Wraps with the SAME font it draws with, so nothing overflows on phones.
+function wrapMsg(str,maxW,size){g.font='800 '+size+'px system-ui,sans-serif';const out=[];let line='';for(const w of String(str).split(' ')){const t=line?line+' '+w:w;if(g.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t}if(line)out.push(line);return out}
+function drawMsg(y){if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(ui.msg.length,(ui.msgC||0)+1.2);
+  let size=10,L=wrapMsg(ui.msg,W-36,size);if(L.length>3){size=9;L=wrapMsg(ui.msg,W-36,size)}L=L.slice(0,4);const lh=size+3,h=L.length*lh+14,top=y<H/2?y-6:H-6-h;
+  RR(6,top,W-12,h,7,'#fff','#2b2440');g.strokeStyle='#58a8f8';g.lineWidth=1;g.strokeRect(10.5,top+3.5,W-21,h-7);
+  let left=Math.floor(ui.msgC);L.forEach((l,i)=>{const part=l.slice(0,Math.max(0,left));left-=l.length+1;txt(part,16,top+8+size+i*lh,'#2b2440',size,'left')});
+  if(ui.msgC>=ui.msg.length&&S.scene==='map'&&(ui.anim>>4)%2){g.fillStyle='#e8402a';g.beginPath();g.moveTo(W-22,top+h-9);g.lineTo(W-14,top+h-9);g.lineTo(W-18,top+h-5);g.fill()}}

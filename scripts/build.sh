@@ -4,3 +4,4 @@
 set -e; cd "$(dirname "$0")/.."
 if command -v node >/dev/null; then for f in js/*.js; do node --check "$f"; done; fi
 python3 scripts/build-farm-grid.py
+python3 scripts/build-farm-grid.py outer
