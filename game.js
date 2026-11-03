@@ -1,3 +1,4 @@
+const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=11';
 // ===== Pet Farm v9 — farm map, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
@@ -539,7 +540,10 @@ function drawWalk(t){const m=ui.mg;walkTick();const x=m.x;
 function promptBox(a,b){RR(30,34,180,38,10,'#fff','#2b2440');txt(a,W/2,50,'#2b2440',10);txt(b,W/2,64,'#e0457b',9)}
 function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
   const sc=S.scene;
-  if(sc==='title'){bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore();
+  if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,sc2=Math.max(W/iw,H/ih)*1.08,dw=iw*sc2,dh=ih*sc2,ex=dw-W,ox=-ex/2-Math.sin(t/260)*ex/2,oy=-(dh-H)*0.3+Math.sin(t/190)*2;g.drawImage(LOGO.img,ox,oy,dw,dh);
+      for(let i=0;i<4;i++){const cx=((t*0.25*(1+i*0.3)+i*90)%(W+80))-40,cy=10+i*9+Math.sin(t/60+i)*2;g.fillStyle='rgba(255,255,255,0.55)';g.beginPath();g.ellipse(cx,cy,16,5,0,0,7);g.ellipse(cx+10,cy-3,10,5,0,0,7);g.fill()}
+      g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}
+    else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore()}
     const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
     const lp=DB.pets[DB.lastId];if(lp&&it[ui.tsel]==='CONTINUE')txt(lp.name+' • '+stageName(lp.stage,spOf(lp)),W/2,206,'#fff',9);else txt(petList().length+' pet'+(petList().length===1?'':'s')+' saved on this device',W/2,206,'#fff',9)}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
@@ -594,7 +598,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
     if(sc==='tricks'){panel(16,50,W-32,H-62,'TRICKS');TRICKS.forEach((tr,i)=>{const y=60+i*26,on=i===ui.sel,p=S.tricks[tr.id],done=p>=TUNE.trickNeed;RR(26,y,W-52,22,7,on?'#ffe0ec':'#fff',on?'#ff5a8b':'#d8d0e8');
         txt(tr.n,36,y+15,'#2b2440',10,'left');for(let j=0;j<TUNE.trickNeed;j++)star(108+j*11,y+11,4.5,j<p?'#ffc83a':'#a99fc8');txt(done?'DO IT':'TEACH',W-34,y+15,done?'#2a9a50':'#e0457b',9,'right')});
       txt('A teach / perform  B back',W/2,H-16,'#8a80a8',10)}
-    if(sc==='pause'){R(0,0,W,H,'#2b244099');panel(50,42,W-100,PAUSE.length*24+20,'MENU');PAUSE.forEach((c,i)=>{const y=54+i*24,on=i===ui.sel;RR(60,y,W-120,20,8,on?'#ff5a8b':'#fff',on?null:'#d8d0e8');txt(c,W/2,y+14,on?'#fff':'#5b4b8a',10)});
+    if(sc==='pause'){R(0,0,W,H,'#2b244099');if(LOGO.ok)g.drawImage(LOGO.img,W/2-32,4,64,36);panel(50,42,W-100,PAUSE.length*24+20,'MENU');PAUSE.forEach((c,i)=>{const y=54+i*24,on=i===ui.sel;RR(60,y,W-120,20,8,on?'#ff5a8b':'#fff',on?null:'#d8d0e8');txt(c,W/2,y+14,on?'#fff':'#5b4b8a',10)});
       const age=Math.floor((now()-(S.born||now()))/DAY);txt('Age '+age+' day'+(age===1?'':'s')+(GROW[S.stage]?' • grows in ~'+daysLeft()+' days':''),W/2,H-24,'#fff',9);txt('A choose  B back',W/2,H-10,'#fff',9)}
     if(sc==='teach'){const m=ui.mg;teachTick();if(ui.mg){panel(20,46,W-40,40,'TEACH '+m.tr.n);
       txt(m.cue?'Press it NOW!':'Watch for the cue…',W/2,66,'#5b4b8a',10);for(let j=0;j<TUNE.trickNeed;j++)star(W/2-24+j*12,78,5,j<S.tricks[m.tr.id]?'#ffc83a':'#a99fc8');
