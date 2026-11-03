@@ -1,5 +1,5 @@
 const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=14';
-// ===== Pet Farm v15 — walkable overworld, cat/chicken/pig + dogs =====
+// ===== Pet Farm v15 — walkable overworld + horse/rabbit assets =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
 const RATE={hunger:6,happy:3,coat:100/(12*24),plaque:100/(8*24)};
@@ -9,8 +9,8 @@ const STAGE_N={egg:'EGG',puppy:'PUPPY',youngster:'YOUNGSTER',teen:'TEEN',adult:'
 // real days in stage + care XP (max 14 XP/day) — Adult ≈ 6 weeks, Senior ≈ 4 months of caring
 const GROW={puppy:{days:7,xp:60},youngster:{days:14,xp:120},teen:{days:21,xp:180},adult:{days:75,xp:600}};
 const SPECIES=[{id:'dog',n:'DOG',ok:true},{id:'cat',n:'CAT',ok:true},{id:'chicken',n:'CHICKEN',ok:true},{id:'pig',n:'PIG',ok:true},
- {id:'cow',n:'COW'},{id:'sheep',n:'SHEEP'},{id:'horse',n:'HORSE'},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'rabbit',n:'RABBIT'},{id:'bird',n:'BIRD'}];
-const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'}};
+ {id:'horse',n:'HORSE',ok:true},{id:'rabbit',n:'RABBIT',ok:true},{id:'cow',n:'COW'},{id:'sheep',n:'SHEEP'},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'bird',n:'BIRD'}];
+const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'},horse:{baby:'FOAL',house:'STABLE',food:'HORSE FEED'},rabbit:{baby:'KIT',house:'HUTCH',food:'RABBIT FOOD'}};
 const spOf=p=>(p&&p.species&&SP[p.species])?p.species:'dog';
 function stageName(st,sp){return st==='puppy'?SP[sp||'dog'].baby:STAGE_N[st||'egg']}
 const BREEDS={
@@ -24,6 +24,8 @@ const BREEDS={
  cat:{sp:'cat',n:'CAT',c:'#f0a050',d:'#c07030',l:'#fff4e6',bl:20,bh:11,leg:12,hr:11,sn:4,fur:0,desc:'Purrs, naps, loves a cushion'},
  chicken:{sp:'chicken',n:'CHICKEN',c:'#fff8ec',d:'#e8d8c0',l:'#ffffff',bl:14,bh:13,leg:10,hr:8,sn:3,fur:0,desc:'Clucks, pecks & scratches'},
  pig:{sp:'pig',n:'PIG',c:'#ffb0c0',d:'#e88aa0',l:'#ffd0dc',bl:24,bh:14,leg:8,hr:12,sn:5,fur:0,desc:'Oink! Loves a muddy roll'},
+ horse:{sp:'horse',n:'HORSE',c:'#8c5a32',d:'#5a3a20',l:'#c89a70',bl:28,bh:16,leg:18,hr:12,sn:8,fur:0,desc:'Gallops, neighs & loves carrots'},
+ rabbit:{sp:'rabbit',n:'RABBIT',c:'#dcdce6',d:'#b0b0c0',l:'#ffffff',bl:16,bh:12,leg:10,hr:10,sn:3,fur:0,desc:'Hops, flops ears & munches greens'},
  collie:{n:'BORDER COLLIE',c:'#2a2630',d:'#16131a',l:'#ffffff',ear:'semi',tail:'plume',bl:22,bh:12,leg:15,hr:10,sn:9,fur:1.2,white:true,desc:'Clever! Learns tricks fast'}};
 const BKEYS=Object.keys(BREEDS).filter(k=>!BREEDS[k].sp);
 const FOODS=[
@@ -31,13 +33,15 @@ const FOODS=[
  {id:'biscuit',n:'PEANUT TREAT',v:8,joy:12,plq:4,d:'Dog-safe peanut biscuit'},{id:'dental',n:'DENTAL CHEW',v:6,joy:6,plq:-30,d:'Cleans teeth!'},{id:'carrot',n:'CARROT STICK',v:10,joy:2,plq:-8,d:'Crunchy, helps teeth'}];
 const SFOODS={cat:[{id:'catbisc',n:'CAT BISCUITS',v:20},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'salmon',n:'SALMON',v:22,joy:6},{id:'chicken',n:'CHICKEN',v:24,joy:5},{id:'dental',n:'DENTAL TREAT',v:6,joy:6,plq:-30,d:'Cleans teeth!'}],
  chicken:[{id:'corn',n:'CORN',v:20},{id:'grain',n:'MIXED GRAIN',v:24},{id:'worms',n:'MEALWORMS',v:12,joy:10,d:'Favourite snack!'},{id:'greens',n:'GREENS',v:14,joy:4}],
- pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}]};
+ pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}],
+ horse:[{id:'hay',n:'HAY',v:24},{id:'oats',n:'OATS',v:22,joy:4},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'apple',n:'APPLE',v:14,joy:6},{n:'SUGAR LUMP',id:'sugar',v:6,joy:12}],
+ rabbit:[{id:'pellets',n:'PELLETS',v:20},{id:'hay',n:'HAY',v:18,joy:3},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'greens',n:'GREENS',v:12,joy:5},{id:'apple',n:'APPLE SLICE',v:10,joy:6}]};
 function foods(){return S.species&&SFOODS[S.species]||FOODS}
 const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},{id:'rope',n:'TUG ROPE',p:20},{id:'frisbee',n:'FRISBEE',p:30},{id:'duck',n:'PLUSH DUCK',p:40}];
 const GAMES=[{id:'fetch',n:'FETCH',d:'Tap A when the ball hits the zone'},{id:'simon',n:'MEMORY',d:'Repeat the pad pattern'},{id:'dash',n:'DASH',d:'▲▼ dodge rocks, grab hearts'}];
 const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{id:'lay',n:'LAY DOWN'},{id:'roll',n:'ROLL OVER'}];
 const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
-const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP']};
+const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP']};
 let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}
 const cv=document.getElementById('screen'),g=cv.getContext('2d');
 const SAVE='pocketpal_v9';
@@ -189,7 +193,7 @@ function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
   if(a==='CUDDLE'){careAct('cuddle');return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
-  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!']}[S.species]||['Love you!']));save()}
+  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
   if(id==='groom'){S.scene='groom';ui.mg={ph:S.coat<15?'short':'intro',snips:0,t:0,start:S.coat,mat:S.coat>=TUNE.matAt,brush:0,last:null}}}
 function feed(f){if(S.hunger>=97&&!f.plq){say('Too full!');return}
@@ -467,7 +471,9 @@ function house(sp,x,y,s,night,name){g.save();g.translate(x,y);g.scale(s,s);const
     R(-20,-4,3,4,'#7a5030');R(17,-4,3,4,'#7a5030');RR(-6,-24,12,14,6,'#3a2020');g.strokeStyle=dk('#a0a0a0');g.lineWidth=1.5;g.beginPath();g.moveTo(6,-10);g.lineTo(20,0);g.stroke()}
   if(sp==='pig'){E(0,-2,32,6,dk('#7a5030'));RR(-24,-28,34,24,2,dk('#d8a070'));R(-26,-32,38,5,dk('#8a5a3a'));RR(-10,-20,10,16,3,'#3a2020');
     for(let i=-30;i<34;i+=8)R(i,-12,3,12,dk('#b08050'));R(-30,-10,64,2,dk('#b08050'))}
-  if(name){RR(-15,-30+(sp==='pig'?-8:0),30,9,3,'#fff8');txt(name.slice(0,6),0,-23+(sp==='pig'?-8:0),'#5b4b8a',6)}
+  if(sp==='horse'){RR(-26,-40,52,40,3,dk('#c89050'));g.fillStyle=dk('#8a5030');g.beginPath();g.moveTo(-30,-38);g.lineTo(0,-62);g.lineTo(30,-38);g.fill();RR(-8,-26,16,26,2,'#3a2020');R(-28,-18,8,18,dk('#a07040'));R(20,-18,8,18,dk('#a07040'))}
+  if(sp==='rabbit'){RR(-18,-28,36,28,6,dk('#e8d8b0'));R(-20,-30,40,6,dk('#7a9a50'));RR(-6,-18,12,14,4,'#3a2020');E(-14,-8,5,4,dk('#fff0'));E(14,-8,5,4,dk('#fff0'))}
+  if(name){RR(-15,-30+(sp==='pig'?-8:sp==='horse'?-12:0),30,9,3,'#fff8');txt(name.slice(0,6),0,-23+(sp==='pig'?-8:sp==='horse'?-12:0),'#5b4b8a',6)}
   g.restore()}
 function lockedHouse(n,x,y,s){g.save();g.globalAlpha=.55;g.translate(x,y);g.scale(s,s);R(-24,-30,48,30,'#b0a8c0');g.fillStyle='#8a80a8';g.beginPath();g.moveTo(-28,-28);g.lineTo(0,-46);g.lineTo(28,-28);g.fill();g.globalAlpha=1;lock(0,-16);g.restore();txt(n,x,y+8*s,'#fff',6);txt('coming soon',x,y+15*s,'#ffffffaa',5)}
 function drawMap(t){const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#8fd06e');sky.addColorStop(1,'#6cbf50');g.fillStyle=sky;g.fillRect(0,0,W,H);
@@ -492,6 +498,7 @@ function drawMap(t){const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0
   txt('✚ choose  A go  B back',W/2,H-3,'#fff',7)}
 // ===== critters (cat / chicken / pig) =====
 function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok';const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1;
+  if(IMG[sp]&&IMG[sp].naturalWidth){const sleep=pose==='sleep'||pose==='lay'||pose==='nap';let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;if(pose==='walk'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;const im=IMG[sp],iw=im.naturalWidth,ih=im.naturalHeight,sc=28*sz/Math.max(iw,ih);g.save();g.translate(cx,cy+dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);g.imageSmoothingEnabled=false;g.drawImage(im,-iw/2,-ih+(sleep?4:0));g.restore();return}
   const sleep=pose==='sleep'||pose==='lay'||pose==='nap',eat=pose==='eat'||pose==='sniff';
   let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*12;if(pose==='walk'||pose==='trot'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;
   g.save();g.translate(cx,cy);E(0,1,20*sz,4*sz,'#0003');g.translate(0,dy);g.scale(sz*(o.dir||1),sz);if(pose==='roll')g.rotate(Math.sin(T/8)*.6);
@@ -518,6 +525,15 @@ function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mo
     const hx=18,hy=by-2+(eat?6:0);E(hx,hy,11,10,c);g.fillStyle=d;g.beginPath();g.moveTo(hx-6,hy-7);g.lineTo(hx-2,hy-15);g.lineTo(hx+1,hy-7);g.fill();
     E(hx+9,hy+2,4,4.5,d);E(hx+8,hy+1,.9,1.3,'#7a3a4a');E(hx+10.5,hy+1,.9,1.3,'#7a3a4a');eye(hx+2,hy-3,1.8);
     if(mood==='happy'||pose==='happy'){g.strokeStyle='#7a3a4a';g.lineWidth=1;g.beginPath();g.arc(hx+5,hy+5,2.5,.2,Math.PI-.4);g.stroke()}}
+  if(sp==='horse'){const c='#8c5a32',d='#5a3a20',by=sleep?-10:-18;
+    if(!sleep)[[-10,1],[-4,-1],[6,1],[12,-1]].forEach(([x,s])=>RR(x-2,by+6,4,-by-4+s*sw*.3,2,d));
+    E(0,by,18,11,c);g.strokeStyle=d;g.lineWidth=3;g.beginPath();g.moveTo(-18,by-2);g.quadraticCurveTo(-28,by+4,-24,by+10);g.stroke();
+    const hx=16,hy=by-10+(eat?6:0);R(hx-2,hy,6,12,c);E(hx+6,hy-2,9,7,c);E(hx+10,hy-1,3,2.5,d);eye(hx+4,hy-3,1.6);R(hx-1,hy-8,2,8,'#3a2818')}
+  if(sp==='rabbit'){const c='#dcdce6',d='#b0b0c0',by=sleep?-8:-14;
+    if(!sleep)[[-6,sw],[-2,-sw],[6,sw],[10,-sw]].forEach(([x,s])=>RR(x-1.5,by+4,3,-by-3+s*.2,1.5,d));
+    E(0,by,12,9,c);E(-10,by+1,4,4,'#fff');const hx=10,hy=by-6+(eat?5:0);
+    [[-2,0],[3,0]].forEach(([a])=>{g.fillStyle=c;g.beginPath();g.moveTo(hx+a,hy-2);g.lineTo(hx+a-1,hy-18);g.lineTo(hx+a+3,hy-2);g.fill();E(hx+a+1,hy-10,1.2,5,'#ffb0c0')});
+    E(hx,hy,8,7,c);eye(hx-1,hy-1,1.5);eye(hx+3,hy-1,1.5);E(hx+2,hy+2,1.5,1,'#ff90a8')}
   if(mood==='sad'&&!sleep&&T%90<60)E(cx?0:0,-30,0,0,'#0000');
   g.restore()}
 // ===== UI pieces =====
