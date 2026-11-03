@@ -1,7 +1,7 @@
 // ===== critters.js — cat / chicken / pig / horse / rabbit art =====
 // ===== critters (cat / chicken / pig) =====
 function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok';const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1;
-  if(IMG[sp]&&IMG[sp].naturalWidth){const sleep=pose==='sleep'||pose==='lay'||pose==='nap';let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;if(pose==='walk'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;const im=IMG[sp],iw=im.naturalWidth,ih=im.naturalHeight,sc=28*sz/Math.max(iw,ih);g.save();g.translate(cx,cy+dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);g.imageSmoothingEnabled=false;g.drawImage(im,-iw/2,-ih+(sleep?4:0));g.restore();return}
+  if(IMG[sp]&&IMG[sp].naturalWidth){const sleep=pose==='sleep'||pose==='lay'||pose==='nap';let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;if(pose==='walk'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;const im=varImg(IMG[sp],o.sv),iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height,sc=28*sz/Math.max(iw,ih);g.save();g.translate(cx,cy+dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);g.imageSmoothingEnabled=false;g.drawImage(im,-iw/2,-ih+(sleep?4:0));g.restore();return}
   const sleep=pose==='sleep'||pose==='lay'||pose==='nap',eat=pose==='eat'||pose==='sniff';
   let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*12;if(pose==='walk'||pose==='trot'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;
   g.save();g.translate(cx,cy);E(0,1,20*sz,4*sz,'#0003');g.translate(0,dy);g.scale(sz*(o.dir||1),sz);if(pose==='roll')g.rotate(Math.sin(T/8)*.6);
@@ -57,3 +57,27 @@ const _sheepC={};function sheepTint(im,sv){const T=typeof SHEEP_TYPES!=='undefin
   if(T.spot){const cx=(px/7)|0,cy=(py/7)|0,dx=px-cx*7-3.5,dy=py-cy*7-3.5;if((cx*5+cy*3)%4===0&&dx*dx+dy*dy<9){a[i]=a[i+1]=60;a[i+2]=70}}
   else{a[i]=r*T.f[0];a[i+1]=gg*T.f[1];a[i+2]=b*T.f[2]}}
  x.putImageData(d,0,0);return _sheepC[k]=c}
+
+// v43 cat / chicken colour types: palette swap the 16px sprite (cached)
+const VAR_MAP={cat_tabby:{'232,160,72':[176,146,108],'200,120,48':[96,76,56]},cat_black:{'232,160,72':[64,62,78],'200,120,48':[40,40,54],'40,40,40':[240,206,60]},
+ chicken_brown:{'245,245,240':[192,120,64],'220,220,210':[146,86,42]},chicken_rooster:{'245,245,240':[214,92,44],'220,220,210':[36,84,64]}};
+const _varC={};function varImg(im,sv){const M=VAR_MAP[sv];if(!M||!im)return im;const k=sv+im.src;if(_varC[k])return _varC[k];
+ const c=document.createElement('canvas');c.width=im.naturalWidth||im.width;c.height=im.naturalHeight||im.height;const x=c.getContext('2d');x.drawImage(im,0,0);
+ let d;try{d=x.getImageData(0,0,c.width,c.height)}catch(e){return im}const a=d.data;
+ for(let i=0;i<a.length;i+=4){if(a[i+3]<10)continue;const m=M[a[i]+','+a[i+1]+','+a[i+2]];if(m){a[i]=m[0];a[i+1]=m[1];a[i+2]=m[2]}}
+ x.putImageData(d,0,0);
+ if(sv==='chicken_rooster'){x.fillStyle='#e8302a';x.fillRect(10,0,2,2);x.fillRect(9,1,1,1);x.fillRect(12,6,1,2);x.fillStyle='#1e4a3a';x.fillRect(1,3,2,3);x.fillRect(0,4,1,3);x.fillStyle='#e8a020';x.fillRect(10,5,1,1)}
+ return _varC[k]=c}
+// v43 COW (procedural, chunky): white / brown / black
+const COW_COL={cow_white:['#fbf8f0','#2e2a2e','#f0b0b8'],cow_brown:['#a8683a','#f6efe4','#f0b0b8'],cow_black:['#34303a','#f6efe4','#e8a0b0']};
+const _critC=critter;critter=function(cx,cy,sp,stage,o){if(sp!=='cow')return _critC(cx,cy,sp,stage,o);o=o||{};
+ const T=ui.anim,pose=o.pose||'idle',sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1,[c,p,nose]=COW_COL[o.sv]||COW_COL.cow_white,sleep=pose==='sleep'||pose==='lay'||pose==='nap',eat=pose==='eat';
+ let dy=0;if(pose==='happy'||pose==='hop')dy=-Math.abs(Math.sin(T/6))*6;const sw=(pose==='walk'||pose==='play')?Math.sin(T/5)*3:0,ol='#2b2020';
+ g.save();g.translate(cx,cy);E(0,1,24*sz,4*sz,'#0003');g.translate(0,dy);g.scale(sz*(o.dir||1),sz);const by=sleep?-10:-20;
+ if(!sleep)[[-14,sw],[-8,-sw],[8,sw],[14,-sw]].forEach(([x,s])=>{RR(x-3,by+6,6,-by-6+s*.3,2,c,ol);R(x-3,-3,6,3,'#3a2a20')});
+ g.strokeStyle=ol;g.lineWidth=2;g.beginPath();g.moveTo(-21,by-4);g.quadraticCurveTo(-27,by+4+Math.sin(T/10)*2,-24,by+12);g.stroke();E(-24,by+13,2.5,3,ol);
+ RR(-22,by-11,42,22,10,c,ol);E(-8,by-3,7,5,p);E(6,by+4,6,4,p);E(-14,by+6,4,3,p);E(2,by+9,5,2.5,'#f4b0c0');
+ const hx=20,hy=by-10+(eat?8:0);E(hx-6,hy-8,4,2.5,c);E(hx+6,hy-8,4,2.5,c);R(hx-5,hy-13,2,4,'#f0e6c8');R(hx+3,hy-13,2,4,'#f0e6c8');
+ RR(hx-8,hy-9,16,17,6,c,ol);E(hx-2,hy-4,3,3,p);RR(hx-7,hy+3,14,7,4,nose,ol);E(hx-3,hy+6,1.2,1.2,'#7a3a4a');E(hx+3,hy+6,1.2,1.2,'#7a3a4a');
+ const bl=T%170<6||sleep;[-3,3].forEach(ex=>{if(bl){R(hx+ex-1.5,hy-2,3,1,ol)}else{E(hx+ex,hy-2,1.8,2.1,ol);E(hx+ex+.6,hy-2.8,.6,.6,'#fff')}});
+ g.restore()};

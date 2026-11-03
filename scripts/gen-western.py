@@ -37,17 +37,20 @@ def portrait(kind):
         d.polygon([(21,36),(24,40),(27,36)],fill=SK)
         d.rectangle([22,40,26,42],fill=(200,200,210,255));d.point((24,41),fill=(80,150,220,255))  # bolo tie
     d.rectangle([20,31,27,37],fill=SKD)
-    d.ellipse([12,13,35,36],fill=SK);d.ellipse([10,22,14,29],fill=SK);d.ellipse([33,22,37,29],fill=SK)
+    # v43 a bit more realistic: longer jaw, side shading, nose, almond eyes with whites
+    d.ellipse([10,22,14,29],fill=SKD);d.ellipse([33,22,37,29],fill=SKD);d.point((12,25),fill=SK)
+    d.ellipse([13,13,34,37],fill=SKD);d.ellipse([13,13,32,35],fill=SK);d.ellipse([16,31,31,37],fill=SKD);d.ellipse([16,30,31,35],fill=SK)
     for ex in (17,27):
-        d.rectangle([ex,23,ex+3,27],fill=W);d.rectangle([ex+1,23,ex+3,27],fill=IR);d.rectangle([ex+2,24,ex+3,26],fill=OL);d.point((ex+1,23),fill=W)
-        d.line([(ex,21),(ex+3,21)],fill=HD)
+        d.rectangle([ex,24,ex+3,26],fill=W);d.rectangle([ex+1,23,ex+2,26],fill=IR);d.point((ex+2,25),fill=OL);d.point((ex+1,24),fill=W)
+        d.line([(ex,23),(ex+3,23)],fill=OL);d.line([(ex,21),(ex+3,20 if ex>20 else 21)],fill=HD)
+    d.line([(24,25),(24,28)],fill=SKD);d.point((23,29),fill=SKD);d.point((25,29),fill=SKD)
     if girl:
-        d.line([(ex-11,22),(ex-12,23)],fill=OL);d.line([(31,22),(32,23)],fill=OL)  # lashes
-        d.ellipse([15,28,19,31],fill=(245,140,140,255));d.ellipse([28,28,32,31],fill=(245,140,140,255))
-        d.arc([20,28,27,33],20,160,fill=(190,60,70,255))
+        d.point((16,23),fill=OL);d.point((31,23),fill=OL)  # lashes
+        d.ellipse([15,28,18,30],fill=(250,175,160,255));d.ellipse([29,28,32,30],fill=(250,175,160,255))
+        d.line([(22,32),(26,32)],fill=(190,70,80,255));d.point((21,31),fill=(190,70,80,255));d.point((27,31),fill=(190,70,80,255))
     else:
-        d.ellipse([15,28,19,31],fill=(240,165,140,255));d.ellipse([28,28,32,31],fill=(240,165,140,255))
-        d.arc([20,27,28,33],10,150,fill=OL)
+        d.ellipse([15,28,18,30],fill=(240,180,150,255));d.ellipse([29,28,32,30],fill=(240,180,150,255))
+        d.line([(21,32),(26,32)],fill=(150,60,50,255));d.point((20,31),fill=(150,60,50,255));d.point((27,31),fill=(150,60,50,255))
     # hair fringe under hat
     d.rectangle([12,14,35,18],fill=HB);d.polygon([(12,18),(16,18),(13,23)],fill=HB);d.polygon([(31,18),(35,18),(35,23)],fill=HD)
     d.line([(14,15),(20,15)],fill=HL)
@@ -105,10 +108,15 @@ def grandpa():
     d.polygon([(7,40),(19,37),(21,47),(7,47)],fill=(110,70,40,255));d.polygon([(40,40),(28,37),(26,47),(40,47)],fill=(110,70,40,255))
     d.polygon([(19,35),(24,41),(29,35)],fill=(200,60,40,255))
     d.rectangle([20,31,27,37],fill=(215,160,120,255))
-    d.ellipse([12,13,35,36],fill=(245,200,160,255));d.ellipse([10,22,14,29],fill=(245,200,160,255));d.ellipse([33,22,37,29],fill=(245,200,160,255))
-    d.rectangle([15,20,21,21],fill=(235,235,235,255));d.rectangle([26,20,32,21],fill=(235,235,235,255))
-    for ex in (17,27): d.arc([ex,22,ex+4,26],200,340,fill=OL)
-    d.ellipse([15,28,19,31],fill=(240,150,140,255));d.ellipse([28,28,32,31],fill=(240,150,140,255))
+    GS,GD=(245,200,160,255),(215,160,120,255)
+    d.ellipse([10,22,14,29],fill=GD);d.ellipse([33,22,37,29],fill=GD);d.ellipse([13,13,34,37],fill=GD);d.ellipse([13,13,32,35],fill=GS)
+    d.line([(16,19),(21,18)],fill=(220,220,220,255));d.line([(26,18),(31,19)],fill=(220,220,220,255))  # brows
+    d.line([(15,20),(21,20)],fill=(235,235,235,255));d.line([(26,20),(32,20)],fill=(235,235,235,255))
+    for ex in (17,27):
+        d.rectangle([ex,23,ex+3,24],fill=W);d.rectangle([ex+1,23,ex+2,24],fill=(90,110,140,255));d.line([(ex,22),(ex+3,22)],fill=OL);d.line([(ex,26),(ex+3,26)],fill=GD)
+    d.line([(14,23),(14,24)],fill=GD);d.line([(33,23),(33,24)],fill=GD)  # crow's feet
+    d.line([(24,24),(24,27)],fill=GD);d.ellipse([22,26,26,29],fill=(235,180,145,255))  # nose
+    d.ellipse([15,28,18,30],fill=(240,165,150,255));d.ellipse([29,28,32,30],fill=(240,165,150,255))
     d.polygon([(16,29),(24,27),(31,29),(30,32),(24,30),(17,32)],fill=(240,240,240,255))  # handlebar moustache
     d.polygon([(18,31),(30,31),(27,40),(24,42),(21,40)],fill=(230,230,230,255))
     hat,hatD=(200,170,120,255),(160,130,80,255)

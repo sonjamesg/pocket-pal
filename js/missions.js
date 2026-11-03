@@ -13,7 +13,7 @@ const wm=()=>{if(!DB.missions)DB.missions={};const m=DB.missions.wool||(DB.missi
 const sheepList=()=>petList().filter(p=>p.species==='sheep');
 const fieldSheep=()=>sheepList().filter(p=>!p.carry).slice(0,FIELD_SPOTS.length);
 const inField=(x,y)=>x>=FIELD[0]&&y>=FIELD[1]&&x<FIELD[0]+FIELD[2]&&y<FIELD[1]+FIELD[3];
-function woolNow(p){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=Math.max(0,now()-(p.last||now()))/HOUR;return Math.min(100,(p.wool||0)+(fed?WOOL.fast:WOOL.slow)*h)}
+function woolNow(p){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=Math.max(0,now()-(p.last||now()))/HOUR;return Math.min(100,(p.wool||0)+woolRate(fed)*h)}
 function sheepAt(x,y){if(CUR!=='ranch')return null;const L=fieldSheep();for(let i=0;i<L.length;i++){const [sx,sy]=FIELD_SPOTS[i];if(sx===x&&sy===y)return L[i]}return null}
 // ---- well bucket + wet tiles ----
 function wetKey(x,y){return x+','+y}
@@ -30,7 +30,7 @@ function harvest(x,y){const k=wetKey(x,y),e=grows()[k],good=CROP_GOOD[e.c]||'cor
 function wellUse(){if(DB.bucket>=BUCKET){say('Bucket is full! 5 waters. Go water beds or crops.');return}DB.bucket=BUCKET;saveDB();sfx('water');say('Bucket filled! 5 waters. Water beds or crops.',170)}
 // ---- hints for the bottom bar ----
 function owHint(th){if(!th)return null;if(th.prop==='jobboard')return 'A: read the JOB BOARD';if(th.prop==='farmshop')return 'A: open YOUR FARM SHOP';if(th.prop==='well')return DB.bucket>=BUCKET?'Bucket full (5 waters)':'A: fill bucket at the WELL';
-  if(th.sheepP)return 'A: visit '+th.sheepP.name+' ('+Math.round(woolNow(th.sheepP))+'% wool)';
+  if(th.sheepP)return 'A: visit '+th.sheepP.name+' ('+Math.round(woolNow(th.sheepP))+'% wool'+(woolNow(th.sheepP)<100?' — '+woolETA(th.sheepP,woolNow(th.sheepP)):'')+')';
   if(th.bed||th.crop){const e=grows()[wetKey(th.tx,th.ty)];if(e)return growP(e)>=1?'A: HARVEST!':'Growing… '+Math.round(growP(e)*100)+'%';return DB.bucket>0?'A: water it ('+DB.bucket+' left)':'Fill bucket at the WELL to grow this'}if(th.water)return 'Pond water is muddy — use the WELL';return null}
 // ---- overworld hooks ----
 const _owSolidM=owSolid,_owThingM=owThing,_owInputM=owInput;
