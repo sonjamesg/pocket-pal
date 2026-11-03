@@ -63,3 +63,5 @@ Drop the PNG in `assets/world/<folder>/`, add/keep its key in `assets/world/mani
 ## Avatars (v19, western)
 - `scripts/gen-western.py` draws cowboy/cowgirl portraits (`assets/world/portraits/cow*.png`) and walk sheets (`assets/world/player/cow*.png`, 32x64) plus western Grandpa.
 - Hair/eyes are painted in key colours; `js/avatar.js` palette-swaps them at runtime (5 hair × 5 eye colours, saved in `DB.look`). Pick screen: ▲▼ row, ◀▶ change, A → name.
+
+- `js/shop.js` — PET SHOP interior map (pens, shop lady, door exit); wraps overworld collision/input/draw.
