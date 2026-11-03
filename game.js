@@ -1,4 +1,4 @@
-const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=12';
+const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=13';
 // ===== Pet Farm v9 — farm map, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
@@ -81,8 +81,8 @@ function checkGrow(){const r=GROW[S.stage];if(!r)return;
 function sparkle(n,x=W/2,y=110){for(let i=0;i<n;i++)ui.fx.push({x:x+Math.random()*60-30,y,vx:Math.random()*3-1.5,vy:-Math.random()*3-.5,t:50,ch:'star'})}
 function hearts(n,x=ui.dx,y=120){for(let j=0;j<n;j++)ui.fx.push({x:x-20+j*10,y,vx:Math.random()-.5,vy:-.8,t:50,ch:'heart'})}
 function setPose(p,t){ui.pose=p;ui.poseT=t}
-const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','NEW PET','HOME'];
-function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS','NEW PET']:['NEW PET']}
+const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','NEW PET','HOME','HARD RELOAD'];
+function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS','NEW PET','HARD RELOAD']:['NEW PET','HARD RELOAD']}
 function openMap(){if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;const L=petList(),i=L.findIndex(p=>p.id===ui.mapBack);ui.msel=Math.max(0,i)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
 function newPet(){S={scene:'title'};ui.msgT=0;ui.modal={type:'name',name:'',k:0}}
@@ -151,12 +151,12 @@ function endGame(){const m=ui.mg;const joy=Math.min(35,8+m.score*3);S.happy=clam
 function input0(k){
   const sc=S.scene;
   if(sc==='title'){const it=titleItems(),n=it.length;if(k==='up')ui.tsel=(ui.tsel+n-1)%n;if(k==='down')ui.tsel=(ui.tsel+1)%n;
-    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='FARM MAP')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
+    if(k==='a'||k==='start'){const c=it[ui.tsel];if(c==='HARD RELOAD'){hardReload();return}if(c==='FARM MAP')openMap();else if(c==='CONTINUE')loadPet(DB.lastId&&DB.pets[DB.lastId]?DB.lastId:petList()[0].id);else if(c==='MY PETS'){S={scene:'list'};ui.psel=0;ui.msgT=0}else newPet()}}
   else if(sc==='list'){const L=petList(),n=L.length+1;if(k==='up')ui.psel=(ui.psel+n-1)%n;if(k==='down')ui.psel=(ui.psel+1)%n;if(k==='b'){S={scene:'title'};ui.tsel=0;ui.msgT=0}
     if(k==='a'||k==='start'){if(ui.psel===L.length)newPet();else loadPet(L[ui.psel].id)}
     if(k==='select'&&L[ui.psel]){const id=L[ui.psel].id;askConfirm('Say goodbye to '+L[ui.psel].name+' forever? Other pets stay safe.',()=>{delete DB.pets[id];if(DB.lastId===id)DB.lastId=null;save(true);ui.psel=0})}}
   else if(sc==='pause'){const n=PAUSE.length;if(k==='up')ui.sel=(ui.sel+n-1)%n;if(k==='down')ui.sel=(ui.sel+1)%n;if(k==='b'||k==='start'){S.scene='main';return}
-    if(k==='a'){const c=PAUSE[ui.sel];S.scene='main';if(c==='FARM MAP'){openMap();return}if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
+    if(k==='a'){const c=PAUSE[ui.sel];if(c==='HARD RELOAD'){try{save(true)}catch(e){}hardReload();return}S.scene='main';if(c==='FARM MAP'){openMap();return}if(c==='SAVE'){save();say('Saved on this device!')}if(c==='MY PETS'){save(true);S={scene:'list'};ui.psel=0;ui.msgT=0}if(c==='NEW PET'){save(true);newPet()}if(c==='HOME'){save(true);S={scene:'title'};ui.tsel=0;ui.msgT=0}}}
   else if(sc==='species'){const n=SPECIES.length;if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.sel=(ui.sel+1)%n;
     if(k==='a'||k==='start'){const sp=SPECIES[ui.sel];if(sp.ok){if(sp.id==='dog'){S.scene='breed';ui.sel=0}else{S.species=sp.id;S.breed=sp.id;S.id='p'+now().toString(36)+Math.floor(Math.random()*1e4);S.created=now();S.scene='egg';fix(S);ui.hatch=0;save()}}else say(SPECIES[ui.sel].n+'S are coming soon!')}if(k==='b'){S={scene:'title'};ui.tsel=0}}
   else if(sc==='map'){const L=petList(),n=L.length+1;if(k==='left'||k==='up')ui.msel=(ui.msel+n-1)%n;if(k==='right'||k==='down')ui.msel=(ui.msel+1)%n;
@@ -640,3 +640,8 @@ function drawGame(t){const m=ui.mg;gameTick();
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
 window.__pp={openMap,input,get S(){return S},set S(v){S=v},ui,DB,save,loadPet,startWalk,careAct};
 fit();frame();
+
+const GAME_VER=13;
+function hardReload(){const go=()=>{const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
+try{const p=[];if(window.caches)p.push(caches.keys().then(k=>Promise.all(k.map(x=>caches.delete(x)))));if(navigator.serviceWorker)p.push(navigator.serviceWorker.getRegistrations().then(r=>Promise.all(r.map(x=>x.unregister()))));Promise.all(p).then(go,go);setTimeout(go,1500)}catch(e){go()}}
+fetch('version.json?check='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(j.v>GAME_VER){const b=document.createElement('div');b.textContent='New version — tap here or press HARD RELOAD';b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99;background:#ffd84a;color:#222;font:bold 14px sans-serif;text-align:center;padding:10px';b.onclick=hardReload;document.body.appendChild(b)}}).catch(()=>{});
