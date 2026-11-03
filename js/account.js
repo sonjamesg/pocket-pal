@@ -46,7 +46,7 @@ function drawPin(t){bg(false);R(0,0,W,H,'#2b244066');const P=ui.pin;panel(12,6,W
 function askName(){S={scene:'acct'};ui.nameAcct=1;ui.modal={type:'name',name:ui.acctMode==='login'?lastName().slice(0,8):'',k:0}}
 const _finishNameA=finishName;finishName=function(n){if(!ui.nameAcct)return _finishNameA(n);ui.nameAcct=null;ui.modal=null;n=(n||'').trim().toUpperCase();if(!n){ui.aerr='Type a username first';return}
   ui.acctName=n;if(ui.acctMode==='login'){openPin('login');return}ACC.busy=true;accCall({action:'check_name',name:n}).then(r=>{ACC.busy=false;if(!r.ok){ui.aerr=ERR[r.err]||ERR.server;return}if(r.taken){ui.aerr=ERR.taken;return}openPin('create')})};
-const _modalInputA=modalInput;modalInput=function(k){const m=ui.modal;if(ui.nameAcct&&m&&m.type==='name'){if(k==='b'&&!m.name){ui.modal=null;ui.nameAcct=null;return}if(k==='a'&&KEYS[m.k]==='SKIP'){finishName(m.name);return}}
+const _modalInputA=modalInput;modalInput=function(k){const m=ui.modal;if(ui.nameAcct&&m&&m.type==='name'){if(k==='b'&&!m.name){ui.modal=null;ui.nameAcct=null;return}}
   if(m&&m.type==='confirm'&&m.no&&(k==='a'||k==='start')&&m.k===1){ui.modal=null;m.no();return}return _modalInputA(k)};
 const _drawModalA=drawModal;drawModal=function(t){_drawModalA(t);if(ui.nameAcct&&ui.modal&&ui.modal.type==='name'){R(18,6,W-36,16,'#5b4b8a');txt(ui.acctMode==='login'?'YOUR USERNAME':'PICK A USERNAME',W/2,18,'#fff',10)}};
 function acctInput(k){if(ACC.busy)return;if(k==='up'||k==='down')ui.asel^=1;if(k==='b'){S={scene:'title'};ui.tsel=0;return}
