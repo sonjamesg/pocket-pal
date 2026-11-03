@@ -1,4 +1,4 @@
-const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=11';
+const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=12';
 // ===== Pet Farm v9 — farm map, cat/chicken/pig + dogs =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
@@ -540,7 +540,15 @@ function drawWalk(t){const m=ui.mg;walkTick();const x=m.x;
 function promptBox(a,b){RR(30,34,180,38,10,'#fff','#2b2440');txt(a,W/2,50,'#2b2440',10);txt(b,W/2,64,'#e0457b',9)}
 function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
   const sc=S.scene;
-  if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,sc2=Math.max(W/iw,H/ih)*1.08,dw=iw*sc2,dh=ih*sc2,ex=dw-W,ox=-ex/2-Math.sin(t/260)*ex/2,oy=-(dh-H)*0.3+Math.sin(t/190)*2;g.drawImage(LOGO.img,ox,oy,dw,dh);
+  if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,k=Math.max(W/iw,H/ih),dw=iw*k,dh=ih*k,ox=(W-dw)/2,oy=(H-dh)/2;g.drawImage(LOGO.img,ox,oy,dw,dh);
+      const P=(x,y)=>[ox+x*1.25*k,oy+y*1.25*k];
+      const eat=(t%240),dip=eat<90?Math.sin(eat/90*Math.PI)*4:0;
+      if(dip>0.3){const sx=850,sy=305,sw=110,sh=100,[dx,dy]=P(sx/1.25,sy/1.25);g.fillStyle='#e9e1cc';g.fillRect(dx+2,dy,sw*k-4,dip+1);g.drawImage(LOGO.img,sx,sy,sw,sh,dx,dy+dip,sw*k,sh*k);
+        const[gx,gy]=P(735,330);g.fillStyle='#4f9a3a';for(let j=0;j<5;j++)g.fillRect(Math.round(gx-6+j*3),Math.round(gy-(j%2?3:5)),1,j%2?3:5);
+        if(eat>30&&eat<60&&(eat>>3)%2){g.fillStyle='#3a7a2a';g.fillRect(Math.round(gx-2),Math.round(gy+dip-6),3,1)}}
+      const blink=(ph,ex)=>{const f=(t+ph)%200;if(f<7){ex.forEach(([x,y,c])=>{const[a,b]=P(x,y);g.fillStyle=c;g.fillRect(Math.round(a-2),Math.round(b-1.5),4,3);g.fillStyle='#2b2440';g.fillRect(Math.round(a-2),Math.round(b),4,1)})}};
+      blink(0,[[322,246,'#f2ede4'],[352,246,'#f2ede4']]);
+      if(dip<=0.3)blink(97,[[713,276,'#f0d2c0']]);
       for(let i=0;i<4;i++){const cx=((t*0.25*(1+i*0.3)+i*90)%(W+80))-40,cy=10+i*9+Math.sin(t/60+i)*2;g.fillStyle='rgba(255,255,255,0.55)';g.beginPath();g.ellipse(cx,cy,16,5,0,0,7);g.ellipse(cx+10,cy-3,10,5,0,0,7);g.fill()}
       g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}
     else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore()}
