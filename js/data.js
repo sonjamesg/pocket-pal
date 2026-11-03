@@ -1,5 +1,5 @@
 // ===== data.js — species, breeds, foods, toys, tricks tables + logo =====
-const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>LOGO.ok=false;LOGO.img.src='assets/pet-farm-logo.jpg?v=14';
+const LOGO={img:new Image(),ok:false};LOGO.img.onload=()=>LOGO.ok=true;LOGO.img.onerror=()=>{LOGO.ok=false;LOGO.err=true};LOGO.img.src='assets/pet-farm-logo.jpg?v=14';
 // ===== Pet Farm v16 — modular build =====
 const W=240,H=216,HOUR=3600e3,DAY=24*HOUR;
 // per real HOUR. Coat fully long in ~12 days, plaque bad in ~6 days.
