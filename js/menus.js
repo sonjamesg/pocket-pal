@@ -1,6 +1,9 @@
 // ===== menus.js — title/pause items, naming & confirm modals =====
 const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','HOME'];
-function titleItems(){return petList().length?['CONTINUE','FARM MAP','MY PETS']:['START']}
+function hasSave(){return !!((DB.avatar&&DB.playerName)||petList().length)}
+function titleItems(){if(!hasSave())return['NEW GAME'];const a=['CONTINUE','NEW GAME'];if(petList().length)a.push('MY PETS');return a}
+function newGame(){const go=()=>{try{localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60};saveDB();S={scene:'title'};avatarOpen()};if(hasSave())askConfirm('Start a NEW GAME? Your saved ranch on this device will be erased.',go);else go()}
+function continueGame(){if(DB.avatar&&DB.playerName&&DB.introDone){openMap();return}if(DB.lastId&&DB.pets[DB.lastId]){loadPet(DB.lastId);return}openMap()}
 function openMap(){if(!DB.avatar||!DB.playerName){avatarOpen();return}if(!DB.introDone){startIntro();return}if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
 // v16: no starter pet — pets are bought at the PET STORE on the farm map
