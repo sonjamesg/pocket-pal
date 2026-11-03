@@ -9,7 +9,7 @@ const WOOL_STEPS=['','Go to the PET SHOP (south gate, WILD WOODS) and talk to th
   'Walk your sheep home to the SHEEP FIELD (fenced pasture by the SHEEP SHED).',
   'Feed & cuddle your sheep so its wool grows. When it is FULL, choose SHEAR!',
   'Wool sheared! Take your WOOL to YOUR FARM SHOP and SELL it.','Wool sold! Collect your reward at the JOB BOARD.','Done! You started a wool farm.'];
-const wm=()=>{const m=DB.missions.wool||(DB.missions.wool={step:0,v:2});if(!m.v){if(m.step>=4)m.step++;m.v=2}return m};
+const wm=()=>{if(!DB.missions)DB.missions={};const m=DB.missions.wool||(DB.missions.wool={step:0,v:2});if(!m.v){if(m.step>=4)m.step++;m.v=2}return m};
 const sheepList=()=>petList().filter(p=>p.species==='sheep');
 const fieldSheep=()=>sheepList().filter(p=>!p.carry).slice(0,FIELD_SPOTS.length);
 const inField=(x,y)=>x>=FIELD[0]&&y>=FIELD[1]&&x<FIELD[0]+FIELD[2]&&y<FIELD[1]+FIELD[3];
@@ -79,7 +79,7 @@ const JOBS={more:{n:'MORE WOOL',d:'Shear 2 more full fleeces.',rew:30,unl:()=>wm
   dog:{n:'DOG BUDDY',d:'Get a dog at the PET SHOP and teach it SIT.',rew:30,unl:()=>wm().step>=6,ready:()=>petList().some(p=>p.species==='dog'&&p.tricks&&p.tricks.sit>=TUNE.trickNeed),base:()=>0,hint:'Get a dog & teach SIT'},
   crops:{n:'GROW CROPS',d:'Water beds or crops with the WELL bucket. Wait, then HARVEST 3.',rew:20,unl:()=>wm().step>=1,ready:j=>(DB.harvested||0)>=j.base+3,base:()=>DB.harvested||0,hint:'Water & HARVEST 3 crops'},
   flock:{n:'BIG FLOCK',d:'Have 3 sheep in your SHEEP FIELD.',rew:40,unl:()=>jst('more').s===2,ready:()=>sheepList().length>=3,base:()=>0,hint:'Get 3 sheep'}};
-function jst(id){const M=DB.missions;return M[id]||(M[id]={s:0})}
+function jst(id){const M=DB.missions||(DB.missions={});return M[id]||(M[id]={s:0})}
 function jobs(){const m=wm(),L=[{id:'wool',n:'START A WOOL FARM',tag:m.step===0?'NEW':m.step>=6?'DONE':m.step===5?'REWARD!':'ACTIVE',d:m.step===0?'Get a FREE sheep, grow its wool, shear and sell it! Reward ● '+MISSION_REWARD:WOOL_STEPS[m.step]}];
   for(const id in JOBS){const J=JOBS[id],st=jst(id);if(!J.unl()&&!st.s)continue;L.push({id,n:J.n,tag:st.s===0?'NEW':st.s===2?'DONE':J.ready(st)?'REWARD!':'ACTIVE',d:J.d+(st.s<2?' Reward ● '+J.rew:'')})}
   return L.sort((a,b)=>(a.tag==='DONE')-(b.tag==='DONE'))}

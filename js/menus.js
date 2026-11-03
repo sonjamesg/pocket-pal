@@ -2,7 +2,7 @@
 const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','HOME'];
 function hasSave(){return !!((DB.avatar&&DB.playerName)||petList().length)}
 function titleItems(){if(!hasSave())return['NEW GAME'];const a=['CONTINUE','NEW GAME'];if(petList().length)a.push('MY PETS');return a}
-function newGame(){const go=()=>{try{localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60};saveDB();S={scene:'title'};avatarOpen()};if(hasSave())askConfirm('Start a NEW GAME? Your ranch will be erased.',()=>askConfirm('REALLY erase? Pets and coins will be GONE forever!',go));else go()}
+function newGame(){const go=()=>{try{localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60,coinsMerged:1,missions:{}};saveDB();S={scene:'title'};avatarOpen()};if(hasSave())askConfirm('Start a NEW GAME? Your ranch will be erased.',()=>askConfirm('REALLY erase? Pets and coins will be GONE forever!',go));else go()}
 function continueGame(){if(DB.avatar&&DB.playerName&&DB.introDone){openMap();return}if(DB.lastId&&DB.pets[DB.lastId]){loadPet(DB.lastId);return}openMap()}
 function openMap(){if(!DB.avatar||!DB.playerName){avatarOpen();return}if(!DB.introDone){startIntro();return}if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','DONE']);
