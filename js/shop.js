@@ -51,5 +51,5 @@ function drawShop(t){owUpdate();const o=ui.ow,cx=(MW*TS-W)/2,cy=Math.max(-20,Mat
   g.restore();
   R(0,0,W,16,'#2b2440cc');txt('PET SHOP',6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.lady?'A: talk to the shop lady':th&&th.pen?'A: look at the animal':th&&th.exit?'Walk out the door':null;
-  if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A talk  B leave',W/2,H-4,'#fff',7)}
+  if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A talk  B leave',W/2,H-4,'#fff',7)}
 drawOverworld=function(t){if(CUR==='shop')return drawShop(t);return _drawOW(t)};

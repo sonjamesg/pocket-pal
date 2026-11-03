@@ -93,4 +93,4 @@ function drawInt(t){owUpdate();const o=ui.ow,m=MAPS.int,cx=MW*TS<=W?(MW*TS-W)/2:
   const vg=g.createRadialGradient(W/2,H/2,40,W/2,H/2,170);vg.addColorStop(0,'#0000');vg.addColorStop(1,house?'#40200030':'#20100040');g.fillStyle=vg;g.fillRect(0,0,W,H);
   R(0,0,W,16,'#2b2440cc');txt(m.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.obj?'A: look':th&&th.exit?'Walk out the door':null;
-  if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A look  B leave',W/2,H-4,'#fff',7)}
+  if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A look  B leave',W/2,H-4,'#fff',7)}
