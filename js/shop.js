@@ -47,7 +47,7 @@ function drawShop(t){owUpdate();const o=ui.ow,cx=(MW*TS-W)/2,cy=Math.max(-20,Mat
   // mat by the door
   R(6*TS+4,10*TS+6,4*TS-8,8,'#5a8a48');
   const AVS=avImg('s'),FS=DB.avatar==='girl'&&IMG.farmergirl&&IMG.farmergirl.naturalWidth?'farmergirl':'farmer';
-  if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);
+  if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH);if(P3D)hatTop(o.px+8,Math.round(o.py)-1-(FH-16))}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);
   g.restore();
   R(0,0,W,16,'#2b2440cc');txt('PET SHOP',6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.lady?'A: talk to the shop lady':th&&th.pen?'A: look at the animal':th&&th.exit?'Walk out the door':null;
@@ -73,14 +73,14 @@ function drawShop3D(t){owUpdate();const o=ui.ow,cx=Math.round((MW*TS-W)/2),cy=Ma
   p3SideWalls(L,Rx,2*TS,(MH-1)*TS+8,WH,'#e8c8a0','#6a4028');
   const items=[];
   // shop lady behind a chunky counter (counter front face is tall so it reads as a toy block)
-  items.push([3*TS+16,()=>{shopLady(SHOP_LADY[0]*TS,SHOP_LADY[1]*TS+8+Math.round(Math.sin(t/20)));const X=4*TS,Y=3*TS+16;R(X,Y-14,8*TS,14,'#c88a50');R(X,Y-14,8*TS,3,'#e8b070');R(X,Y-3,8*TS,3,'#6a4020');for(let i=0;i<8;i++)RR(X+i*TS+3,Y-11,10,6,2,'#a86a3a');R(X+5*TS,Y-20,10,6,'#505868');R(X+5*TS+2,Y-19,6,2,'#9ae0a0');RR(X+2*TS,Y-19,10,5,2,'#f0e0a0')},4*TS+64]);
+  items.push([3*TS+16,()=>{{const ly=SHOP_LADY[1]*TS+8+Math.round(Math.sin(t/20));shopLady(SHOP_LADY[0]*TS,ly);E(SHOP_LADY[0]*TS+8,ly-8,5,2.4,'#7a3a20');E(SHOP_LADY[0]*TS+8,ly-11,3,2.4,'#7a3a20');E(SHOP_LADY[0]*TS+7,ly-12,1.2,.7,'#b06a40')}const X=4*TS,Y=3*TS+16;R(X,Y-14,8*TS,14,'#c88a50');R(X,Y-14,8*TS,3,'#e8b070');R(X,Y-3,8*TS,3,'#6a4020');for(let i=0;i<8;i++)RR(X+i*TS+3,Y-11,10,6,2,'#a86a3a');R(X+5*TS,Y-20,10,6,'#505868');R(X+5*TS+2,Y-19,6,2,'#9ae0a0');RR(X+2*TS,Y-19,10,5,2,'#f0e0a0')},4*TS+64]);
   SHOP_PENS.forEach(([px,py,a],i)=>{const X=px*TS,Y=py*TS,cage=OWBASE[py][px]==='c';items.push([Y+32,()=>{
     g.save();g.translate(X+16,Y+28);g.scale(.42,.42);const dir=Math.sin(t/60+i)>0?1:-1,pose=((t>>6)+i)%3===0?'sit':'walk';
     if(a.startsWith('dog'))dog(0,0,BKEYS[(a==='dog1'?3:0)%BKEYS.length],'puppy',{pose,mood:'happy',dir});else{g.scale(1.8,1.8);critter(0,0,a,'adult',{pose,mood:'happy',dir})};g.restore();
     if(cage){g.fillStyle='#8890a0';for(let k=0;k<=30;k+=5)g.fillRect(X+1+k,Y+4,1.4,28);R(X,Y+2,32,3,'#505868');R(X,Y+30,32,3,'#505868');R(X,Y+2,32,1,'#a8b0c0')}
     else{R(X,Y+20,32,12,'#a06830');R(X,Y+20,32,3,'#d09050');for(let k=4;k<32;k+=8)R(X+k,Y+23,1,9,'#7a4a22')}},X+16]);});
   items.push([o.py+16,()=>{const AVS=avImg('s'),FS=DB.avatar==='girl'&&IMG.farmergirl&&IMG.farmergirl.naturalWidth?'farmergirl':'farmer';E(o.px+8,o.py+15,6,2,'#0003');
-    if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv)},o.px+8]);
+    if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH);if(P3D)hatTop(o.px+8,Math.round(o.py)-1-(FH-16))}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv)},o.px+8]);
   items.sort((a,b)=>a[0]-b[0]).forEach(([y,fn,x])=>withProj(x,y,fn));
   g.restore();
   R(0,0,W,16,'#2b2440cc');txt('PET SHOP',6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');

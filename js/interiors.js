@@ -84,7 +84,7 @@ function drawInt(t){owUpdate();const o=ui.ow,m=MAPS.int,cx=MW*TS<=W?(MW*TS-W)/2:
   if(!house&&!P3D)for(let x=0;x<MW;x+=5)R(x*TS,0,TS*5,2,'#3a2010');
   // objects, sorted top-to-bottom, player in between
   let drawn=false;const drawP=()=>withProj(o.px+8,o.py+16,()=>{const AVS=avImg('s'),FS=DB.avatar==='girl'&&IMG.farmergirl&&IMG.farmergirl.naturalWidth?'farmergirl':'farmer';E(o.px+8,o.py+12,5,2,'#0004');
-    if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);drawn=true});
+    if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH);if(P3D)hatTop(o.px+8,Math.round(o.py)-1-(FH-16))}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);drawn=true});
   for(let y=0;y<MH;y++){if(!drawn&&y*TS>o.py)drawP();for(let x=0;x<MW;x++){const c=OWBASE[y][x];if(INT_MSG[c])withProj(x*TS+8,y*TS+16,()=>{toyBase(c,x*TS,y*TS);drawIntObj(c,x*TS,y*TS,x,y,t)})}}
   if(!drawn)drawP();
   // cosy owned animals of this building's species, wandering in place

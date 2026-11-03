@@ -7,8 +7,8 @@ def mix(a,b,t): return tuple(int(a[i]+(b[i]-a[i])*t) for i in range(3))+(255,)
 def hx(h): h=h.lstrip('#'); return tuple(int(h[i:i+2],16) for i in (0,2,4))+(255,)
 OL=hx('3a2a3a')
 class C:
-  def __init__(s,w,h): s.w,s.h=w,h; s.im=Image.new('RGBA',(w*K,h*K),(0,0,0,0)); s.d=ImageDraw.Draw(s.im)
-  def S(s,v): return [x*K for x in v]
+  def __init__(s,w,h,up=0): s.oy=up; s.w,s.h=w,h+up; s.im=Image.new('RGBA',(w*K,(h+up)*K),(0,0,0,0)); s.d=ImageDraw.Draw(s.im)
+  def S(s,v): return [(x+(s.oy if i%2 else 0))*K for i,x in enumerate(v)]
   def rr(s,x,y,w,h,r,c,ol=True,shade=True):
     if ol: s.d.rounded_rectangle(s.S([x-1,y-1,x+w+1,y+h+1]),r*K+K,fill=OL)
     s.d.rounded_rectangle(s.S([x,y,x+w,y+h]),r*K,fill=c)
@@ -16,8 +16,8 @@ class C:
       s.d.rounded_rectangle(s.S([x+1,y+1,x+w-1,y+h*0.28]),max(r-1,0)*K,fill=mix(c,(255,255,255),.22))
       s.d.rounded_rectangle(s.S([x+1,y+h*0.78,x+w-1,y+h-1]),max(r-1,0)*K,fill=mix(c,(40,20,60),.22))
   def poly(s,pts,c,ol=True):
-    if ol: s.d.polygon([(px*K,py*K) for px,py in pts],fill=OL,outline=OL,width=2*K)
-    s.d.polygon([(px*K,py*K) for px,py in pts],fill=c)
+    if ol: s.d.polygon([(px*K,(py+s.oy)*K) for px,py in pts],fill=OL,outline=OL,width=2*K)
+    s.d.polygon([(px*K,(py+s.oy)*K) for px,py in pts],fill=c)
   def ell(s,x,y,rx,ry,c,ol=False):
     if ol: s.d.ellipse(s.S([x-rx-1,y-ry-1,x+rx+1,y+ry+1]),fill=OL)
     s.d.ellipse(s.S([x-rx,y-ry,x+rx,y+ry]),fill=c)
@@ -26,6 +26,7 @@ class C:
     sh=sh.filter(ImageFilter.GaussianBlur(2*K)); sh.alpha_composite(s.im); s.im=sh; s.d=ImageDraw.Draw(s.im)
   def save(s,p,split=None,grow=0):
     im=s.im.resize((s.w,s.h),Image.LANCZOS)
+    if split: split+=s.oy
     if split and grow:  # v51 TALLER: repeat a plain wall row under the eave so the building stands taller (door/bottom anchor unchanged)
       band=im.crop((0,split,s.w,split+1)); t=Image.new('RGBA',(s.w,s.h+grow),(0,0,0,0)); t.paste(im.crop((0,0,s.w,split)),(0,0))
       for i in range(grow): t.paste(band,(0,split+i))
@@ -41,18 +42,22 @@ class C:
     im.save(os.path.join(OUT,p)); print('wrote',p)
 # --- parts ---
 def roof(c,x,y,w,h,col,shingle=True,over=4):
-  # v53 Mabe-style roof: big rounded overhang, thick shadowed eave underside, chunky ridge cap, glossy toy highlight
-  over=over+3; top=y-6; hh=h+6
-  c.rr(x-over+1,top+hh-2,w+over*2-2,4,2,mix(col,(30,15,50),.55))            # eave underside (depth)
-  c.rr(x-over,top,w+over*2,hh,9,col)
-  if shingle:
-    for i in range(1,int(hh/6)):
-      yy=top+i*6; c.d.line(c.S([x-over+4,yy,x+w+over-4,yy]),fill=mix(col,(40,20,60),.2),width=K)
-      for j in range(int((w+over*2)/7)):
-        xx=x-over+4+j*7+(3.5 if i%2 else 0); c.d.line(c.S([xx,yy,xx,yy+6]),fill=mix(col,(40,20,60),.14),width=K//2)
-  c.rr(x-over+2,top+hh-5,w+over*2-4,3,2,mix(col,(40,20,60),.3),ol=False,shade=False)  # eave rim shade
-  c.rr(x+w*.2,top-3,w*.6,6,3,mix(col,(255,255,255),.25))                      # ridge cap
-  c.ell(x+w*.3,top+4,w*.22,2.2,mix(col,(255,255,255),.6),ol=False)             # gloss
+  # v56 LA-Switch roof: large visible TOP plane (camera looks down on it), rows of chunky tiles lightening toward
+  # the ridge, thick shadowed eave underside at the front, ridge cap with highlight.
+  over=over+3; up=c.oy*.95; top=y-6-up; hh=h+6+up; X0=x-over; Wd=w+over*2
+  c.rr(X0+1,top+hh-2,Wd-2,4,2,mix(col,(30,15,50),.55))
+  c.rr(X0,top,Wd,hh,9,col)
+  rows=max(3,int(hh/6))
+  for i in range(rows):
+    yy=top+2+i*(hh-4)/rows; t=1-i/rows
+    band=mix(col,(255,255,255),.28*t) if i<rows-1 else mix(col,(40,20,60),.18)
+    c.rr(X0+2,yy,Wd-4,(hh-4)/rows,3,band,ol=False,shade=False)
+    if shingle:
+      c.d.line(c.S([X0+3,yy+(hh-4)/rows-1,X0+Wd-3,yy+(hh-4)/rows-1]),fill=mix(col,(40,20,60),.28),width=K)
+      for j in range(int(Wd/8)):
+        xx=X0+4+j*8+(4 if i%2 else 0); c.d.line(c.S([xx,yy+1,xx,yy+(hh-4)/rows-1]),fill=mix(col,(40,20,60),.18),width=K//2)
+  c.rr(x+w*.12,top-3,w*.76,6,3,mix(col,(255,255,255),.35))                      # ridge cap
+  c.ell(x+w*.3,top+5,w*.2,2.2,mix(col,(255,255,255),.7),ol=False)               # gloss
 def gable(c,cx,top,w,base,col):
   c.poly([(cx-w/2,base),(cx,top),(cx+w/2,base)],col)
   c.poly([(cx-w/2+3,base-1),(cx,top+3),(cx-1,base-1)],mix(col,(255,255,255),.25),ol=False)
@@ -64,7 +69,7 @@ def wall(c,x,y,w,h,col,planks=False,boards=False):
     for xx in range(int(x+5),int(x+w-1),5): c.d.line(c.S([xx,y+1,xx,y+h-1]),fill=mix(col,(60,30,40),.2),width=K//2)
 def win(c,x,y,w=9,h=8,frame=hx('ffffff')):
   c.rr(x,y,w,h,2,frame,shade=False); c.rr(x+1.3,y+1.3,w-2.6,h-2.6,1.5,hx('6ec8ff'),ol=False,shade=False)
-  c.d.polygon([( (x+1.5)*K,(y+h-2)*K),((x+w-3)*K,(y+1.5)*K),((x+w-1.5)*K,(y+1.5)*K),((x+3)*K,(y+h-1.5)*K)],fill=hx('d8f4ff'))
+  o=c.oy; c.d.polygon([( (x+1.5)*K,(y+o+h-2)*K),((x+w-3)*K,(y+o+1.5)*K),((x+w-1.5)*K,(y+o+1.5)*K),((x+3)*K,(y+o+h-1.5)*K)],fill=hx('d8f4ff'))
   c.d.line(c.S([x+w/2,y+1,x+w/2,y+h-1]),fill=frame,width=K//2)
 def door(c,x,y,w,h,col,barn=False,arch=True):
   c.rr(x,y,w,h,4 if arch else 1,col)
@@ -80,11 +85,10 @@ def sign(c,cx,y,w,txtcol,bg):
   c.rr(cx-w/2,y,w,7,3,bg)
 # --- buildings ---
 def farmhouse():
-  c=C(64,80); c.shadow()
+  c=C(64,80,20); c.shadow()
   wall(c,6,42,52,32,hx('fff1d6'),planks=True)
   roof(c,6,22,52,22,hx('3f7cf0'))
-  c.rr(42,8,7,16,1,hx('e86a4a'))  # chimney
-  c.ell(46,5,3,2,hx('ffffffaa'.replace('aa','')))
+  c.rr(41,-8,10,22,2,hx('e86a4a')); c.rr(40,-10,12,5,2,hx('c84a3a')); c.rr(42,-9,8,2,1,hx('3a2020'),ol=False,shade=False)  # chunky chimney w/ top
   gable(c,32,10,26,24,hx('3f7cf0')); win(c,28,15,8,7)
   win(c,10,50); win(c,45,50)
   c.rr(24,56,16,2,1,hx('e86a4a'),shade=False)
@@ -92,12 +96,17 @@ def farmhouse():
   flowers(c,8,62,4); flowers(c,44,62,4)
   c.save('buildings/farmhouse.png',48,16)
 def barn(name,w,col,roofc,label=None):
-  c=C(w,80); c.shadow(); cx=w/2
+  c=C(w,80,24); c.shadow(); cx=w/2
   wall(c,5,36,w-10,38,col,boards=True)
   c.rr(5,36,w-10,3,1,hx('ffffff'),shade=False); c.rr(5,72,w-10,2,1,hx('ffffff'),shade=False)
-  c.poly([(0,43),(9,24),(cx,11),(w-9,24),(w,43)],mix(roofc,(30,15,50),.55))
-  c.poly([(-1,41),(9,21),(cx,7),(w-9,21),(w+1,41)],roofc)
-  c.rr(cx-8,5,16,5,2.5,mix(roofc,(255,255,255),.3))
+  c.poly([(0,44),(6,-12),(w-6,-12),(w,44)],mix(roofc,(30,15,50),.55))
+  c.poly([(-1,41),(5,-16),(w-5,-16),(w+1,41)],roofc)
+  for i in range(9):
+    y0=-16+i*6.3; t=1-i/9; inset=5-(i*6.3)*6/57
+    c.poly([(inset+1,y0+1),(w-inset-1,y0+1),(w-inset+.6,y0+6),(inset-.6,y0+6)],mix(roofc,(255,255,255),.3*t),ol=False)
+    c.d.line(c.S([inset,y0+6,w-inset,y0+6]),fill=mix(roofc,(40,20,60),.3),width=K)
+  c.rr(6,-19,w-12,5,2.5,mix(roofc,(255,255,255),.35))
+  c.ell(w*.3,-10,w*.15,2,mix(roofc,(255,255,255),.7))
   c.poly([(5,38),(12,23),(cx,13),(cx,17),(14,26),(9,38)],mix(roofc,(255,255,255),.3),ol=False)
   c.rr(cx-6,20,12,10,2,hx('ffffff')); c.rr(cx-4.5,21.5,9,7,1,hx('ffe08a'),ol=False,shade=False)
   if w>=90: win(c,12,46); win(c,w-21,46)
@@ -105,7 +114,7 @@ def barn(name,w,col,roofc,label=None):
   if label: c.rr(cx-10,40,20,6,3,hx('fff6dc'))
   c.save(name,44,16)
 def coop():
-  c=C(64,80); c.shadow()
+  c=C(64,80,20); c.shadow()
   for xx in (10,50): c.rr(xx,66,4,10,1,hx('8a5a3a'))
   wall(c,6,40,52,28,hx('ffd27a'),planks=True)
   roof(c,6,24,52,18,hx('ee4a3a'))
@@ -117,14 +126,14 @@ def coop():
   c.ell(53,16.5,1,1.2,hx('ee3a3a'))
   c.save('buildings/coop.png',45,14)
 def shed(name,wallc,roofc,acc,w=48,h=64,planks=True,boards=False,doorc=None):
-  c=C(w,h); c.shadow(); wt=h-34
+  c=C(w,h,14); c.shadow(); wt=h-34
   wall(c,5,h-wt-6,w-10,wt,wallc,planks=planks,boards=boards)
   roof(c,5,h-wt-24,w-10,19,roofc,over=3)
   win(c,6,h-wt+1,7,7); win(c,w-13,h-wt+1,7,7)
   door(c,w/2-7,h-wt+1,14,wt-7,doorc or acc,barn=True,arch=False)
   c.save(name,h-wt-1,12); return c
 def sty():
-  c=C(64,80); c.shadow()
+  c=C(64,80,18); c.shadow()
   wall(c,6,42,52,30,hx('f2b8a8'),planks=True)
   roof(c,6,24,52,20,hx('8a5ad8'))
   win(c,12,50); door(c,32,50,16,22,hx('b0603a'),barn=True,arch=False)
@@ -141,7 +150,7 @@ def doghouse():
   c.ell(36,42,4,2,hx('3a86e8'),ol=True)
   c.save('buildings/doghouse.png')
 def petstore():
-  c=C(48,64); c.shadow()
+  c=C(48,64,16); c.shadow()
   wall(c,4,26,40,34,hx('6ad8b0'))
   roof(c,4,14,40,14,hx('ff6aa8'),over=3)
   for i in range(5): c.rr(4+i*8,27,8,5,2,hx('ffffff') if i%2 else hx('ff6aa8'),ol=False,shade=False)

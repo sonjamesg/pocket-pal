@@ -3,7 +3,7 @@
 // re-projected row-by-row onto a tilted plane (far rows smaller + foreshortened). Upright things (buildings,
 // trees, fences, player, furniture, back walls) are NOT warped: they're billboards placed at their projected
 // foot point and scaled by depth, so you see their full fronts — the LA Switch "toy diorama" look.
-let P3D=true;const P3={A:.5,c:.7,F:420,H0:H/2+8};let P3C=null;
+let P3D=true;const P3={A:.48,c:.7,F:420,H0:H/2+22};let P3C=null;
 function p3v(y){const d=y-P3.H0;return d/(P3.c+d/P3.F)}
 function proj(wx,wy){const C=P3C;if(!C)return[wx,wy,1];const v=wy-C.camY,s=1/(1-v/P3.F);return[W/2+(wx-C.camX)*s,P3.H0+P3.c*v*s,s]}
 // draw fn() in world coords, anchored + depth-scaled at world foot point (wx,wy). Must be called inside the world translate.
@@ -35,3 +35,11 @@ function p3later(wx,wy,fn){if(P3D&&P3GROUND){P3Q.push([wy,wx,fn]);return}fn()}
 function p3flush(maxY){const keep=[];P3Q.sort((a,b)=>a[0]-b[0]);for(const q of P3Q){if(maxY!=null&&q[0]>maxY){keep.push(q);continue}withProj(q[1],q[0],q[2])}P3Q=keep}
 // cast shadow for a billboard (soft parallelogram toward lower-right, like LA's sun)
 function p3shadow(wx,wy,w,h){if(!P3D)return;const C=P3C,[sx,sy,s]=proj(wx,wy),X=sx+C.cx,Y=sy+C.cy;g.fillStyle='rgba(10,40,20,.22)';g.beginPath();g.moveTo(X-w*s/2,Y);g.lineTo(X+w*s/2,Y);g.lineTo(X+w*s/2+h*.35*s,Y+h*.18*s);g.lineTo(X-w*s/2+h*.35*s,Y+h*.18*s);g.closePath();g.fill()}
+
+// chunky 3D grass clump (LA-style): layered blades with a lit top and dark base
+function grassTuft(x,y,h){E(x,y+1,7,2,'#0a281440');const cols=['#2f8a2a','#3fa83a','#58c845','#7ae05a'];
+  for(let i=0;i<7;i++){const bx=x-6+i*2,ht=6+((h>>i)&3)*2;g.fillStyle=cols[i%2];g.beginPath();g.moveTo(bx-1.6,y);g.lineTo(bx+((h>>(i+2))&1?1.5:-1.5),y-ht);g.lineTo(bx+1.6,y);g.fill()}
+  for(let i=0;i<4;i++){const bx=x-4+i*2.6,ht=8+((h>>(i+1))&3)*2;g.fillStyle=cols[2+i%2];g.beginPath();g.moveTo(bx-1.2,y);g.lineTo(bx,y-ht);g.lineTo(bx+1.2,y);g.fill()}}
+
+// angle-fit: from the raised LA camera you see the TOP of the hat brim + crown and the shoulders
+function hatTop(x,y){E(x,y+2.4,8.2,2.8,'#4a2c14');E(x,y+2,7.6,2.3,'#a8743a');E(x+.5,y+2.6,6,1.2,'#8a5a2e');E(x,y,4,2.6,'#4a2c14');E(x,y-.2,3.4,2.1,'#8a5a2e');E(x-1,y-1,1.6,.8,'#d8a868')}
