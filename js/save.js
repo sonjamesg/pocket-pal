@@ -27,4 +27,4 @@ function loadPet(id){const p=DB.pets[id];if(!p)return;S=fix(JSON.parse(JSON.stri
   if(S.scene==='main'){timeTick();checkGrow()}DB.lastId=id;save(true)}
 let S={scene:'title'};
 let ui={tsel:0,psel:0,sel:0,menu:0,anim:0,msg:'',msgT:0,fx:[],hatch:0,shake:0,pose:'idle',poseT:0,mg:null,dx:110,dir:1,idle:{k:'sit',t:60},warnI:0};
-function say(m,t=130){ui.msg=m;ui.msgT=t}
+function say(m,t=130){ui.msg=m;ui.msgT=Math.max(t,90+String(m).length*3)}

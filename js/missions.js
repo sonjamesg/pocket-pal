@@ -88,7 +88,7 @@ function drawShear(t){const m=ui.mg;m.t++;R(0,0,W,H,'#e8f4d8');for(let x=0;x<W;x
   if(m.done){R(0,0,W,H,'#0007');panel(30,70,W-60,80,'WOOL!');txt('A big fluffy fleece!',W/2,100,'#2b2440',10);txt('+'+WOOL.coins+' coins • bales: '+(DB.woolBales||0),W/2,118,'#8a80a8',9);txt('A done',W/2,138,'#e0457b',10)}
   else txt('Tap A to shear ✂   B stop',W/2,H-8,'#2b2440',9)}
 // ---- scene routing ----
-const _input0M=input0;input0=function(k){if(S.scene==='store'&&!ui.modal)return storeInput(k);if(S.scene==='jobs')return jobsInput(k);if(S.scene==='shear')return shearInput(k);return _input0M(k)};
+const _input0M=input0;input0=function(k){if(ui.msgT>0&&(S.scene==='map'||S.scene==='jobs')&&(k==='a'||k==='b')){if((ui.msgC||0)<ui.msg.length){ui.msgC=ui.msg.length;ui.msgT=Math.max(ui.msgT,120)}else ui.msgT=0;return}if(S.scene==='store'&&!ui.modal)return storeInput(k);if(S.scene==='jobs')return jobsInput(k);if(S.scene==='shear')return shearInput(k);return _input0M(k)};
 const _frameM=frame;frame=function(){const sc=S.scene;if(sc!=='jobs'&&sc!=='shear'&&sc!=='store')return _frameM();ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);
   if(sc==='jobs')drawJobs(t);else if(sc==="store")drawPetCatalog(t);else drawShear(t);
   ui.fx=ui.fx.filter(f=>{f.x+=f.vx;f.y+=f.vy;f.vy+=.06;f.t--;g.globalAlpha=Math.min(1,f.t/20);if(f.ch==='wool'){E(f.x,f.y,3,2.5,'#fffaf0');E(f.x+2,f.y-1,2,2,'#f0e8d8')}else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});

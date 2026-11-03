@@ -107,5 +107,10 @@ function drawGame(t){const m=ui.mg;gameTick();
   if(m.over){R(0,0,W,H,'#0008');panel(30,60,W-60,90,'DONE!');txt('Score '+m.score,W/2,100,'#2b2440',16);txt('Best '+Math.max(m.score,S.best[m.id]||0),W/2,120,'#8a80a8',10);txt('A to collect joy & coins',W/2,140,'#e0457b',10)}}
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
 
-// v28: messages wrap to 2 lines instead of being cut at 40 chars
-function drawMsg(y){const L=wrapTxt(ui.msg,W-40,8).slice(0,2);if(L.length<2){RR(14,y,W-28,20,10,'#fff','#2b2440');txt(ui.msg.length>44?L[0]:ui.msg,W/2,y+14,'#2b2440',9);return}if(y>H/2)y-=8;RR(14,y,W-28,28,10,'#fff','#2b2440');L.forEach((l,i)=>txt(l,W/2,y+12+i*11,'#2b2440',8))}
+// v30: Grandpa-style speech bubble (no portrait). Wraps with the SAME font it draws with, so nothing overflows on phones.
+function wrapMsg(str,maxW,size){g.font='800 '+size+'px system-ui,sans-serif';const out=[];let line='';for(const w of String(str).split(' ')){const t=line?line+' '+w:w;if(g.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t}if(line)out.push(line);return out}
+function drawMsg(y){if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(ui.msg.length,(ui.msgC||0)+1.2);
+  let size=10,L=wrapMsg(ui.msg,W-36,size);if(L.length>3){size=9;L=wrapMsg(ui.msg,W-36,size)}L=L.slice(0,4);const lh=size+3,h=L.length*lh+14,top=y<H/2?y-6:H-6-h;
+  RR(6,top,W-12,h,7,'#fff','#2b2440');g.strokeStyle='#58a8f8';g.lineWidth=1;g.strokeRect(10.5,top+3.5,W-21,h-7);
+  let left=Math.floor(ui.msgC);L.forEach((l,i)=>{const part=l.slice(0,Math.max(0,left));left-=l.length+1;txt(part,16,top+8+size+i*lh,'#2b2440',size,'left')});
+  if(ui.msgC>=ui.msg.length&&S.scene==='map'&&(ui.anim>>4)%2){g.fillStyle='#e8402a';g.beginPath();g.moveTo(W-22,top+h-9);g.lineTo(W-14,top+h-9);g.lineTo(W-18,top+h-5);g.fill()}}
