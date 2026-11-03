@@ -45,7 +45,7 @@ drawPetCatalog=function(t){
       RR(x,y+bob,w,h,10,lk?'#d8d4e4':c.col,on?'#ffe36a':'#2b2440');if(on)RR(x-2,y+bob-2,w+4,h+4,12,'#0000','#2b2440');
       RR(x+3,y+3+bob,32,30,8,'#fffd');g.save();if(lk)g.globalAlpha=.45;shopIcon(c,x+19,y+30+bob,t);g.restore();
       otxt(c.n,x+40+33,y+(lk?15:21)+bob,lk?'#5b4b8a':'#fff',c.n.length>7?9:11);
-      if(lk){RR(x+38,y+19+bob,66,15,6,c.soon?'#8a80a8':'#2b2440');txt('🔒',x+45,y+30+bob,'#fff',7);txt(c.need.toUpperCase(),x+75,y+30+bob,c.soon?'#fff':'#ffe36a',c.need.length>13?5:6)}
+      if(lk){RR(x+38,y+19+bob,66,15,6,c.soon?'#8a80a8':'#2b2440');txt('🔒',x+45,y+30+bob,'#fff',7);txt(c.need.toUpperCase(),x+75,y+30+bob,c.soon?'#fff':'#ffe36a',c.need.length>13?5:6,'center',56)}
       if(c.id==='sheep'&&job&&(t>>4)%2){RR(x+w-34,y-6+bob,38,13,6,'#ffe36a','#2b2440');txt('FREE!',x+w-15,y+4+bob,'#2a9a50',8)}});
     txt('✚ pick   A open   B leave',W/2,H-3,'#2b2440',8);return}
   const c=SHOP_CATS[ui.cat],L=catItems(c),it=L[ui.sel%L.length],lk=!catOpen(c),can=!lk&&(it.free||DB.wallet>=it.p);
