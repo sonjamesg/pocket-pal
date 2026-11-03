@@ -13,7 +13,7 @@ function owExtras2(t,o){if(CUR!=='ranch')return;
   for(const [bx,by,bw,bh] of BARNS)mat(bx*TS+bw*8,(by+bh)*TS+8,bw%2?14:22);mat(HOME[0]*TS+24,(HOME[1]+2)*TS+2,14);
   // chickens pecking in the run beside the coop
   const coop=BARNS.find(b=>b[4]==='coop');if(coop)for(let i=0;i<3;i++){const X=(coop[0]-2)*TS+40+i*22+Math.sin(t/90+i*2)*6,Y=(coop[1]+coop[3]+3)*TS+6+i*5,pk=((t/12+i*7)|0)%20<4;
-    E(X,Y+6,5,2,'#0003');E(X,Y+1,5,4,i===1?'#a0582a':'#fff8ee');E(X+(pk?4:3),Y-(pk?-1:3),3,3,i===1?'#a0582a':'#fff8ee');R(X+(pk?6:5),Y-(pk?-1:3),2,1,'#f0a020');R(X+(pk?4:3),Y-(pk?1:5),2,1,'#e03030')}}
+    p3later(X,Y+6,()=>{E(X,Y+6,5,2,'#0003');E(X,Y+1,5,4,i===1?'#a0582a':'#fff8ee');E(X+(pk?4:3),Y-(pk?-1:3),3,3,i===1?'#a0582a':'#fff8ee');R(X+(pk?6:5),Y-(pk?-1:3),2,1,'#f0a020');R(X+(pk?4:3),Y-(pk?1:5),2,1,'#e03030')})}}
 function ambienceWorld(t){if(CUR==='int'||CUR==='shop')return;const [ccx,ccy]=CAMC,L=ccx-W/2,T=ccy-H/2,h=dayPhase();
   if(CUR==='ranch'){ // chimney smoke from the farmhouse
     if(t%40===0)AMB.sm.push({x:HOME[0]*TS+34,y:HOME[1]*TS-30,a:1});

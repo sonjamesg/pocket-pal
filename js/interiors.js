@@ -129,6 +129,6 @@ function intWalls(m,house,t){const L=TS,Rx=(MW-1)*TS,id=m.id;
     else{R(L+6,top+28,Rx-L-12,3,'#6a4020');for(let x=L+12;x<Rx-12;x+=30){E(x,top+24,5,5,'#ffe08a');R(x-1,top+18,2,6,'#3a2010')}}  // lanterns
     // ceiling beams
     R(L-4,top-6,w+8,7,'#5a3418');R(L-4,top-6,w+8,2,'#8a5a2e')});
-  // side walls: upright panels marching toward the camera
-  for(let y=2;y<MH-1;y++)for(const sx of [0,MW-1]){const X=sx*TS,base=(y+1)*TS;withProj(sx?X:X+TS,base,()=>{const xx=sx?X:X+TS-6;R(xx,base-WALL_H+(y-2)*0,6,WALL_H,sx?'#0000':'#0000');R(sx?X:X+TS-5,base-WALL_H,5,WALL_H,wallC[2]);R(sx?X:X+TS-5,base-WALL_H,5,3,'#5a3418')})}}
+  // v55 smooth perspective side walls
+  p3SideWalls(TS,(MW-1)*TS,2*TS,(MH-1)*TS+8,WALL_H,wallC[1],wallC[2])}
 function w2(a,b){return(b-a)/2}

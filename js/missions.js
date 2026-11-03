@@ -67,9 +67,9 @@ const GOOD_COL={corn:'#ffd84a',hay:'#e8c860',pumpkin:'#ff8a2a',flower:'#ff6fa8',
 function owExtras(t,o){if(CUR==='ranch')for(const k in grows()){const e=grows()[k],[x,y]=k.split(',').map(Number),X=x*TS,Y=y*TS,p=growP(e);g.fillStyle='#2050a050';g.fillRect(X+1,Y+10,TS-2,5);
     if(p<1){const h=3+Math.floor(p*8);R(X+7,Y+14-h,2,h,'#2a8a2a');R(X+4,Y+14-h,3,2,'#4ac04a');R(X+9,Y+13-h,3,2,'#4ac04a')}
     else{const b=Math.round(Math.sin(t/8)*1.5);E(X+8,Y+6+b,5,5,'#2b2440');E(X+8,Y+6+b,4,4,GOOD_COL[CROP_GOOD[e.c]]||'#ffd84a');if((t>>3)%4===0)star(X+13,Y+1,2.5,'#fff')}}
-  if(CUR==='ranch')fieldSheep().forEach((p,i)=>{const [sx,sy]=FIELD_SPOTS[i],bob=Math.sin(t/30+i)>0,X=sx*TS+8,Y=sy*TS+14;g.save();g.translate(X,Y);g.scale(.62,.62);
+  if(CUR==='ranch')fieldSheep().forEach((p,i)=>{const [sx,sy]=FIELD_SPOTS[i],bob=Math.sin(t/30+i)>0,X=sx*TS+8,Y=sy*TS+14;p3later(X,Y,()=>{g.save();g.translate(X,Y);g.scale(.62,.62);
     critter(0,0,'sheep','adult',{pose:(t>>6)%3===i%3?'eat':'idle',mood:'happy',dir:bob?1:-1,wool:woolNow(p),sv:p.breed});g.restore();
-    const lw=p.name.length*4+6;RR(X-lw/2,Y+1,lw,7,3,'#fff8');txt(p.name.slice(0,8),X,Y+6,'#5b4b8a',5);if(woolNow(p)>=100&&(t>>4)%2)txt('!',X+10,Y-18,'#e8402a',9)});
+    const lw=p.name.length*4+6;RR(X-lw/2,Y+1,lw,7,3,'#fff8');txt(p.name.slice(0,8),X,Y+6,'#5b4b8a',5);if(woolNow(p)>=100&&(t>>4)%2)txt('!',X+10,Y-18,'#e8402a',9)})});
   const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0,sv:p.breed});g.restore()}}}
 // screen-space HUD: bucket + current job tracker (the full list lives only on the JOB BOARD)
 function owHud(t){if(DB.bucket>0){RR(W-96,1,36,14,4,'#9ad8ff','#2b2440');R(W-92,4,7,7,'#3a86e8');R(W-93,3,9,1,'#2b2440');txt('×'+DB.bucket,W-74,12,'#2b2440',9)}

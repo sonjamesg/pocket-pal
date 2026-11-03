@@ -53,3 +53,37 @@ function drawShop(t){owUpdate();const o=ui.ow,cx=(MW*TS-W)/2,cy=Math.max(-20,Mat
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.lady?'A: talk to the shop lady':th&&th.pen?'A: look at the animal':th&&th.exit?'Walk out the door':null;
   if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A talk  B leave',W/2,H-4,'#fff',7)}
 drawOverworld=function(t){if(CUR==='shop')return drawShop(t);return _drawOW(t)};
+
+// ===== v55 angled PET SHOP: looking into the shop from the door, tall back wall, counter + cages as toy billboards =====
+function drawShop3D(t){owUpdate();const o=ui.ow,cx=Math.round((MW*TS-W)/2),cy=Math.round(Math.max(-20,Math.min(MH*TS-H+4,o.py+8-H/2)));
+  g.fillStyle='#181020';g.fillRect(0,0,W,H);P3Q=[];P3GROUND=true;p3dBegin(cx,cy);g.fillStyle='#2a1a14';g.fillRect(P3C.ox-40,P3C.oy-40,W/P3.A+80,H/P3.A+80);g.imageSmoothingEnabled=false;
+  for(let y=2;y<MH;y++)for(let x=0;x<MW;x++){const c=OWBASE[y][x],X=x*TS,Y=y*TS;
+    if(c==='#'){R(X,Y,TS,TS,'#6a4028');continue}R(X,Y,TS,TS,(x+y)%2?'#f8e8c8':'#ecd8b0');R(X,Y+15,TS,1,'#d8c098');
+    if(c==='D'){R(X,Y,TS,TS,'#c84848');R(X+1,Y+1,TS-2,TS-2,'#e86060')}}
+  SHOP_PENS.forEach(([px,py])=>{const X=px*TS,Y=py*TS,cage=OWBASE[py][px]==='c';R(X+1,Y+1,30,30,cage?'#d8d0c0':'#e8c868');if(!cage)for(let k=0;k<5;k++)R(X+3+k*6,Y+20+(k%2)*4,4,1,'#c8a040')});
+  R(6*TS+4,10*TS+6,4*TS-8,8,'#5a8a48');
+  P3GROUND=false;p3dWarp('#2a1a14');g.save();g.translate(-cx,-cy);
+  const L=TS,Rx=(MW-1)*TS,WH=62;
+  // back wall
+  withProj((L+Rx)/2,2*TS,()=>{const top=2*TS-WH,w=Rx-L;R(L,top,w,WH,'#f6e2bc');for(let x=L+4;x<Rx;x+=10)R(x,top,4,WH-16,'#ffeccc');R(L,2*TS-16,w,16,'#e86a9a');R(L,2*TS-17,w,2,'#ffb0cc');R(L,top,w,5,'#6a4028');
+    [L+14,L+54,Rx-84,Rx-44].forEach(x=>{RR(x-1,top+11,26,20,4,'#6a4028');R(x+1,top+13,22,16,'#9ad8ff');R(x+1,top+21,22,8,'#c8ecff');R(x+12,top+13,1,16,'#6a4028');R(x+3,top+14,5,2,'#fff')});
+    RR((L+Rx)/2-34,top+6,68,14,6,'#ff5a8b','#2b2440');txt('PET SHOP',(L+Rx)/2,top+17,'#fff',9);
+    for(let x=4*TS;x<12*TS;x+=8){R(x,top+36,8,3,'#8a5a30');[['#e85050',1],['#50a0e8',4]].forEach(([c,i])=>RR(x+i,top+29,3,7,1,c))}
+    R(L-4,top-6,w+8,7,'#5a3418');R(L-4,top-6,w+8,2,'#8a5a2e')});
+  p3SideWalls(L,Rx,2*TS,(MH-1)*TS+8,WH,'#e8c8a0','#6a4028');
+  const items=[];
+  // shop lady behind a chunky counter (counter front face is tall so it reads as a toy block)
+  items.push([3*TS+16,()=>{shopLady(SHOP_LADY[0]*TS,SHOP_LADY[1]*TS+8+Math.round(Math.sin(t/20)));const X=4*TS,Y=3*TS+16;R(X,Y-14,8*TS,14,'#c88a50');R(X,Y-14,8*TS,3,'#e8b070');R(X,Y-3,8*TS,3,'#6a4020');for(let i=0;i<8;i++)RR(X+i*TS+3,Y-11,10,6,2,'#a86a3a');R(X+5*TS,Y-20,10,6,'#505868');R(X+5*TS+2,Y-19,6,2,'#9ae0a0');RR(X+2*TS,Y-19,10,5,2,'#f0e0a0')},4*TS+64]);
+  SHOP_PENS.forEach(([px,py,a],i)=>{const X=px*TS,Y=py*TS,cage=OWBASE[py][px]==='c';items.push([Y+32,()=>{
+    g.save();g.translate(X+16,Y+28);g.scale(.42,.42);const dir=Math.sin(t/60+i)>0?1:-1,pose=((t>>6)+i)%3===0?'sit':'walk';
+    if(a.startsWith('dog'))dog(0,0,BKEYS[(a==='dog1'?3:0)%BKEYS.length],'puppy',{pose,mood:'happy',dir});else{g.scale(1.8,1.8);critter(0,0,a,'adult',{pose,mood:'happy',dir})};g.restore();
+    if(cage){g.fillStyle='#8890a0';for(let k=0;k<=30;k+=5)g.fillRect(X+1+k,Y+4,1.4,28);R(X,Y+2,32,3,'#505868');R(X,Y+30,32,3,'#505868');R(X,Y+2,32,1,'#a8b0c0')}
+    else{R(X,Y+20,32,12,'#a06830');R(X,Y+20,32,3,'#d09050');for(let k=4;k<32;k+=8)R(X+k,Y+23,1,9,'#7a4a22')}},X+16]);});
+  items.push([o.py+16,()=>{const AVS=avImg('s'),FS=DB.avatar==='girl'&&IMG.farmergirl&&IMG.farmergirl.naturalWidth?'farmergirl':'farmer';E(o.px+8,o.py+15,6,2,'#0003');
+    if(AVS||(IMG[FS]&&IMG[FS].naturalWidth)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Math.round(o.py)-4-(FH-16),16,FH)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv)},o.px+8]);
+  items.sort((a,b)=>a[0]-b[0]).forEach(([y,fn,x])=>withProj(x,y,fn));
+  g.restore();
+  R(0,0,W,16,'#2b2440cc');txt('PET SHOP',6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
+  const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.lady?'A: talk to the shop lady':th&&th.pen?'A: look at the animal':th&&th.exit?'Walk out the door':null;
+  if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A talk  B leave',W/2,H-4,'#fff',7)}
+{const _ds=drawShop;drawShop=function(t){return P3D?drawShop3D(t):_ds(t)}}
