@@ -42,7 +42,7 @@ function gridIn(k,n,go){if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.se
 function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='FEED')S.scene='food';if(a==='PLAY')S.scene='games';if(a==='TRICKS')S.scene='tricks';if(a==='TOYS')S.scene='toys';if(a==='CARE')S.scene='care';
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
-  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+12);addXP(1);hearts(4);setPose('happy',60);say('Brushed '+S.name+'\'s fleece — so soft!');save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
+  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+15);if(S.species==='sheep')S.wool=Math.min(100,(S.wool||0)+8);addXP(1);hearts(4);setPose('happy',60);say('Brushed! Happy +15'+(S.species==='sheep'?'  Wool +8%':''));save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
   if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*'],sheep:['*baa-aa!*','*soft baa*','*fluffy nuzzle*']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
@@ -50,11 +50,11 @@ function careAct(id){
 function feed(f){if(S.hunger>=97&&!f.plq){say('Too full!');return}
   S.hunger=clamp(S.hunger+f.v);S.happy=clamp(S.happy+(f.joy||0));if(f.plq)S.plaque=clamp(S.plaque+f.plq);addXP(2);
   S.scene='main';setPose('eat',80);ui.eatFood=f.id;say(f.n+' +'+f.v+(f.plq<0?' • cleaner teeth':''));if(f.joy>5)hearts(3);checkGrow();save()}
-function toy(t){if(!S.toys.includes(t.id)){if(S.coins<t.p){say('Need '+t.p+' coins — play games & walk!');return}
-    S.coins-=t.p;S.toys.push(t.id);sparkle(16);say('Got a '+t.n+'!');save();return}
+function toy(t){if(!S.toys.includes(t.id)){if(DB.wallet<t.p){say('Need '+t.p+' coins — play games & walk!');return}
+    DB.wallet-=t.p;S.toys.push(t.id);sparkle(16);say('Got a '+t.n+'!');save();return}
   S.scene='main';S.happy=clamp(S.happy+12);addXP(2);ui.idle={k:'play',t:300,toy:t.id};ui.poseT=0;hearts(3);say(S.name+' loves the '+t.n.toLowerCase()+'!');save()}
 function perform(tr){S.scene='main';setPose(tr.id,120);S.happy=clamp(S.happy+10);S.hunger=clamp(S.hunger-2);addXP(1);sparkle(14);say(S.name+' does '+tr.n+'!');checkGrow();save()}
-function endGame(){const m=ui.mg;const joy=Math.min(30,8+m.score*3),coins=Math.min(15,2+m.score);S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-5);S.coins+=coins;addXP(2);
+function endGame(){const m=ui.mg;const joy=Math.min(30,8+m.score*3),coins=Math.min(15,2+m.score);S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-5);DB.wallet+=coins;addXP(2);
   const b=S.best[m.id]||0;if(m.score>b)S.best[m.id]=m.score;ui.mg=null;S.scene='main';setPose('happy',60);hearts(4);say('Joy +'+joy+'  ● +'+coins+(m.score>b?' NEW BEST':''));checkGrow();save()}
 // ---- idle life ----
 function pickIdle(){const I=ui.idle,sad=S.happy<35||S.coat>=TUNE.matAt||S.plaque>=TUNE.plaqueBad||S.hunger<25;
@@ -83,7 +83,7 @@ function walkTick(){const m=ui.mg;if(m.done)return;if(m.stT>0)m.stT--;
   else if(m.st==='wee'&&!m.stT){m.cur.d=true;m.st='walk';say('Wee on the lamp post!',70)}
   else if(m.st==='poo'&&!m.stT){m.cur.px=m.x+60;m.st='bagQ'}
   else if(m.st==='bagging'&&!m.stT){m.cur.d=true;m.st='walk';say('Good owner! Bagged & binned',80);sparkle(8,80,150)}}
-function endWalk(){const m=ui.mg,joy=Math.min(35,10+m.sn*4+Math.round(m.x/m.len*10)),coins=3+m.bag*2;S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-6);S.coins+=coins;addXP(3);S.lastWalk=now();
+function endWalk(){const m=ui.mg,joy=Math.min(35,10+m.sn*4+Math.round(m.x/m.len*10)),coins=3+m.bag*2;S.happy=clamp(S.happy+joy);S.hunger=clamp(S.hunger-6);DB.wallet+=coins;addXP(3);S.lastWalk=now();
   ui.mg=null;S.scene='main';setPose('happy',60);hearts(4);say('Lovely walk! Joy +'+joy+'  ● +'+coins);checkGrow();save()}
 // ---- teeth ----
 function teethInput(k){const m=ui.mg;if(m.done){if(k==='a'||k==='b'){S.scene='main';ui.mg=null;setPose('happy',60);save()}return}

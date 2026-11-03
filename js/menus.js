@@ -2,7 +2,7 @@
 const PAUSE=['RESUME','FARM MAP','SAVE','MY PETS','HOME'];
 function hasSave(){return !!((DB.avatar&&DB.playerName)||petList().length)}
 function titleItems(){if(!hasSave())return['NEW GAME'];const a=['CONTINUE','NEW GAME'];if(petList().length)a.push('MY PETS');return a}
-function newGame(){const go=()=>{try{localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60};saveDB();S={scene:'title'};avatarOpen()};if(hasSave())askConfirm('Start a NEW GAME? Your saved ranch on this device will be erased.',go);else go()}
+function newGame(){const go=()=>{try{localStorage.removeItem(SAVE)}catch(e){}DB={v:9,pets:{},lastId:null,wallet:60};saveDB();S={scene:'title'};avatarOpen()};if(hasSave())askConfirm('Start a NEW GAME? Your ranch will be erased.',()=>askConfirm('REALLY erase? Pets and coins will be GONE forever!',go));else go()}
 function continueGame(){if(DB.avatar&&DB.playerName&&DB.introDone){openMap();return}if(DB.lastId&&DB.pets[DB.lastId]){loadPet(DB.lastId);return}openMap()}
 function openMap(){if(!DB.avatar||!DB.playerName){avatarOpen();return}if(!DB.introDone){startIntro();return}if(S.id)save(true);ui.mapBack=S.id&&S.stage?S.id:null;S={scene:'map'};ui.msgT=0;owInit(ui.mapBack)}
 const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').concat(['DEL','SKIP','DONE']);
@@ -36,7 +36,7 @@ function input(k){if(ui.modal)return modalInput(k);return input0(k)}
 // ===== intro: Grandpa hands over the ranch (Pokémon-style typed dialogue) =====
 function introPages(){const n=DB.playerName||'KID';return['Howdy, '+n+'! There you are, partner. Come closer, let your old Grandpa get a look at you.',
   'I want you to have my ranch. Once it was full of animals and life… but in my old age, I let it slip away.',
-  'Bring it back to its former glory, '+n+'. Start at the PET SHOP — out the south GATE, in the WILD WOODS. I believe in you!']}
+  'Bring it back to its former glory, '+n+'. First, go read the JOB BOARD by the farmhouse. It shows what to do next. I believe in you!']}
 function startIntro(){S={scene:'intro'};ui.dlg={i:0,c:0};ui.ow=null;owInit(null)}
 function introInput(k){const d=ui.dlg,P=introPages(),full=P[d.i].length;if(k!=='a'&&k!=='start'&&k!=='b')return;
   if(d.c<full){d.c=full;return}if(d.i<P.length-1){d.i++;d.c=0;return}DB.introDone=1;saveDB();S={scene:'map'};ui.msgT=0;owInit(null)}

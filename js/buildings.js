@@ -35,7 +35,7 @@ function drawMap(t){const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0
   R(150,128,84,40,'#a07848');for(let y=132;y<166;y+=6)R(152,y,80,2,'#8a6038');txt('FIELD — soon',192,178,'#fff',7);
   E(36,192,26,12,'#5ab0ff');E(30,189,10,4,'#8ad0ff');
   for(let i=0;i<5;i++){E(8+i*14,30,8,9,'#4a9a3a')}
-  R(0,0,W,22,'#2b2440cc');txt('FARM MAP',8,15,'#fff',10,'left');txt('● '+petList().reduce((a,p)=>a+(p.coins||0),0),W-8,15,'#ffd84a',9,'right');
+  R(0,0,W,22,'#2b2440cc');txt('FARM MAP',8,15,'#fff',10,'left');txt('● '+DB.wallet,W-8,15,'#ffd84a',9,'right');
   const L=petList(),slots=[[30,92],[78,92],[166,92],[214,92],[78,170],[30,150]];
   const pets=L.slice(0,6);if(ui.msel>L.length)ui.msel=0;
   pets.forEach((p,i)=>{const [x,y]=slots[i],on=ui.msel===i,sp=spOf(p);if(on){E(x,y+2,28,7,'#ffe36a');}

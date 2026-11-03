@@ -37,7 +37,7 @@ const SFOODS={cat:[{id:'catbisc',n:'CAT BISCUITS',v:20},{id:'wet',n:'WET FOOD',v
  chicken:[{id:'corn',n:'CORN',v:20},{id:'grain',n:'MIXED GRAIN',v:24},{id:'worms',n:'MEALWORMS',v:12,joy:10,d:'Favourite snack!'},{id:'greens',n:'GREENS',v:14,joy:4}],
  pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}],
  horse:[{id:'hay',n:'HAY',v:24},{id:'oats',n:'OATS',v:22,joy:4},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'apple',n:'APPLE',v:14,joy:6},{n:'SUGAR LUMP',id:'sugar',v:6,joy:12}],
- sheep:[{id:'greens',n:'FRESH GRASS',v:22},{id:'hay',n:'HAY',v:26},{id:'grain',n:'SHEEP NUTS',v:20,joy:4},{id:'apple',n:'APPLE',v:12,joy:8},{id:'carrot',n:'CARROT',v:12,joy:6}],
+ sheep:[{id:'greens',n:'FRESH GRASS',v:18,d:'Free!'},{id:'hay',n:'HAY',v:30,cost:3,stock:'hay',d:'Uses your HAY, or ● 3'},{id:'corn',n:'CORN',v:24,joy:4,cost:3,stock:'corn',d:'Uses your CORN, or ● 3'},{id:'apple',n:'APPLE',v:12,joy:8,cost:2,d:'● 2'},{id:'carrot',n:'CARROT',v:12,joy:6,cost:2,d:'● 2'}],
  rabbit:[{id:'pellets',n:'PELLETS',v:20},{id:'hay',n:'HAY',v:18,joy:3},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'greens',n:'GREENS',v:12,joy:5},{id:'apple',n:'APPLE SLICE',v:10,joy:6}]};
 function foods(){return S.species&&SFOODS[S.species]||FOODS}
 const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},{id:'rope',n:'TUG ROPE',p:20},{id:'frisbee',n:'FRISBEE',p:30},{id:'duck',n:'PLUSH DUCK',p:40}];
@@ -46,5 +46,5 @@ const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{
 const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
 const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP'],sheep:['FEED','CUDDLE','BRUSH','SHEAR','SLEEP']};
 // v28 sheep wool: % per real HOUR. Fed+happy: 0->100 in ~3 min. Hungry or sad: 1/3 speed (~9 min). Sheep get hungry faster than dogs.
-const WOOL={fast:100*20,slow:100*20/3,hunger:40,happy:20,need:40,coins:15};
+const WOOL={fast:100*20,slow:100*20/3,hunger:7,happy:3.5,need:40,coins:0}; // v32: hunger/happy decay close to dogs (6/3 per hr)
 let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}
