@@ -1,0 +1,4575 @@
+{
+  "width": 30,
+  "height": 24,
+  "tileSize": 16,
+  "cols": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "AA",
+    "AB",
+    "AC",
+    "AD"
+  ],
+  "rows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "howTo": "Caller says e.g. B2 \u2192 look up cells[\"B2\"]. Letters = columns left\u2192right starting A=x0. Numbers = rows top\u2192bottom starting 1=y0.",
+  "legend": {
+    "g": "grass",
+    "p": "path",
+    "f": "fence",
+    "t": "tree",
+    "w": "water",
+    "c": "field",
+    "C": "corn",
+    "W": "wheat",
+    "s": "sign",
+    "H": "house",
+    "L": "locked"
+  },
+  "houseSlots": [
+    {
+      "slot": 1,
+      "origin": [
+        3,
+        3
+      ],
+      "door": [
+        4,
+        4
+      ],
+      "grid": "D4"
+    },
+    {
+      "slot": 2,
+      "origin": [
+        9,
+        3
+      ],
+      "door": [
+        10,
+        4
+      ],
+      "grid": "J4"
+    },
+    {
+      "slot": 3,
+      "origin": [
+        15,
+        3
+      ],
+      "door": [
+        16,
+        4
+      ],
+      "grid": "P4"
+    },
+    {
+      "slot": 4,
+      "origin": [
+        3,
+        9
+      ],
+      "door": [
+        4,
+        10
+      ],
+      "grid": "D10"
+    },
+    {
+      "slot": 5,
+      "origin": [
+        9,
+        9
+      ],
+      "door": [
+        10,
+        10
+      ],
+      "grid": "J10"
+    },
+    {
+      "slot": 6,
+      "origin": [
+        15,
+        9
+      ],
+      "door": [
+        16,
+        10
+      ],
+      "grid": "P10"
+    }
+  ],
+  "locked": [
+    {
+      "name": "COW BARN",
+      "origin": [
+        22,
+        3
+      ],
+      "grid": "W4"
+    },
+    {
+      "name": "STABLE",
+      "origin": [
+        22,
+        9
+      ],
+      "grid": "W10"
+    }
+  ],
+  "cells": {
+    "A1": {
+      "x": 0,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B1": {
+      "x": 1,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "C1": {
+      "x": 2,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "D1": {
+      "x": 3,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "E1": {
+      "x": 4,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "F1": {
+      "x": 5,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "G1": {
+      "x": 6,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "H1": {
+      "x": 7,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "I1": {
+      "x": 8,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "J1": {
+      "x": 9,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "K1": {
+      "x": 10,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "L1": {
+      "x": 11,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "M1": {
+      "x": 12,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "N1": {
+      "x": 13,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "O1": {
+      "x": 14,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "P1": {
+      "x": 15,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q1": {
+      "x": 16,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "R1": {
+      "x": 17,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "S1": {
+      "x": 18,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T1": {
+      "x": 19,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "U1": {
+      "x": 20,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V1": {
+      "x": 21,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W1": {
+      "x": 22,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "X1": {
+      "x": 23,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Y1": {
+      "x": 24,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Z1": {
+      "x": 25,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AA1": {
+      "x": 26,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB1": {
+      "x": 27,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AC1": {
+      "x": 28,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AD1": {
+      "x": 29,
+      "y": 0,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A2": {
+      "x": 0,
+      "y": 1,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B2": {
+      "x": 1,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C2": {
+      "x": 2,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D2": {
+      "x": 3,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E2": {
+      "x": 4,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F2": {
+      "x": 5,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G2": {
+      "x": 6,
+      "y": 1,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "H2": {
+      "x": 7,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I2": {
+      "x": 8,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J2": {
+      "x": 9,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K2": {
+      "x": 10,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L2": {
+      "x": 11,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M2": {
+      "x": 12,
+      "y": 1,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "N2": {
+      "x": 13,
+      "y": 1,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O2": {
+      "x": 14,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P2": {
+      "x": 15,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q2": {
+      "x": 16,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R2": {
+      "x": 17,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S2": {
+      "x": 18,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T2": {
+      "x": 19,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U2": {
+      "x": 20,
+      "y": 1,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "V2": {
+      "x": 21,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W2": {
+      "x": 22,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X2": {
+      "x": 23,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y2": {
+      "x": 24,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z2": {
+      "x": 25,
+      "y": 1,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "AA2": {
+      "x": 26,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB2": {
+      "x": 27,
+      "y": 1,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC2": {
+      "x": 28,
+      "y": 1,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD2": {
+      "x": 29,
+      "y": 1,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A3": {
+      "x": 0,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B3": {
+      "x": 1,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C3": {
+      "x": 2,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D3": {
+      "x": 3,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E3": {
+      "x": 4,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F3": {
+      "x": 5,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G3": {
+      "x": 6,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H3": {
+      "x": 7,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I3": {
+      "x": 8,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J3": {
+      "x": 9,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K3": {
+      "x": 10,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L3": {
+      "x": 11,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M3": {
+      "x": 12,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N3": {
+      "x": 13,
+      "y": 2,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O3": {
+      "x": 14,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P3": {
+      "x": 15,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q3": {
+      "x": 16,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R3": {
+      "x": 17,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S3": {
+      "x": 18,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T3": {
+      "x": 19,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "U3": {
+      "x": 20,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V3": {
+      "x": 21,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W3": {
+      "x": 22,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X3": {
+      "x": 23,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y3": {
+      "x": 24,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z3": {
+      "x": 25,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA3": {
+      "x": 26,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB3": {
+      "x": 27,
+      "y": 2,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC3": {
+      "x": 28,
+      "y": 2,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD3": {
+      "x": 29,
+      "y": 2,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A4": {
+      "x": 0,
+      "y": 3,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B4": {
+      "x": 1,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C4": {
+      "x": 2,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D4": {
+      "x": 3,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "E4": {
+      "x": 4,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "F4": {
+      "x": 5,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "G4": {
+      "x": 6,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H4": {
+      "x": 7,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I4": {
+      "x": 8,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J4": {
+      "x": 9,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "K4": {
+      "x": 10,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "L4": {
+      "x": 11,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "M4": {
+      "x": 12,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N4": {
+      "x": 13,
+      "y": 3,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O4": {
+      "x": 14,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P4": {
+      "x": 15,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "Q4": {
+      "x": 16,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "R4": {
+      "x": 17,
+      "y": 3,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "S4": {
+      "x": 18,
+      "y": 3,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T4": {
+      "x": 19,
+      "y": 3,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U4": {
+      "x": 20,
+      "y": 3,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "V4": {
+      "x": 21,
+      "y": 3,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W4": {
+      "x": 22,
+      "y": 3,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "X4": {
+      "x": 23,
+      "y": 3,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Y4": {
+      "x": 24,
+      "y": 3,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Z4": {
+      "x": 25,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA4": {
+      "x": 26,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB4": {
+      "x": 27,
+      "y": 3,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC4": {
+      "x": 28,
+      "y": 3,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD4": {
+      "x": 29,
+      "y": 3,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A5": {
+      "x": 0,
+      "y": 4,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B5": {
+      "x": 1,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C5": {
+      "x": 2,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D5": {
+      "x": 3,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "E5": {
+      "x": 4,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "F5": {
+      "x": 5,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H1",
+      "slot": 1
+    },
+    "G5": {
+      "x": 6,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H5": {
+      "x": 7,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I5": {
+      "x": 8,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J5": {
+      "x": 9,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "K5": {
+      "x": 10,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "L5": {
+      "x": 11,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H2",
+      "slot": 2
+    },
+    "M5": {
+      "x": 12,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N5": {
+      "x": 13,
+      "y": 4,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O5": {
+      "x": 14,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P5": {
+      "x": 15,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "Q5": {
+      "x": 16,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "R5": {
+      "x": 17,
+      "y": 4,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H3",
+      "slot": 3
+    },
+    "S5": {
+      "x": 18,
+      "y": 4,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T5": {
+      "x": 19,
+      "y": 4,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U5": {
+      "x": 20,
+      "y": 4,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "V5": {
+      "x": 21,
+      "y": 4,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W5": {
+      "x": 22,
+      "y": 4,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "X5": {
+      "x": 23,
+      "y": 4,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Y5": {
+      "x": 24,
+      "y": 4,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Z5": {
+      "x": 25,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA5": {
+      "x": 26,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB5": {
+      "x": 27,
+      "y": 4,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC5": {
+      "x": 28,
+      "y": 4,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD5": {
+      "x": 29,
+      "y": 4,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A6": {
+      "x": 0,
+      "y": 5,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B6": {
+      "x": 1,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C6": {
+      "x": 2,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D6": {
+      "x": 3,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E6": {
+      "x": 4,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F6": {
+      "x": 5,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G6": {
+      "x": 6,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H6": {
+      "x": 7,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I6": {
+      "x": 8,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J6": {
+      "x": 9,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K6": {
+      "x": 10,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L6": {
+      "x": 11,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M6": {
+      "x": 12,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N6": {
+      "x": 13,
+      "y": 5,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O6": {
+      "x": 14,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P6": {
+      "x": 15,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q6": {
+      "x": 16,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R6": {
+      "x": 17,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S6": {
+      "x": 18,
+      "y": 5,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T6": {
+      "x": 19,
+      "y": 5,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U6": {
+      "x": 20,
+      "y": 5,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "V6": {
+      "x": 21,
+      "y": 5,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W6": {
+      "x": 22,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X6": {
+      "x": 23,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y6": {
+      "x": 24,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z6": {
+      "x": 25,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA6": {
+      "x": 26,
+      "y": 5,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB6": {
+      "x": 27,
+      "y": 5,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC6": {
+      "x": 28,
+      "y": 5,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "AD6": {
+      "x": 29,
+      "y": 5,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A7": {
+      "x": 0,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B7": {
+      "x": 1,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C7": {
+      "x": 2,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D7": {
+      "x": 3,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E7": {
+      "x": 4,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F7": {
+      "x": 5,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G7": {
+      "x": 6,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H7": {
+      "x": 7,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I7": {
+      "x": 8,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J7": {
+      "x": 9,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K7": {
+      "x": 10,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L7": {
+      "x": 11,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M7": {
+      "x": 12,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N7": {
+      "x": 13,
+      "y": 6,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O7": {
+      "x": 14,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P7": {
+      "x": 15,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q7": {
+      "x": 16,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R7": {
+      "x": 17,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S7": {
+      "x": 18,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T7": {
+      "x": 19,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "U7": {
+      "x": 20,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V7": {
+      "x": 21,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W7": {
+      "x": 22,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X7": {
+      "x": 23,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y7": {
+      "x": 24,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z7": {
+      "x": 25,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA7": {
+      "x": 26,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB7": {
+      "x": 27,
+      "y": 6,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC7": {
+      "x": 28,
+      "y": 6,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD7": {
+      "x": 29,
+      "y": 6,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A8": {
+      "x": 0,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "B8": {
+      "x": 1,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "C8": {
+      "x": 2,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "D8": {
+      "x": 3,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "E8": {
+      "x": 4,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "F8": {
+      "x": 5,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "G8": {
+      "x": 6,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "H8": {
+      "x": 7,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "I8": {
+      "x": 8,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "J8": {
+      "x": 9,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "K8": {
+      "x": 10,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "L8": {
+      "x": 11,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "M8": {
+      "x": 12,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "N8": {
+      "x": 13,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O8": {
+      "x": 14,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "P8": {
+      "x": 15,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Q8": {
+      "x": 16,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "R8": {
+      "x": 17,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "S8": {
+      "x": 18,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "T8": {
+      "x": 19,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "U8": {
+      "x": 20,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "V8": {
+      "x": 21,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "W8": {
+      "x": 22,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "X8": {
+      "x": 23,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Y8": {
+      "x": 24,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Z8": {
+      "x": 25,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AA8": {
+      "x": 26,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AB8": {
+      "x": 27,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC8": {
+      "x": 28,
+      "y": 7,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AD8": {
+      "x": 29,
+      "y": 7,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A9": {
+      "x": 0,
+      "y": 8,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B9": {
+      "x": 1,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C9": {
+      "x": 2,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D9": {
+      "x": 3,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E9": {
+      "x": 4,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F9": {
+      "x": 5,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G9": {
+      "x": 6,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H9": {
+      "x": 7,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I9": {
+      "x": 8,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J9": {
+      "x": 9,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K9": {
+      "x": 10,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L9": {
+      "x": 11,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M9": {
+      "x": 12,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N9": {
+      "x": 13,
+      "y": 8,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O9": {
+      "x": 14,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P9": {
+      "x": 15,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q9": {
+      "x": 16,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R9": {
+      "x": 17,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S9": {
+      "x": 18,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T9": {
+      "x": 19,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U9": {
+      "x": 20,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V9": {
+      "x": 21,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W9": {
+      "x": 22,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X9": {
+      "x": 23,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y9": {
+      "x": 24,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z9": {
+      "x": 25,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA9": {
+      "x": 26,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB9": {
+      "x": 27,
+      "y": 8,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC9": {
+      "x": 28,
+      "y": 8,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD9": {
+      "x": 29,
+      "y": 8,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A10": {
+      "x": 0,
+      "y": 9,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B10": {
+      "x": 1,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C10": {
+      "x": 2,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D10": {
+      "x": 3,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "E10": {
+      "x": 4,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "F10": {
+      "x": 5,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "G10": {
+      "x": 6,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H10": {
+      "x": 7,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I10": {
+      "x": 8,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J10": {
+      "x": 9,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "K10": {
+      "x": 10,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "L10": {
+      "x": 11,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "M10": {
+      "x": 12,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N10": {
+      "x": 13,
+      "y": 9,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O10": {
+      "x": 14,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P10": {
+      "x": 15,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "Q10": {
+      "x": 16,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "R10": {
+      "x": 17,
+      "y": 9,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "S10": {
+      "x": 18,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T10": {
+      "x": 19,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U10": {
+      "x": 20,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V10": {
+      "x": 21,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W10": {
+      "x": 22,
+      "y": 9,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "X10": {
+      "x": 23,
+      "y": 9,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Y10": {
+      "x": 24,
+      "y": 9,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Z10": {
+      "x": 25,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA10": {
+      "x": 26,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB10": {
+      "x": 27,
+      "y": 9,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC10": {
+      "x": 28,
+      "y": 9,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD10": {
+      "x": 29,
+      "y": 9,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A11": {
+      "x": 0,
+      "y": 10,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B11": {
+      "x": 1,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C11": {
+      "x": 2,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D11": {
+      "x": 3,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "E11": {
+      "x": 4,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "F11": {
+      "x": 5,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H4",
+      "slot": 4
+    },
+    "G11": {
+      "x": 6,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H11": {
+      "x": 7,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I11": {
+      "x": 8,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J11": {
+      "x": 9,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "K11": {
+      "x": 10,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "L11": {
+      "x": 11,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H5",
+      "slot": 5
+    },
+    "M11": {
+      "x": 12,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N11": {
+      "x": 13,
+      "y": 10,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O11": {
+      "x": 14,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P11": {
+      "x": 15,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "Q11": {
+      "x": 16,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "R11": {
+      "x": 17,
+      "y": 10,
+      "tile": "g",
+      "kind": "house_slot",
+      "feature": "H6",
+      "slot": 6
+    },
+    "S11": {
+      "x": 18,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T11": {
+      "x": 19,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U11": {
+      "x": 20,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V11": {
+      "x": 21,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W11": {
+      "x": 22,
+      "y": 10,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "X11": {
+      "x": 23,
+      "y": 10,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Y11": {
+      "x": 24,
+      "y": 10,
+      "tile": "g",
+      "kind": "locked_barn",
+      "feature": "L"
+    },
+    "Z11": {
+      "x": 25,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA11": {
+      "x": 26,
+      "y": 10,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB11": {
+      "x": 27,
+      "y": 10,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC11": {
+      "x": 28,
+      "y": 10,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "AD11": {
+      "x": 29,
+      "y": 10,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A12": {
+      "x": 0,
+      "y": 11,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B12": {
+      "x": 1,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C12": {
+      "x": 2,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D12": {
+      "x": 3,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E12": {
+      "x": 4,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F12": {
+      "x": 5,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G12": {
+      "x": 6,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H12": {
+      "x": 7,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I12": {
+      "x": 8,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J12": {
+      "x": 9,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K12": {
+      "x": 10,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L12": {
+      "x": 11,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M12": {
+      "x": 12,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N12": {
+      "x": 13,
+      "y": 11,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O12": {
+      "x": 14,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P12": {
+      "x": 15,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q12": {
+      "x": 16,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R12": {
+      "x": 17,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S12": {
+      "x": 18,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T12": {
+      "x": 19,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U12": {
+      "x": 20,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V12": {
+      "x": 21,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W12": {
+      "x": 22,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X12": {
+      "x": 23,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y12": {
+      "x": 24,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z12": {
+      "x": 25,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA12": {
+      "x": 26,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB12": {
+      "x": 27,
+      "y": 11,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC12": {
+      "x": 28,
+      "y": 11,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD12": {
+      "x": 29,
+      "y": 11,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A13": {
+      "x": 0,
+      "y": 12,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B13": {
+      "x": 1,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C13": {
+      "x": 2,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D13": {
+      "x": 3,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E13": {
+      "x": 4,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F13": {
+      "x": 5,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G13": {
+      "x": 6,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H13": {
+      "x": 7,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I13": {
+      "x": 8,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J13": {
+      "x": 9,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K13": {
+      "x": 10,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L13": {
+      "x": 11,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M13": {
+      "x": 12,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N13": {
+      "x": 13,
+      "y": 12,
+      "tile": "s",
+      "kind": "sign"
+    },
+    "O13": {
+      "x": 14,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P13": {
+      "x": 15,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q13": {
+      "x": 16,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R13": {
+      "x": 17,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S13": {
+      "x": 18,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T13": {
+      "x": 19,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U13": {
+      "x": 20,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V13": {
+      "x": 21,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W13": {
+      "x": 22,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X13": {
+      "x": 23,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y13": {
+      "x": 24,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z13": {
+      "x": 25,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA13": {
+      "x": 26,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB13": {
+      "x": 27,
+      "y": 12,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC13": {
+      "x": 28,
+      "y": 12,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD13": {
+      "x": 29,
+      "y": 12,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A14": {
+      "x": 0,
+      "y": 13,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B14": {
+      "x": 1,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "C14": {
+      "x": 2,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "D14": {
+      "x": 3,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "E14": {
+      "x": 4,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "F14": {
+      "x": 5,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "G14": {
+      "x": 6,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "H14": {
+      "x": 7,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "I14": {
+      "x": 8,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "J14": {
+      "x": 9,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "K14": {
+      "x": 10,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "L14": {
+      "x": 11,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "M14": {
+      "x": 12,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "N14": {
+      "x": 13,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O14": {
+      "x": 14,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "P14": {
+      "x": 15,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Q14": {
+      "x": 16,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "R14": {
+      "x": 17,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "S14": {
+      "x": 18,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "T14": {
+      "x": 19,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "U14": {
+      "x": 20,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "V14": {
+      "x": 21,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "W14": {
+      "x": 22,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "X14": {
+      "x": 23,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Y14": {
+      "x": 24,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "Z14": {
+      "x": 25,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AA14": {
+      "x": 26,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AB14": {
+      "x": 27,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC14": {
+      "x": 28,
+      "y": 13,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AD14": {
+      "x": 29,
+      "y": 13,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A15": {
+      "x": 0,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B15": {
+      "x": 1,
+      "y": 14,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "C15": {
+      "x": 2,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D15": {
+      "x": 3,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E15": {
+      "x": 4,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F15": {
+      "x": 5,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "G15": {
+      "x": 6,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "H15": {
+      "x": 7,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "I15": {
+      "x": 8,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "J15": {
+      "x": 9,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "K15": {
+      "x": 10,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L15": {
+      "x": 11,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M15": {
+      "x": 12,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N15": {
+      "x": 13,
+      "y": 14,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O15": {
+      "x": 14,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P15": {
+      "x": 15,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q15": {
+      "x": 16,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R15": {
+      "x": 17,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S15": {
+      "x": 18,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T15": {
+      "x": 19,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U15": {
+      "x": 20,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V15": {
+      "x": 21,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W15": {
+      "x": 22,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X15": {
+      "x": 23,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y15": {
+      "x": 24,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z15": {
+      "x": 25,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA15": {
+      "x": 26,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB15": {
+      "x": 27,
+      "y": 14,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC15": {
+      "x": 28,
+      "y": 14,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD15": {
+      "x": 29,
+      "y": 14,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A16": {
+      "x": 0,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B16": {
+      "x": 1,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C16": {
+      "x": 2,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D16": {
+      "x": 3,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E16": {
+      "x": 4,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F16": {
+      "x": 5,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "G16": {
+      "x": 6,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "H16": {
+      "x": 7,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "I16": {
+      "x": 8,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "J16": {
+      "x": 9,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "K16": {
+      "x": 10,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L16": {
+      "x": 11,
+      "y": 15,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "M16": {
+      "x": 12,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N16": {
+      "x": 13,
+      "y": 15,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O16": {
+      "x": 14,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P16": {
+      "x": 15,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q16": {
+      "x": 16,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "R16": {
+      "x": 17,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S16": {
+      "x": 18,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T16": {
+      "x": 19,
+      "y": 15,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "U16": {
+      "x": 20,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V16": {
+      "x": 21,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W16": {
+      "x": 22,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "X16": {
+      "x": 23,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y16": {
+      "x": 24,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Z16": {
+      "x": 25,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AA16": {
+      "x": 26,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB16": {
+      "x": 27,
+      "y": 15,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC16": {
+      "x": 28,
+      "y": 15,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD16": {
+      "x": 29,
+      "y": 15,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A17": {
+      "x": 0,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B17": {
+      "x": 1,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C17": {
+      "x": 2,
+      "y": 16,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D17": {
+      "x": 3,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E17": {
+      "x": 4,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F17": {
+      "x": 5,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G17": {
+      "x": 6,
+      "y": 16,
+      "tile": "w",
+      "kind": "water"
+    },
+    "H17": {
+      "x": 7,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I17": {
+      "x": 8,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J17": {
+      "x": 9,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K17": {
+      "x": 10,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L17": {
+      "x": 11,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M17": {
+      "x": 12,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N17": {
+      "x": 13,
+      "y": 16,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O17": {
+      "x": 14,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P17": {
+      "x": 15,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q17": {
+      "x": 16,
+      "y": 16,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "R17": {
+      "x": 17,
+      "y": 16,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "S17": {
+      "x": 18,
+      "y": 16,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "T17": {
+      "x": 19,
+      "y": 16,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U17": {
+      "x": 20,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V17": {
+      "x": 21,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W17": {
+      "x": 22,
+      "y": 16,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "X17": {
+      "x": 23,
+      "y": 16,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Y17": {
+      "x": 24,
+      "y": 16,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Z17": {
+      "x": 25,
+      "y": 16,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "AA17": {
+      "x": 26,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB17": {
+      "x": 27,
+      "y": 16,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC17": {
+      "x": 28,
+      "y": 16,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD17": {
+      "x": 29,
+      "y": 16,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A18": {
+      "x": 0,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B18": {
+      "x": 1,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C18": {
+      "x": 2,
+      "y": 17,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D18": {
+      "x": 3,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E18": {
+      "x": 4,
+      "y": 17,
+      "tile": "w",
+      "kind": "water"
+    },
+    "F18": {
+      "x": 5,
+      "y": 17,
+      "tile": "w",
+      "kind": "water"
+    },
+    "G18": {
+      "x": 6,
+      "y": 17,
+      "tile": "w",
+      "kind": "water"
+    },
+    "H18": {
+      "x": 7,
+      "y": 17,
+      "tile": "w",
+      "kind": "water"
+    },
+    "I18": {
+      "x": 8,
+      "y": 17,
+      "tile": "w",
+      "kind": "water"
+    },
+    "J18": {
+      "x": 9,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K18": {
+      "x": 10,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L18": {
+      "x": 11,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M18": {
+      "x": 12,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N18": {
+      "x": 13,
+      "y": 17,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O18": {
+      "x": 14,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P18": {
+      "x": 15,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q18": {
+      "x": 16,
+      "y": 17,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "R18": {
+      "x": 17,
+      "y": 17,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "S18": {
+      "x": 18,
+      "y": 17,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "T18": {
+      "x": 19,
+      "y": 17,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U18": {
+      "x": 20,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V18": {
+      "x": 21,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W18": {
+      "x": 22,
+      "y": 17,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "X18": {
+      "x": 23,
+      "y": 17,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Y18": {
+      "x": 24,
+      "y": 17,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Z18": {
+      "x": 25,
+      "y": 17,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "AA18": {
+      "x": 26,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB18": {
+      "x": 27,
+      "y": 17,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC18": {
+      "x": 28,
+      "y": 17,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD18": {
+      "x": 29,
+      "y": 17,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A19": {
+      "x": 0,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B19": {
+      "x": 1,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C19": {
+      "x": 2,
+      "y": 18,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D19": {
+      "x": 3,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "E19": {
+      "x": 4,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "F19": {
+      "x": 5,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "G19": {
+      "x": 6,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "H19": {
+      "x": 7,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "I19": {
+      "x": 8,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "J19": {
+      "x": 9,
+      "y": 18,
+      "tile": "w",
+      "kind": "water"
+    },
+    "K19": {
+      "x": 10,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L19": {
+      "x": 11,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M19": {
+      "x": 12,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N19": {
+      "x": 13,
+      "y": 18,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O19": {
+      "x": 14,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P19": {
+      "x": 15,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q19": {
+      "x": 16,
+      "y": 18,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "R19": {
+      "x": 17,
+      "y": 18,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "S19": {
+      "x": 18,
+      "y": 18,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "T19": {
+      "x": 19,
+      "y": 18,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U19": {
+      "x": 20,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V19": {
+      "x": 21,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W19": {
+      "x": 22,
+      "y": 18,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "X19": {
+      "x": 23,
+      "y": 18,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Y19": {
+      "x": 24,
+      "y": 18,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Z19": {
+      "x": 25,
+      "y": 18,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "AA19": {
+      "x": 26,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB19": {
+      "x": 27,
+      "y": 18,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC19": {
+      "x": 28,
+      "y": 18,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD19": {
+      "x": 29,
+      "y": 18,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A20": {
+      "x": 0,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B20": {
+      "x": 1,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C20": {
+      "x": 2,
+      "y": 19,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D20": {
+      "x": 3,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E20": {
+      "x": 4,
+      "y": 19,
+      "tile": "w",
+      "kind": "water"
+    },
+    "F20": {
+      "x": 5,
+      "y": 19,
+      "tile": "w",
+      "kind": "water"
+    },
+    "G20": {
+      "x": 6,
+      "y": 19,
+      "tile": "w",
+      "kind": "water"
+    },
+    "H20": {
+      "x": 7,
+      "y": 19,
+      "tile": "w",
+      "kind": "water"
+    },
+    "I20": {
+      "x": 8,
+      "y": 19,
+      "tile": "w",
+      "kind": "water"
+    },
+    "J20": {
+      "x": 9,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K20": {
+      "x": 10,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L20": {
+      "x": 11,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M20": {
+      "x": 12,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N20": {
+      "x": 13,
+      "y": 19,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O20": {
+      "x": 14,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P20": {
+      "x": 15,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q20": {
+      "x": 16,
+      "y": 19,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "R20": {
+      "x": 17,
+      "y": 19,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "S20": {
+      "x": 18,
+      "y": 19,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "T20": {
+      "x": 19,
+      "y": 19,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U20": {
+      "x": 20,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V20": {
+      "x": 21,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W20": {
+      "x": 22,
+      "y": 19,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "X20": {
+      "x": 23,
+      "y": 19,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Y20": {
+      "x": 24,
+      "y": 19,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Z20": {
+      "x": 25,
+      "y": 19,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "AA20": {
+      "x": 26,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB20": {
+      "x": 27,
+      "y": 19,
+      "tile": "p",
+      "kind": "path"
+    },
+    "AC20": {
+      "x": 28,
+      "y": 19,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD20": {
+      "x": 29,
+      "y": 19,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A21": {
+      "x": 0,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B21": {
+      "x": 1,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C21": {
+      "x": 2,
+      "y": 20,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D21": {
+      "x": 3,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E21": {
+      "x": 4,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F21": {
+      "x": 5,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G21": {
+      "x": 6,
+      "y": 20,
+      "tile": "w",
+      "kind": "water"
+    },
+    "H21": {
+      "x": 7,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I21": {
+      "x": 8,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J21": {
+      "x": 9,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K21": {
+      "x": 10,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L21": {
+      "x": 11,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M21": {
+      "x": 12,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N21": {
+      "x": 13,
+      "y": 20,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O21": {
+      "x": 14,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P21": {
+      "x": 15,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q21": {
+      "x": 16,
+      "y": 20,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "R21": {
+      "x": 17,
+      "y": 20,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "S21": {
+      "x": 18,
+      "y": 20,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "T21": {
+      "x": 19,
+      "y": 20,
+      "tile": "C",
+      "kind": "corn"
+    },
+    "U21": {
+      "x": 20,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V21": {
+      "x": 21,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W21": {
+      "x": 22,
+      "y": 20,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "X21": {
+      "x": 23,
+      "y": 20,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Y21": {
+      "x": 24,
+      "y": 20,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "Z21": {
+      "x": 25,
+      "y": 20,
+      "tile": "W",
+      "kind": "wheat"
+    },
+    "AA21": {
+      "x": 26,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB21": {
+      "x": 27,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AC21": {
+      "x": 28,
+      "y": 20,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD21": {
+      "x": 29,
+      "y": 20,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A22": {
+      "x": 0,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B22": {
+      "x": 1,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C22": {
+      "x": 2,
+      "y": 21,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "D22": {
+      "x": 3,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "E22": {
+      "x": 4,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F22": {
+      "x": 5,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G22": {
+      "x": 6,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "H22": {
+      "x": 7,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I22": {
+      "x": 8,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J22": {
+      "x": 9,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "K22": {
+      "x": 10,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L22": {
+      "x": 11,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M22": {
+      "x": 12,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N22": {
+      "x": 13,
+      "y": 21,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O22": {
+      "x": 14,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P22": {
+      "x": 15,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q22": {
+      "x": 16,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "R22": {
+      "x": 17,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "S22": {
+      "x": 18,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T22": {
+      "x": 19,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "U22": {
+      "x": 20,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V22": {
+      "x": 21,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W22": {
+      "x": 22,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "X22": {
+      "x": 23,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Y22": {
+      "x": 24,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Z22": {
+      "x": 25,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AA22": {
+      "x": 26,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB22": {
+      "x": 27,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AC22": {
+      "x": 28,
+      "y": 21,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD22": {
+      "x": 29,
+      "y": 21,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A23": {
+      "x": 0,
+      "y": 22,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B23": {
+      "x": 1,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "C23": {
+      "x": 2,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "D23": {
+      "x": 3,
+      "y": 22,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "E23": {
+      "x": 4,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "F23": {
+      "x": 5,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "G23": {
+      "x": 6,
+      "y": 22,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "H23": {
+      "x": 7,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "I23": {
+      "x": 8,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "J23": {
+      "x": 9,
+      "y": 22,
+      "tile": "t",
+      "kind": "tree"
+    },
+    "K23": {
+      "x": 10,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "L23": {
+      "x": 11,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "M23": {
+      "x": 12,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "N23": {
+      "x": 13,
+      "y": 22,
+      "tile": "p",
+      "kind": "path"
+    },
+    "O23": {
+      "x": 14,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "P23": {
+      "x": 15,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Q23": {
+      "x": 16,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "R23": {
+      "x": 17,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "S23": {
+      "x": 18,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "T23": {
+      "x": 19,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "U23": {
+      "x": 20,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "V23": {
+      "x": 21,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "W23": {
+      "x": 22,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "X23": {
+      "x": 23,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Y23": {
+      "x": 24,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "Z23": {
+      "x": 25,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AA23": {
+      "x": 26,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AB23": {
+      "x": 27,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AC23": {
+      "x": 28,
+      "y": 22,
+      "tile": "g",
+      "kind": "grass"
+    },
+    "AD23": {
+      "x": 29,
+      "y": 22,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "A24": {
+      "x": 0,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "B24": {
+      "x": 1,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "C24": {
+      "x": 2,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "D24": {
+      "x": 3,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "E24": {
+      "x": 4,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "F24": {
+      "x": 5,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "G24": {
+      "x": 6,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "H24": {
+      "x": 7,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "I24": {
+      "x": 8,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "J24": {
+      "x": 9,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "K24": {
+      "x": 10,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "L24": {
+      "x": 11,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "M24": {
+      "x": 12,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "N24": {
+      "x": 13,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "O24": {
+      "x": 14,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "P24": {
+      "x": 15,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Q24": {
+      "x": 16,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "R24": {
+      "x": 17,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "S24": {
+      "x": 18,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "T24": {
+      "x": 19,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "U24": {
+      "x": 20,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "V24": {
+      "x": 21,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "W24": {
+      "x": 22,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "X24": {
+      "x": 23,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Y24": {
+      "x": 24,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "Z24": {
+      "x": 25,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AA24": {
+      "x": 26,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AB24": {
+      "x": 27,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AC24": {
+      "x": 28,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    },
+    "AD24": {
+      "x": 29,
+      "y": 23,
+      "tile": "f",
+      "kind": "fence"
+    }
+  }
+}
