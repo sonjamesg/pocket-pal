@@ -59,3 +59,7 @@ Drop the PNG in `assets/world/<folder>/`, add/keep its key in `assets/world/mani
 - `scripts/build.sh` now also regenerates `assets/world/world-grid.*`.
 - Onboarding: first map open asks **BOY / GIRL** (`DB.avatar`, sprites `player/farmer.png` / `player/farmer-girl.png`). You start at your blue **ranch house** (`home` AD5, door AE6). No starter pet; the **PET SHOP** moved off the ranch to the Wild Woods (`outer.petStore` AS31, door AT32).
 - Intro: BOY/GIRL portraits (`portraits/*.png`, scripts/gen-portraits.py) → name entry (`DB.playerName`) → Grandpa typed dialogue (3 pages, `introPages()` in js/menus.js) → start at your house door (AE7).
+
+## Avatars (v19, western)
+- `scripts/gen-western.py` draws cowboy/cowgirl portraits (`assets/world/portraits/cow*.png`) and walk sheets (`assets/world/player/cow*.png`, 32x64) plus western Grandpa.
+- Hair/eyes are painted in key colours; `js/avatar.js` palette-swaps them at runtime (5 hair × 5 eye colours, saved in `DB.look`). Pick screen: ▲▼ row, ◀▶ change, A → name.

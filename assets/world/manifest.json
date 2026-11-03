@@ -1,5 +1,5 @@
 {
-  "rev": 8,
+  "rev": 9,
   "images": {
     "tree": "trees/tree.png",
     "grass": "tiles/grass.png",
@@ -38,6 +38,10 @@
     "farmergirl": "player/farmer-girl.png",
     "pboy": "portraits/boy.png",
     "pgirl": "portraits/girl.png",
-    "pgrandpa": "portraits/grandpa.png"
+    "pgrandpa": "portraits/grandpa.png",
+    "pcowboy": "portraits/cowboy.png",
+    "pcowgirl": "portraits/cowgirl.png",
+    "scowboy": "player/cowboy.png",
+    "scowgirl": "player/cowgirl.png"
   }
 }
