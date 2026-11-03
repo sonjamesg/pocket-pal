@@ -3,8 +3,9 @@
 const LEAN={x:.010,y:.006};let CAMC=[0,0];
 function leanOff(bx,by,h){return[Math.round((bx-CAMC[0])*h*LEAN.x/16),Math.round((by-CAMC[1])*h*LEAN.y/16)]}
 // draw image (or sub-rect) with its base fixed and upper rows shifted progressively
-function drawLean(im,X,Y,w,h,sx,sy){w=w||im.width;h=h||im.height;sx=sx||0;sy=sy||0;const bx=X+w/2,by=Y+h;
-  for(let r=0;r<h;r+=2){const up=h-r,[dx,dy]=leanOff(bx,by,up);g.drawImage(im,sx,sy+r,w,Math.min(2,h-r),X+dx,Y+r+dy,w,Math.min(2,h-r))}}
+// v27: whole-sprite integer offset (no per-strip shear) -> no seams/tears crawling with camera
+function drawLean(im,X,Y,w,h,sx,sy){w=w||im.width;h=h||im.height;sx=sx||0;sy=sy||0;const [dx,dy]=leanOff(X+w/2,Y+h,h/2);
+  g.drawImage(im,sx,sy,w,h,X+dx,Y+dy,w,h)}
 const isF=(x,y)=>x>=0&&y>=0&&x<MW&&y<MH&&OWBASE[y][x]==='f';
 const FW='#fbfbf4',FS='#c8ccd8',FD='#7a8098',FO='#3a3e58';
 function picket(X,Y,h,lx,ly){// one picket at X, base Y, height h, lean offset at top
