@@ -23,6 +23,7 @@ function house(sp,x,y,s,night,name){g.save();g.translate(x,y);g.scale(s,s);const
     for(let i=-30;i<34;i+=8)R(i,-12,3,12,dk('#b08050'));R(-30,-10,64,2,dk('#b08050'))}
   if(sp==='horse'){RR(-26,-40,52,40,3,dk('#c89050'));g.fillStyle=dk('#8a5030');g.beginPath();g.moveTo(-30,-38);g.lineTo(0,-62);g.lineTo(30,-38);g.fill();RR(-8,-26,16,26,2,'#3a2020');R(-28,-18,8,18,dk('#a07040'));R(20,-18,8,18,dk('#a07040'))}
   if(sp==='rabbit'){RR(-18,-28,36,28,6,dk('#e8d8b0'));R(-20,-30,40,6,dk('#7a9a50'));RR(-6,-18,12,14,4,'#3a2020');E(-14,-8,5,4,dk('#fff0'));E(14,-8,5,4,dk('#fff0'))}
+  if(sp==='sheep'){R(-24,-30,48,30,dk('#e8dcc0'));for(let i=-22;i<24;i+=6)R(i,-30,1,30,dk('#c8b890'));g.fillStyle=dk('#5a7a9a');g.beginPath();g.moveTo(-28,-28);g.lineTo(0,-46);g.lineTo(28,-28);g.fill();RR(-8,-20,16,20,2,'#3a2020')}
   if(name){RR(-15,-30+(sp==='pig'?-8:sp==='horse'?-12:0),30,9,3,'#fff8');txt(name.slice(0,6),0,-23+(sp==='pig'?-8:sp==='horse'?-12:0),'#5b4b8a',6)}
   g.restore()}
 function lockedHouse(n,x,y,s){g.save();g.globalAlpha=.55;g.translate(x,y);g.scale(s,s);R(-24,-30,48,30,'#b0a8c0');g.fillStyle='#8a80a8';g.beginPath();g.moveTo(-28,-28);g.lineTo(0,-46);g.lineTo(28,-28);g.fill();g.globalAlpha=1;lock(0,-16);g.restore();txt(n,x,y+8*s,'#fff',6);txt('coming soon',x,y+15*s,'#ffffffaa',5)}

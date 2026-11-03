@@ -1,6 +1,6 @@
 // ===== overworld-draw.js — walking, input, drawOverworld, farmer =====
 const DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-function owAt(id){const i=petList().slice(0,6).findIndex(p=>p.id===id);if(i<0)return null;const [hx,hy]=HSLOT[i];return{x:hx+1,y:hy+2,dir:'down'}}
+function owAt(id){const i=homePets().slice(0,6).findIndex(p=>p.id===id);if(i<0)return null;const [hx,hy]=HSLOT[i];return{x:hx+1,y:hy+2,dir:'down'}}
 function owInit(back){const a=back&&owAt(back);if(a){setMap('ranch');ui.ow=Object.assign({px:a.x*TS,py:a.y*TS,step:0,map:'ranch'},a)}else if(!ui.ow){const [sx,sy]=MAP_LAYOUT.start;setMap('ranch');ui.ow={x:sx,y:sy+1,dir:'down',px:sx*TS,py:(sy+1)*TS,step:0,map:'ranch'}}else setMap(ui.ow.map||'ranch');ui.ow.mv=null;grandpaAllowance()}
 function owTry(d){const o=ui.ow;if(o.mv)return;o.dir=d;const [dx,dy]=DV[d],nx=o.x+dx,ny=o.y+dy;if(!owSolid(nx,ny)){o.mv={tx:nx,ty:ny,t:0};o.step++}}
 function owUpdate(){const o=ui.ow;if(!o)return;if(o.mv){o.mv.t+=1/8;const k=Math.min(1,o.mv.t);o.px=(o.x+(o.mv.tx-o.x)*k)*TS;o.py=(o.y+(o.mv.ty-o.y)*k)*TS;
@@ -8,7 +8,7 @@ function owUpdate(){const o=ui.ow;if(!o)return;if(o.mv){o.mv.t+=1/8;const k=Math
   if(!o.mv&&!ui.modal){for(const d of ['up','down','left','right'])if(held[d]){owTry(d);break}}}
 function owInput(k){const o=ui.ow;if(k==='select'){loadArt(true);say('Art reloaded');return}if(DV[k]){if(!o.mv)owTry(k);return}
   if(k==='a'&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(!th)return;
-    if(th.barn){barnTalk(th.barn);return}if(CUR==='ranch'&&(th.weed||th.water)){chore(o.x+dx,o.y+dy,th.weed?'weed':'water');return}if(th.pet){loadPet(th.pet.id);return}if(th.empty){say('An empty plot. Buy a pet at the PET SHOP in the woods!');return}if(th.store){openStore();return}if(th.home){say('Home sweet home! Pets come from the PET SHOP in the WILD WOODS.');return}
+    if(th.barn){barnTalk(th.barn);return}if(CUR==='ranch'&&th.weed){chore(o.x+dx,o.y+dy,'weed');return}if(th.pet){loadPet(th.pet.id);return}if(th.empty){say('An empty plot. Buy a pet at the PET SHOP in the woods!');return}if(th.store){openStore();return}if(th.home){say('Home sweet home! Pets come from the PET SHOP in the WILD WOODS.');return}
     if(th.gate){owGate();return}if(th.lock)say(th.lock+' — coming soon!');else if(th.sign)say(CUR==='ranch'?'N: Homes  E: Barns  S: Gate to the WILD WOODS':'N: Ranch gate  — explore the woods!');else if(th.prop)say(PROP_MSG[th.prop]||'Part of the ranch.');else if(th.bed)say('A pretty flower bed.');else if(th.hay)say('A bale of sweet-smelling hay.');else if(th.crop)say((th.crop==='C'?'Corn':th.crop==='W'?'Wheat':th.crop==='U'?'Pumpkins':'Tilled soil')+' — harvesting coming soon!');else if(th.water)say(CUR==='ranch'?'A shiny pond.':'Cool, clear water.');else if(th.rock)say('A mossy rock.');else if(th.tree)say(th.tree==='apple'?'An apple tree heavy with red apples!':'A big leafy tree.');else if(th.wall)say('Go round to the door!')}
   if(k==='b'&&CUR!=='ranch'){const [gx,gy]=MAPS.outer.gate[0];Object.assign(o,{x:gx,y:gy});owGate();return}
   if(k==='b'){if(ui.mapBack&&DB.pets[ui.mapBack])loadPet(ui.mapBack);else{S={scene:'title'};ui.tsel=0}}
@@ -45,7 +45,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   const drawStore=front=>{if(CUR!=='ranch'&&((STORE[1]+1>=o.y)===front)){const [sx,sy]=STORE;if(ok('petstore'))drawLean(IMG.petstore,sx*TS,(sy+2)*TS-IMG.petstore.height);else{R(sx*TS+2,sy*TS+2,44,28,'#f0a040')}RR(sx*TS+4,sy*TS-41,40,9,3,'#ff5a8b','#2b2440');txt('PET SHOP',sx*TS+24,sy*TS-34,'#fff',6)}};let drawHome=()=>{};
   if(CUR==='ranch'){
   drawHome=front=>{if((HOME[1]+1>=o.y)!==front)return;if(ok('b_farmhouse')){const [hx,hy]=HOME;drawLean(IMG.b_farmhouse,hx*TS-8,(hy+2)*TS-IMG.b_farmhouse.height)}else {const [hx,hy]=HOME,X=hx*TS,Y=hy*TS;E(X+24,Y+31,24,4,'#0003');R(X+3,Y+12,42,20,'#e8c890');for(let i=0;i<5;i++)R(X+3,Y+15+i*4,42,1,'#c8a070');g.fillStyle='#3a6ad8';g.beginPath();g.moveTo(X-1,Y+14);g.lineTo(X+24,Y-6);g.lineTo(X+49,Y+14);g.fill();g.fillStyle='#2a4aa8';g.fillRect(X-1,Y+12,50,3);R(X+20,Y+20,8,12,'#7a4a20');R(X+26,Y+26,1,1,'#ffd84a');R(X+7,Y+18,9,7,'#9ad8ff');R(X+32,Y+18,9,7,'#9ad8ff');R(X+7,Y+21,9,1,'#fff');R(X+32,Y+21,9,1,'#fff');R(X+36,Y-2,5,8,'#a04030')}};
-  const L=petList().slice(0,6);
+  const L=homePets().slice(0,6);
   HSLOT.forEach(([hx,hy],i)=>{const p=L[i],X=hx*TS+24,Y=hy*TS+32;if(p){const sp=spOf(p);if(sp==='dog'&&ok('b_doghouse')){drawLean(IMG.b_doghouse,hx*TS,(hy-1)*TS);RR(X-14,Y+1,28,8,3,'#fff8');txt(p.name.slice(0,6),X,Y+7,'#5b4b8a',5)}else house(sp,X,Y,.66,false,p.name);R(X-4,Y-1,8,2,'#5a3a20')}
     else{const px=hx*TS,py=hy*TS;g.fillStyle='#a0783c55';g.fillRect(px+4,py+6,40,22);g.fillStyle='#7a5030';[[px+3,py+5],[px+43,py+5],[px+3,py+26],[px+43,py+26]].forEach(([a,b])=>g.fillRect(a,b,2,4));R(px+22,py+18,4,10,'#7a5030');R(px+17,py+14,14,6,'#e8d0a0')}});
   LOCKS.forEach(([hx,hy,n])=>lockedHouse(n,hx*TS+24,hy*TS+30,.66));
@@ -57,7 +57,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
     else{const [px,py,pw,ph,id]=q,k='p_'+id;if(!ok(k))return;const im=IMG[k];let X=px*TS+pw*8-im.width/2,Y=(py+ph)*TS-im.height;
       if(id==='windmill'){drawLean(im,X,Y);const [lx,ly]=leanOff(X+im.width/2,Y+im.height,im.height/2),a=t/40,cx=X+24+lx,cy=Y+24+ly;g.save();g.translate(cx,cy);g.rotate(a);for(let i=0;i<4;i++){g.rotate(Math.PI/2);R(-1,-22,2,22,'#4a2c14');R(1,-22,6,15,'#f8f4e8');R(1,-22,6,1,'#6a4a2a');R(6,-22,1,15,'#6a4a2a');R(1,-14,6,1,'#b0a080')}g.restore();E(cx,cy,3,3,'#6a4020')}
       else drawLean(im,X,Y)}});
-  drawStore(false);drawHome(false);drawBig(false);
+  drawStore(false);drawHome(false);drawBig(false);owExtras(t,o);
   const AVS=avImg('s'),FS=DB.avatar==='girl'&&ok('farmergirl')?'farmergirl':'farmer';if(AVS||ok(FS)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;g.drawImage(AVS||IMG[FS],fr*16,row*16,16,16,Math.round(o.px),Math.round(o.py)-4-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0),16,16)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);drawBig(true);drawStore(true);drawHome(true);drawFences(true);drawTrees(true);g.restore();
   R(0,0,W,16,'#2b2440cc');txt(CUR==='ranch'?'PET FARM':MAPS.outer.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy);
@@ -66,6 +66,6 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(
   else if(th&&th.gate){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(CUR==='ranch'?'Walk on: leave for the WILD WOODS':'Walk on: back to the RANCH',W/2,H-19,'#2b2440',8)}
   else if(th&&th.home){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: go inside your ranch house',W/2,H-19,'#2b2440',8)}
   else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'A: go inside the ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
-  else if(th&&CUR==='ranch'&&(th.weed||th.water)){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':'A: fill water bucket (+coins)',W/2,H-19,'#2b2440',8)}
+  else if(th&&CUR==='ranch'&&(th.weed||owHint(th))){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':owHint(th),W/2,H-19,'#2b2440',8)}
   else if(th&&th.store){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: enter PET SHOP',W/2,H-19,'#2b2440',8)}
-  else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7)}
+  else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}

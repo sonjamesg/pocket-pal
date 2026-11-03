@@ -23,7 +23,7 @@ function modalInput(k){const m=ui.modal;
 function drawModal(t){const m=ui.modal;R(0,0,W,H,'#2b244099');
   if(m.type==='confirm'){panel(24,62,W-48,92,'ARE YOU SURE?');const words=m.q.split(' ');let line='',y=88;words.forEach(w=>{if((line+w).length>26){txt(line,W/2,y,'#2b2440',10);y+=13;line=''}line+=w+' '});txt(line,W/2,y,'#2b2440',10);
     ['YES','NO'].forEach((l,i)=>{const x=W/2-62+i*66,on=m.k===i;RR(x,128,58,18,9,on?'#ff5a8b':'#fff',on?'#fff':'#5b4b8a');txt(l,x+29,141,on?'#fff':'#5b4b8a',10)});return}
-  panel(12,14,W-24,H-26,ui.nameFor?'WHAT IS YOUR NAME?':'NAME YOUR PET');
+  panel(12,14,W-24,H-26,ui.nameFor?'WHAT IS YOUR NAME?':ui.nameSheep?'NAME YOUR SHEEP':'NAME YOUR PET');
   RR(40,28,W-80,24,8,'#efe6ff','#5b4b8a');const nm=m.name+(m.name.length<8&&t%40<20?'_':'');txt(nm||'',W/2,46,'#5b4b8a',15);if(!m.name)txt(t%40<20?'_':'',W/2,46,'#5b4b8a',15);
   txt(m.name.length+'/8',W-46,62,'#8a80a8',8,'right');
   const C=7,cw=26,ch=20,x0=(W-C*cw)/2+1,y0=66;

@@ -42,9 +42,9 @@ function gridIn(k,n,go){if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.se
 function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='FEED')S.scene='food';if(a==='PLAY')S.scene='games';if(a==='TRICKS')S.scene='tricks';if(a==='TOYS')S.scene='toys';if(a==='CARE')S.scene='care';
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
-  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
+  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+12);addXP(1);hearts(4);setPose('happy',60);say('Brushed '+S.name+'\'s fleece — so soft!');save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
-  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*']}[S.species]||['Love you!']));save()}
+  if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*'],sheep:['*baa-aa!*','*soft baa*','*fluffy nuzzle*']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
   if(id==='groom'){S.scene='groom';ui.mg={ph:S.coat<15?'short':'intro',snips:0,t:0,start:S.coat,mat:S.coat>=TUNE.matAt,brush:0,last:null}}}
 function feed(f){if(S.hunger>=97&&!f.plq){say('Too full!');return}

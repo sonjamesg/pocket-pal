@@ -330,6 +330,13 @@ const MAP_LAYOUT=/*JSON-START*/{
    "well"
   ],
   [
+   45,
+   8,
+   2,
+   2,
+   "jobboard"
+  ],
+  [
    9,
    22,
    1,

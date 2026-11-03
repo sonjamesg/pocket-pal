@@ -83,7 +83,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
   }
   ui.fx=ui.fx.filter(f=>{f.x+=f.vx;f.y+=f.vy;f.vy+=f.ch==='shell'||f.ch==='hair'?.12:0;f.t--;g.globalAlpha=Math.min(1,f.t/20);
     if(f.ch==='heart')heartS(f.x,f.y,1.2);else if(f.ch==='shell')E(f.x,f.y,3,2,'#f4e8d0');else if(f.ch==='hair')E(f.x,f.y,3,1,BREEDS[S.breed||'lab'].c,f.t/5);else if(f.ch==='bubble'){g.strokeStyle='#5ab0ff';g.lineWidth=1;g.beginPath();g.arc(f.x,f.y,2.5,0,7);g.stroke()}else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});
-  if(ui.msgT>0){ui.msgT--;const y=sc==='main'?40:H-40;RR(14,y,W-28,20,10,'#fff','#2b2440');txt(ui.msg.slice(0,40),W/2,y+14,'#2b2440',9)}
+  if(ui.msgT>0){ui.msgT--;drawMsg(sc==='main'?40:H-40)}
   if(saveFlash>0){saveFlash--;g.globalAlpha=Math.min(1,saveFlash/15);RR(W/2-24,36,48,13,6,'#5ad07a');txt('SAVED',W/2,46,'#fff',8);g.globalAlpha=1}
   if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
 function gameIcon(id,x,y){if(id==='fetch')toyIcon('ball',x,y,1.2);
@@ -106,3 +106,6 @@ function drawGame(t){const m=ui.mg;gameTick();
   chromeGame(m);if(m.resT>0)otxt(m.res,W/2,64,'#fff',18);
   if(m.over){R(0,0,W,H,'#0008');panel(30,60,W-60,90,'DONE!');txt('Score '+m.score,W/2,100,'#2b2440',16);txt('Best '+Math.max(m.score,S.best[m.id]||0),W/2,120,'#8a80a8',10);txt('A to collect joy & coins',W/2,140,'#e0457b',10)}}
 function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,8,16,'#fff',11,'left');txt('★ '+m.score,W/2,16,'#ffc83a',11);const left=Math.max(0,Math.ceil((m.dur-m.t)/60));txt(left+'s',W-8,16,'#fff',11,'right');if(m.id==='simon')txt('B quit',W-8,H-6,'#fff8',8,'right')}
+
+// v28: messages wrap to 2 lines instead of being cut at 40 chars
+function drawMsg(y){const L=wrapTxt(ui.msg,W-40,8).slice(0,2);if(L.length<2){RR(14,y,W-28,20,10,'#fff','#2b2440');txt(ui.msg.length>44?L[0]:ui.msg,W/2,y+14,'#2b2440',9);return}if(y>H/2)y-=8;RR(14,y,W-28,28,10,'#fff','#2b2440');L.forEach((l,i)=>txt(l,W/2,y+12+i*11,'#2b2440',8))}

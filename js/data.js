@@ -10,8 +10,8 @@ const STAGE_N={egg:'EGG',puppy:'PUPPY',youngster:'YOUNGSTER',teen:'TEEN',adult:'
 // real days in stage + care XP (max 14 XP/day) — Adult ≈ 6 weeks, Senior ≈ 4 months of caring
 const GROW={puppy:{days:7,xp:60},youngster:{days:14,xp:120},teen:{days:21,xp:180},adult:{days:75,xp:600}};
 const SPECIES=[{id:'dog',n:'DOG',ok:true},{id:'cat',n:'CAT',ok:true},{id:'chicken',n:'CHICKEN',ok:true},{id:'pig',n:'PIG',ok:true},
- {id:'horse',n:'HORSE',ok:true},{id:'rabbit',n:'RABBIT',ok:true},{id:'cow',n:'COW'},{id:'sheep',n:'SHEEP'},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'bird',n:'BIRD'}];
-const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'},horse:{baby:'FOAL',house:'STABLE',food:'HORSE FEED'},rabbit:{baby:'KIT',house:'HUTCH',food:'RABBIT FOOD'}};
+ {id:'horse',n:'HORSE',ok:true},{id:'rabbit',n:'RABBIT',ok:true},{id:'cow',n:'COW'},{id:'sheep',n:'SHEEP',ok:true},{id:'donkey',n:'DONKEY'},{id:'mule',n:'MULE'},{id:'bird',n:'BIRD'}];
+const SP={dog:{baby:'PUPPY',house:'KENNEL',food:'DOG FOOD'},cat:{baby:'KITTEN',house:'CAT HUT',food:'CAT FOOD'},chicken:{baby:'CHICK',house:'COOP',food:'CHICKEN FEED'},pig:{baby:'PIGLET',house:'PIG STY',food:'PIG FOOD'},horse:{baby:'FOAL',house:'STABLE',food:'HORSE FEED'},rabbit:{baby:'KIT',house:'HUTCH',food:'RABBIT FOOD'},sheep:{baby:'LAMB',house:'SHEEP FIELD',food:'SHEEP FOOD'}};
 const spOf=p=>(p&&p.species&&SP[p.species])?p.species:'dog';
 function stageName(st,sp){return st==='puppy'?SP[sp||'dog'].baby:STAGE_N[st||'egg']}
 const BREEDS={
@@ -27,6 +27,7 @@ const BREEDS={
  pig:{sp:'pig',n:'PIG',c:'#ffb0c0',d:'#e88aa0',l:'#ffd0dc',bl:24,bh:14,leg:8,hr:12,sn:5,fur:0,desc:'Oink! Loves a muddy roll'},
  horse:{sp:'horse',n:'HORSE',c:'#8c5a32',d:'#5a3a20',l:'#c89a70',bl:28,bh:16,leg:18,hr:12,sn:8,fur:0,desc:'Gallops, neighs & loves carrots'},
  rabbit:{sp:'rabbit',n:'RABBIT',c:'#dcdce6',d:'#b0b0c0',l:'#ffffff',bl:16,bh:12,leg:10,hr:10,sn:3,fur:0,desc:'Hops, flops ears & munches greens'},
+ sheep:{sp:'sheep',n:'SHEEP',c:'#f4efe0',d:'#3a3440',l:'#ffffff',bl:22,bh:14,leg:9,hr:9,sn:4,fur:0,desc:'Baa! Grows wool fast — shear it for coins'},
  collie:{n:'BORDER COLLIE',c:'#2a2630',d:'#16131a',l:'#ffffff',ear:'semi',tail:'plume',bl:22,bh:12,leg:15,hr:10,sn:9,fur:1.2,white:true,desc:'Clever! Learns tricks fast'}};
 const BKEYS=Object.keys(BREEDS).filter(k=>!BREEDS[k].sp);
 const FOODS=[
@@ -36,11 +37,14 @@ const SFOODS={cat:[{id:'catbisc',n:'CAT BISCUITS',v:20},{id:'wet',n:'WET FOOD',v
  chicken:[{id:'corn',n:'CORN',v:20},{id:'grain',n:'MIXED GRAIN',v:24},{id:'worms',n:'MEALWORMS',v:12,joy:10,d:'Favourite snack!'},{id:'greens',n:'GREENS',v:14,joy:4}],
  pig:[{id:'slop',n:'PIG NUTS',v:26},{id:'apple',n:'APPLE',v:14,joy:8},{id:'carrot',n:'CARROT',v:12,joy:4},{id:'corn',n:'CORN',v:18,joy:3},{id:'veg',n:'VEG SCRAPS',v:22,joy:2}],
  horse:[{id:'hay',n:'HAY',v:24},{id:'oats',n:'OATS',v:22,joy:4},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'apple',n:'APPLE',v:14,joy:6},{n:'SUGAR LUMP',id:'sugar',v:6,joy:12}],
+ sheep:[{id:'greens',n:'FRESH GRASS',v:22},{id:'hay',n:'HAY',v:26},{id:'grain',n:'SHEEP NUTS',v:20,joy:4},{id:'apple',n:'APPLE',v:12,joy:8},{id:'carrot',n:'CARROT',v:12,joy:6}],
  rabbit:[{id:'pellets',n:'PELLETS',v:20},{id:'hay',n:'HAY',v:18,joy:3},{id:'carrot',n:'CARROT',v:14,joy:8},{id:'greens',n:'GREENS',v:12,joy:5},{id:'apple',n:'APPLE SLICE',v:10,joy:6}]};
 function foods(){return S.species&&SFOODS[S.species]||FOODS}
 const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},{id:'rope',n:'TUG ROPE',p:20},{id:'frisbee',n:'FRISBEE',p:30},{id:'duck',n:'PLUSH DUCK',p:40}];
 const GAMES=[{id:'fetch',n:'FETCH',d:'Tap A when the ball hits the zone'},{id:'simon',n:'MEMORY',d:'Repeat the pad pattern'},{id:'dash',n:'DASH',d:'▲▼ dodge rocks, grab hearts'}];
 const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{id:'lay',n:'LAY DOWN'},{id:'roll',n:'ROLL OVER'}];
 const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
-const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP']};
+const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP'],sheep:['FEED','CUDDLE','BRUSH','SHEAR','SLEEP']};
+// v28 sheep wool: % per real HOUR. Fed+happy: 0->100 in ~3 min. Hungry or sad: 1/3 speed (~9 min). Sheep get hungry faster than dogs.
+const WOOL={fast:100*20,slow:100*20/3,hunger:40,happy:20,need:40,coins:15};
 let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}

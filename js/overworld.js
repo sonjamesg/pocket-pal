@@ -1,11 +1,12 @@
 // ===== overworld.js — collision + things on the overworld (ranch + outer world) =====
 const SOLID='ftPTAxwsCWrUYy';
+const homePets=()=>petList().filter(p=>p.species!=='sheep');
 function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x];if(SOLID.includes(c))return true;
   for(const [hx,hy] of CUR==='ranch'?HSLOT.concat(LOCKS,[HOME]):[STORE])if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return true;
   if(CUR==='ranch')for(const [bx,by,bw,bh] of PROPS)if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return true;
   if(CUR==='ranch')for(const [bx,by,bw,bh] of BARNS)if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return true;return false}
 function owThing(x,y){const c=OWBASE[y]&&OWBASE[y][x];
-  if(CUR==='ranch'){const L=petList().slice(0,6);for(let i=0;i<6;i++){const [hx,hy]=HSLOT[i];if(y===hy+1&&x===hx+1)return L[i]?{pet:L[i]}:{empty:true};if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{wall:1}}
+  if(CUR==='ranch'){const L=homePets().slice(0,6);for(let i=0;i<6;i++){const [hx,hy]=HSLOT[i];if(y===hy+1&&x===hx+1)return L[i]?{pet:L[i]}:{empty:true};if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{wall:1}}
   {const [sx,sy]=HOME;if(x===sx+1&&y===sy+1)return{home:1};if(x>=sx&&x<sx+3&&y>=sy&&y<sy+2)return{wall:1}}
   for(const b of BARNS){const [bx,by,bw,bh]=b;if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return{barn:b,door:x===bx+(bw>>1)&&y===by+bh-1}}
   for(const [bx,by,bw,bh,id] of PROPS)if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return{prop:id};
@@ -29,4 +30,4 @@ function chore(x,y,kind){if(DB.choreDay!==today()){DB.choreDay=today();DB.chores
   if(DB.chores>=12){say('All chores done today, partner! Come back tomorrow.');return}
   if(Date.now()-(ui.choreT||0)<3000){say('Catch your breath a sec...');return}ui.choreT=Date.now();
   const c=5+Math.floor(Math.random()*8);if(kind==='weed')OWBASE[y][x]='g';DB.chores++;DB.wallet=(DB.wallet||0)+c;saveDB();
-  say((kind==='weed'?'Pulled the weeds!':'Watered the pens!')+' +'+c+' coins ('+DB.chores+'/12 today)')}
+  say((kind==='weed'?'Pulled the weeds!':'Watered with well water!')+' +'+c+' coins ('+DB.chores+'/12 today)')}

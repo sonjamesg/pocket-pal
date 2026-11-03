@@ -37,5 +37,11 @@ function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mo
     E(0,by,12,9,c);E(-10,by+1,4,4,'#fff');const hx=10,hy=by-6+(eat?5:0);
     [[-2,0],[3,0]].forEach(([a])=>{g.fillStyle=c;g.beginPath();g.moveTo(hx+a,hy-2);g.lineTo(hx+a-1,hy-18);g.lineTo(hx+a+3,hy-2);g.fill();E(hx+a+1,hy-10,1.2,5,'#ffb0c0')});
     E(hx,hy,8,7,c);eye(hx-1,hy-1,1.5);eye(hx+3,hy-1,1.5);E(hx+2,hy+2,1.5,1,'#ff90a8')}
+  if(sp==='sheep'){const wv=Math.max(0,Math.min(100,o.wool==null?60:o.wool))/100,by=sleep?-9:-15,fx=12+wv*7,fy=8+wv*5,wc=wv>.98?'#fffdf4':mix('#f0e6d0','#fffaf0',wv),fd=mix('#d8ccb0','#e8e0cc',wv),sk='#3a3440';
+    if(!sleep)[[-9,sw],[-4,-sw],[6,sw],[11,-sw]].forEach(([x,s])=>RR(x-1.5,by+4,3,-by-3+s*.25,1.5,sk));
+    E(0,by,fx,fy,fd);for(let i=0;i<9;i++){const a=i/9*Math.PI*2;E(Math.cos(a)*fx*.75,by+Math.sin(a)*fy*.7-1,3+wv*3,3+wv*3,wc)}E(-1,by-1,fx*.8,fy*.8,wc);
+    if(wv<.15){E(0,by,fx*.9,fy*.9,'#f4dcc8');E(-2,by-2,4,2,'#fff0e0')}
+    const hx=fx*.85,hy=by-6+(eat?6:0);E(hx-2,hy-6,4+wv*2,3+wv,wc);E(hx-5,hy-1,3,1.6,sk,-.4);E(hx+5,hy-1,3,1.6,sk,.4);E(hx,hy,5.5,6.5,sk);eye(hx-2,hy-1,1.3);eye(hx+2,hy-1,1.3);E(hx,hy+3,1.6,1,'#ff9ab0');
+    if(wv>=1&&T%60<30){star(-fx+2,by-fy,3,'#ffd84a')}}
   if(mood==='sad'&&!sleep&&T%90<60)E(cx?0:0,-30,0,0,'#0000');
   g.restore()}

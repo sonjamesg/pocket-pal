@@ -4,6 +4,7 @@ function timeTick(){const n=now();if(!S.last){S.last=n;return}const hrs=Math.min
   if(S.sleep&&(new Date().getHours()>=7&&new Date().getHours()<20)&&hrs>8)S.sleep=false;
   const sen=S.stage==='senior'?1.15:1;S.hunger=clamp(S.hunger-RATE.hunger*hrs*(S.sleep?.4:1)*sen);
   let hd=RATE.happy*(S.sleep?.3:1);if(S.hunger<30)hd+=3;if(S.coat>=TUNE.matAt)hd+=6;if(S.plaque>=TUNE.plaqueBad)hd+=3;
+  if(S.species==='sheep'){const fed=S.hunger>=WOOL.need&&S.happy>=WOOL.need;S.wool=Math.min(100,(S.wool||0)+(fed?WOOL.fast:WOOL.slow)*hrs*(S.sleep?.5:1));S.hunger=clamp(S.hunger-(WOOL.hunger-RATE.hunger)*hrs*(S.sleep?.4:1));hd+=WOOL.happy-RATE.happy}
   S.happy=clamp(S.happy-hd*hrs);if(S.species==='dog')S.coat=Math.min(100,S.coat+RATE.coat*hrs*(BREEDS[S.breed].curly?1.3:1));else S.coat=5;if(S.species==='dog'||S.species==='cat')S.plaque=Math.min(100,S.plaque+RATE.plaque*hrs);else S.plaque=0}
 setInterval(()=>{if(S.stage&&!['title','list','species','breed','egg','map'].includes(S.scene)){timeTick();checkGrow();if(ui.anim%10===0)save(true)}},1000);
 setInterval(()=>{if(S.stage)save(true)},30000);
