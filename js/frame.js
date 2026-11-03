@@ -28,7 +28,8 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       otxt(sp.n,x,172,on?'#ff5a8b':'#fff',10)});
     if(off>0)otxt('◀',6,104,'#fff',12);if(off+4<SPECIES.length)otxt('▶',W-6,104,'#fff',12);
     otxt(SPECIES[ui.sel].ok?'◀ ▶ choose   A select':'More pets coming soon!',W/2,198,'#fff',11)}
-  else if(sc==='avatar'){bg(false);otxt('WHO ARE YOU?',W/2,30,'#ffe36a',14);g.imageSmoothingEnabled=false;['farmer','farmergirl'].forEach((k,i)=>{const x=70+i*100,on=ui.sel===i;RR(x-36,60,72,96,10,on?'#ffe0ec':'#fffc',on?'#ff5a8b':'#2b244055');if(IMG[k]&&IMG[k].naturalWidth)g.drawImage(IMG[k],0,0,16,16,x-24,72,48,48);txt(i?'GIRL':'BOY',x,146,'#5b4b8a',11)});txt('◀ ▶ choose   A start',W/2,H-10,'#fff',9)}
+  else if(sc==='intro'){drawIntro(t)}
+  else if(sc==='avatar'){bg(false);otxt('WHO ARE YOU?',W/2,30,'#ffe36a',14);g.imageSmoothingEnabled=false;['pboy','pgirl'].forEach((k,i)=>{const x=70+i*100,on=ui.sel===i,bo=on?Math.round(Math.sin(t/6)*2):0;RR(x-40,52,80,104,10,on?'#ffe0ec':'#fffc',on?'#ff5a8b':'#2b244055');if(IMG[k]&&IMG[k].naturalWidth)g.drawImage(IMG[k],x-36,60+bo,72,72);const f=i?'farmergirl':'farmer';if(IMG[f]&&IMG[f].naturalWidth)g.drawImage(IMG[f],0,0,16,16,x+18,118,16,16);txt(i?'GIRL':'BOY',x,148,'#5b4b8a',11)});txt('◀ ▶ choose   A next',W/2,H-10,'#fff',9)}
   else if(sc==='store'){bg(false);const b=BKEYS[ui.sel],B=BREEDS[b],p=priceOf(b),can=DB.wallet>=p;otxt('PET STORE',W/2,22,'#ffe36a',15);txt('● '+DB.wallet,W-10,22,'#ffd84a',10,'right');
     RR(14,32,W-28,136,12,'#fff9','#ffffff');g.save();g.translate(W/2-14,138);g.scale(1.7,1.7);dog(0,0,b,'adult',{pose:t%240<150?'idle':'happy',mood:'happy',coat:30});g.restore();
     g.save();g.translate(W/2+70,160);g.scale(.8,.8);dog(0,0,b,'puppy',{pose:'sit',mood:'happy'});g.restore();txt('puppy',W/2+70,166,'#8a80a8',7);
