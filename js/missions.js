@@ -80,20 +80,23 @@ const JOBS={more:{n:'MORE WOOL',d:'Shear 2 more full fleeces.',rew:30,unl:()=>wm
   crops:{n:'GROW CROPS',d:'Water beds or crops with the WELL bucket. Wait, then HARVEST 3.',rew:20,unl:()=>wm().step>=1,ready:j=>(DB.harvested||0)>=j.base+3,base:()=>DB.harvested||0,hint:'Water & HARVEST 3 crops'},
   flock:{n:'BIG FLOCK',d:'Have 3 sheep in your SHEEP FIELD.',rew:40,unl:()=>jst('more').s===2,ready:()=>sheepList().length>=3,base:()=>0,hint:'Get 3 sheep'}};
 function jst(id){const M=DB.missions||(DB.missions={});return M[id]||(M[id]={s:0})}
-function jobs(){const m=wm(),L=[{id:'wool',n:'START A WOOL FARM',tag:m.step===0?'NEW':m.step>=6?'DONE':m.step===5?'REWARD!':'ACTIVE',d:m.step===0?'Get a FREE sheep, grow its wool, shear and sell it! Reward ● '+MISSION_REWARD:WOOL_STEPS[m.step]}];
-  for(const id in JOBS){const J=JOBS[id],st=jst(id);if(!J.unl()&&!st.s)continue;L.push({id,n:J.n,tag:st.s===0?'NEW':st.s===2?'DONE':J.ready(st)?'REWARD!':'ACTIVE',d:J.d+(st.s<2?' Reward ● '+J.rew:'')})}
+function jobs(){const m=wm(),L=[{id:'wool',n:'START A WOOL FARM',tag:m.step===0?'NEW':m.paused&&m.step<6?'PAUSED':m.step>=6?'DONE':m.step===5?'REWARD!':'ACTIVE',d:m.paused&&m.step<6?'Job cancelled. Your sheep & wool are safe. A: start it again!':m.step===0?'Get a FREE sheep, grow its wool, shear and sell it! Reward ● '+MISSION_REWARD:WOOL_STEPS[m.step]}];
+  for(const id in JOBS){const J=JOBS[id],st=jst(id);if(!J.unl()&&!st.s)continue;L.push({id,n:J.n,tag:st.s===0?(st.c?'PAUSED':'NEW'):st.s===2?'DONE':J.ready(st)?'REWARD!':'ACTIVE',d:J.d+(st.s<2?' Reward ● '+J.rew:'')})}
   return L.sort((a,b)=>(a.tag==='DONE')-(b.tag==='DONE'))}
 function nextThing(){const m=wm(),S1=['Read the JOB BOARD','Get a FREE sheep at the PET SHOP','Walk sheep to the SHEEP FIELD','Feed sheep, grow wool, SHEAR','SELL wool at YOUR FARM SHOP','Get your reward at the JOB BOARD'];
-  if(m.step<6&&m.step>0)return{t:S1[m.step],k:'wool'+m.step};
+  if(m.step<6&&m.step>0&&!m.paused)return{t:S1[m.step],k:'wool'+m.step};
   for(const id in JOBS){const st=jst(id);if(st.s===1&&JOBS[id].ready(st))return{t:'Get your reward at the JOB BOARD',k:'board'}}
-  if(m.step===0)return{t:S1[0],k:'board'};
+  if(m.step===0)return{t:S1[0],k:'board'};if(m.paused&&m.step<6&&!Object.keys(JOBS).some(id=>jst(id).s===1))return{t:'No job right now. Visit the JOB BOARD!',k:'free'};
   for(const id in JOBS){const st=jst(id);if(st.s===1)return{t:JOBS[id].hint,k:'job_'+id}}
-  if(jobs().some(j=>j.tag==='NEW'))return{t:'New job on the JOB BOARD!',k:'board'};return{t:'Grow, shear & sell for coins!',k:'free'}}
-function openJobs(){S={scene:'jobs'};ui.jsel=0;ui.msgT=0}
+  if(jobs().some(j=>j.tag==='NEW'))return{t:'New job on the JOB BOARD!',k:'free'};return{t:'Grow, shear & sell for coins!',k:'free'}}
+function openJobs(){S={scene:'jobs'};ui.jsel=0;ui.jconf=0;ui.msgT=0}
 function celebrate(a,b){ui.cele={a,b,t:0};sfx('fanfare');sparkle(40,W/2,100)}
-function jobsInput(k){const J=jobs(),n=J.length;if(k==='up')ui.jsel=(ui.jsel+n-1)%n;if(k==='down')ui.jsel=(ui.jsel+1)%n;if(k==='b'||k==='start'){S={scene:'map'};return}
+function jobsInput(k){const J=jobs(),n=J.length;
+  if(ui.jconf){const j=J[ui.jsel];if(k==='a'&&j){if(j.id==='wool'){wm().paused=true}else{const st=jst(j.id);st.s=0;st.c=1}saveDB();ui.jconf=0;S={scene:'map'};say('Job cancelled. Pick a new job at the JOB BOARD any time!',240);return}ui.jconf=0;return}
+  if(k==='left'||k==='right'||k==='select'){const j=J[ui.jsel];if(j&&j.tag==='ACTIVE'){ui.jconf=1;return}}if(k==='up')ui.jsel=(ui.jsel+n-1)%n;if(k==='down')ui.jsel=(ui.jsel+1)%n;if(k==='b'||k==='start'){S={scene:'map'};return}
   if(k==='a'){const j=J[ui.jsel],m=wm();
-    if(j.id!=='wool'){const st=jst(j.id),D=JOBS[j.id];if(st.s===0){st.s=1;st.base=D.base();saveDB();S={scene:'map'};say('Job taken! '+D.d,240);return}
+    if(j.id==='wool'&&m.paused&&m.step<6){m.paused=false;saveDB();S={scene:'map'};say('Job back on! '+WOOL_STEPS[m.step],240);return}
+    if(j.id!=='wool'){const st=jst(j.id),D=JOBS[j.id];if(st.s===0){st.s=1;st.c=0;st.base=D.base();saveDB();S={scene:'map'};say('Job taken! '+D.d,240);return}
       if(st.s===1&&D.ready(st)){st.s=2;DB.wallet+=D.rew;saveDB();S={scene:'map'};sfx('coin');celebrate('JOB DONE!',D.n+'  +'+D.rew+' coins');return}
       S={scene:'map'};say(st.s===2?'Done! Great work.':D.d,200);return}
     if(m.step===0){m.step=1;saveDB();S={scene:'map'};say('Job taken! Go to the PET SHOP for your FREE sheep.',240);return}
@@ -104,7 +107,9 @@ function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0006');RR(8,8,W-16,H-14,6,'#c4
   J.slice(0,5).forEach((j,i)=>{const y=28+i*26,on=i===ui.jsel;RR(16,y,W-32,23,4,on?'#fffbe8':'#f4ecd4',on?'#e8402a':'#8a7050');
     txt(j.n,24,y+16,'#2b2440',10,'left');const tc=j.tag==='NEW'||j.tag==='REWARD!'?'#e8402a':j.tag==='DONE'?'#2a9a50':'#5b4b8a';RR(W-80,y+4,58,15,5,tc);txt(j.tag,W-51,y+15,'#fff',9)});
   const j=J[ui.jsel],y0=28+Math.min(5,J.length)*26+2;RR(16,y0,W-32,H-y0-22,5,'#fff','#382010');wrapMsg(j.d,W-48,9).slice(0,3).forEach((l,k)=>txt(l,24,y0+13+k*11,'#2b2440',9,'left'));
-  txt(j.tag==='NEW'?'A: TAKE JOB':j.tag==='REWARD!'?'A: GET REWARD':'A: OK',W/2,H-10,'#382010',10)}
+  if(ui.jconf){RR(30,H/2-30,W-60,56,6,'#fffbe8','#e8402a');txt('CANCEL THIS JOB?',W/2,H/2-10,'#e8402a',11);txt('Animals & coins stay safe.',W/2,H/2+4,'#2b2440',9);txt('A: YES, CANCEL   B: NO',W/2,H/2+18,'#2b2440',9);return}
+  if(j.tag==='ACTIVE'){RR(W-96,H-21,80,16,5,'#e8402a','#382010');txt('◀▶ CANCEL JOB',W-56,H-10,'#fff',8);txt('A: OK',60,H-10,'#382010',10);return}
+  txt(j.tag==='NEW'?'A: TAKE JOB':j.tag==='PAUSED'?'A: START AGAIN':j.tag==='REWARD!'?'A: GET REWARD':'A: OK',W/2,H-10,'#382010',10)}
 // goal arrow: bouncing arrow over the target, or an edge arrow pointing to it
 function goalTile(nx){const k=nx.k,m=wm();if(CUR==='ranch'){if(k==='wool1')return MAPS.ranch.gate[0];if(k==='wool2')return[52,47];if(k==='wool3'){const i=fieldSheep().findIndex(p=>p.id===m.sheepId);return i>=0?FIELD_SPOTS[i]:[52,47]}
     if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[47,6];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
