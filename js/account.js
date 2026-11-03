@@ -92,3 +92,36 @@ const _input0B=input0;input0=function(k){
   if(S.scene==='acct'&&!ui.modal){if(k==='b'){S={scene:'title'};ui.tsel=0}else askName();return}
   return _input0B(k)};
 drawAcct=function(t){bg(false);otxt('PET FARM',W/2,40,'#ffe36a',24);if(ACC.busy)txt('Checking…',W/2,110,'#2b2440',12);else if(ui.aerr)txt(ui.aerr,W/2,110,'#e8402a',11)};
+// ---- v37: native phone keyboard for account username + PIN (DOM overlay) ----
+titleItems=function(){return ACC.token?['CONTINUE','SWITCH ACCOUNT']:['LOGIN']};
+(function(){
+  const ov=document.createElement('div');ov.id='acctov';ov.hidden=true;
+  ov.innerHTML='<form id="acctform" autocomplete="off"><div id="acctttl">YOUR NAME</div><div id="accthint"></div><input id="acctin"><div id="accterr"></div><div class="acctbtns"><button type="button" id="acctback">BACK</button><button type="submit" id="acctok">NEXT</button></div></form>';
+  document.getElementById('screenwrap').appendChild(ov);
+  const f=ov.querySelector('form'),inp=ov.querySelector('#acctin'),ttl=ov.querySelector('#acctttl'),hint=ov.querySelector('#accthint'),er=ov.querySelector('#accterr'),ok=ov.querySelector('#acctok');
+  let mode=null;
+  function show(m){mode=m;ov.hidden=false;S={scene:'acct'};ui.modal=null;ui.nameAcct=null;inp.value='';er.textContent=ui.aerr||'';
+    if(m==='name'){ttl.textContent='YOUR NAME';hint.textContent='Your player name in the game';inp.type='text';inp.inputMode='text';inp.maxLength=8;inp.autocapitalize='characters';inp.placeholder='NAME';inp.setAttribute('autocorrect','off');inp.spellcheck=false;inp.removeAttribute('pattern');inp.autocomplete='username';ok.textContent='NEXT'}
+    else{const P=ui.pin;ttl.textContent=P.mode==='create'?(P.first?'TYPE IT AGAIN':'MAKE A 4-NUMBER CODE'):'TYPE YOUR CODE';hint.textContent=P.mode==='create'?'Remember it! You need it to play.':'Hi '+ui.acctName+'! Type your code';
+      inp.type='password';inp.inputMode='numeric';inp.pattern='[0-9]*';inp.maxLength=4;inp.placeholder='••••';inp.autocomplete='off';ok.textContent='GO'}
+    setTimeout(()=>{inp.focus()},30)}
+  function hide(){ov.hidden=true;mode=null;inp.blur()}
+  window.acctOverlayHide=hide;
+  inp.addEventListener('input',()=>{if(mode==='pin'){inp.value=inp.value.replace(/\D/g,'').slice(0,4);if(inp.value.length===4)setTimeout(submit,120)}else inp.value=inp.value.replace(/[^a-zA-Z0-9 ]/g,'').toUpperCase().slice(0,8)});
+  inp.addEventListener('keydown',e=>e.stopPropagation(),true);
+  function busy(b){ok.disabled=b;inp.disabled=b;if(b){er.style.color='#8a80a8';er.textContent='Checking…'}else er.style.color=''}
+  function submit(){if(ACC.busy||inp.disabled)return;er.textContent='';
+    if(mode==='name'){const n=inp.value.trim().toUpperCase();if(!/[A-Z]/.test(n)){er.textContent='Use at least 1 letter';return}
+      ui.acctName=n;ACC.busy=true;busy(true);accCall({action:'check_name',name:n}).then(r=>{ACC.busy=false;busy(false);if(!r.ok){er.textContent=ERR[r.err]||ERR.server;inp.focus();return}ui.aerr='';openPin(r.taken?'login':'create')})}
+    else if(mode==='pin'){const P=ui.pin;P.code=inp.value;if(P.code.length<4){er.textContent='Type 4 numbers';return}
+      const wasFirst=P.mode==='create'&&!P.first;if(wasFirst||(P.mode==='create'&&P.first!==P.code)){pinOK();show('pin');er.textContent=ui.aerr||'';return}
+      busy(true);pinOK();const w=setInterval(()=>{if(!ACC.busy){clearInterval(w);busy(false);if(S.scene==='pin'||S.scene==='acct'){show('pin');er.textContent=ui.aerr||'';inp.focus()}else hide()}},80)}}
+  f.addEventListener('submit',e=>{e.preventDefault();submit()});
+  ov.querySelector('#acctback').addEventListener('click',()=>{if(ACC.busy)return;if(mode==='pin')show('name');else{hide();S={scene:'title'};ui.tsel=0}});
+  askName=function(){ui.acctMode='any';show('name')};
+  const _op=openPin;openPin=function(m){_op(m);show('pin')};
+  const _al=accLogout;accLogout=function(){hide();_al()};
+  // game input ignored while overlay open
+  const _in=input0;input0=function(k){if(!ov.hidden)return;return _in(k)};
+  input0=(function(p){return function(k){if(S.scene==='title'&&!ui.modal&&ov.hidden&&(k==='a'||k==='start')){const it=titleItems(),c=it[ui.tsel%it.length];if(c==='LOGIN'){au&&au();ui.aerr='';askName();return}}return p(k)}})(input0);
+})();

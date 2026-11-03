@@ -14,7 +14,7 @@ function frame(){ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){u
       g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}
     else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26);g.save();g.translate(W/2,112);g.scale(1.1,1.1);dog(0,0,BKEYS[Math.floor(t/150)%BKEYS.length],'puppy',{pose:t%150<70?'hop':'sit',mood:'happy'});g.restore()}
     const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
-    const n=petList().length;if(!hasSave())txt('No save on this device yet',W/2,206,'#fff',9);else if(it[ui.tsel]==='NEW GAME')txt('Start over: new rancher & avatar',W/2,206,'#fff',9);else txt((DB.playerName||'RANCHER')+' • '+n+' pet'+(n===1?'':'s')+' • '+(DB.wallet||0)+' coins',W/2,206,'#fff',9)}
+    const n=petList().length;if(!ACC.token)txt('New? Login with a new name to start',W/2,206,'#fff',9);else if(!hasSave())txt('No save on this device yet',W/2,206,'#fff',9);else if(it[ui.tsel]==='NEW GAME')txt('Start over: new rancher & avatar',W/2,206,'#fff',9);else txt((DB.playerName||'RANCHER')+' • '+n+' pet'+(n===1?'':'s')+' • '+(DB.wallet||0)+' coins',W/2,206,'#fff',9)}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
     rows.slice(top,top+5).forEach((p,ii)=>{const i=ii+top,y=32+ii*32,on=i===ui.psel;RR(14,y,W-28,28,8,on?'#ffe0ec':'#fffd',on?'#ff5a8b':'#d8d0e8');
       if(!p){txt('+ NEW PET',W/2,y+18,'#e0457b',11);return}
