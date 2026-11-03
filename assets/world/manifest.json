@@ -1,5 +1,5 @@
 {
-  "rev": 5,
+  "rev": 6,
   "images": {
     "tree": "trees/tree.png",
     "grass": "tiles/grass.png",
@@ -17,6 +17,23 @@
     "horse": "animals/horse.png",
     "rabbit": "animals/rabbit.png",
     "wateredge": "tiles/water-edge.png",
-    "petstore": "buildings/petstore.png"
+    "petstore": "buildings/petstore.png",
+    "grass0": "tiles/grass0.png",
+    "grass1": "tiles/grass1.png",
+    "grass2": "tiles/grass2.png",
+    "grass3": "tiles/grass3.png",
+    "tallgrass": "tiles/tallgrass.png",
+    "flower0": "tiles/flower0.png",
+    "flower1": "tiles/flower1.png",
+    "flower2": "tiles/flower2.png",
+    "waterauto0": "tiles/water-auto0.png",
+    "waterauto1": "tiles/water-auto1.png",
+    "pathauto": "tiles/path-auto.png",
+    "sandauto": "tiles/sand-auto.png",
+    "tree2": "trees/tree2x2.png",
+    "pine2": "trees/pine2x2.png",
+    "bridge": "tiles/bridge.png",
+    "rock": "tiles/rock.png",
+    "gatepost": "tiles/gatepost.png"
   }
 }

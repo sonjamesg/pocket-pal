@@ -52,3 +52,8 @@ Drop the PNG in `assets/world/<folder>/`, add/keep its key in `assets/world/mani
 - GBA FireRed-style art: `scripts/make-gba-art.py` regenerates grass/path/water/water-edge/tree/fence/pet store PNGs (replace any PNG by hand as usual).
 - No starter pet: title START → farm map → **PET STORE** (`petStore` in js/map-data.js, door J16). Buy dog breeds with coins (wallet starts at 60, `DB.wallet`).
 - Staging: https://sonjamesg.github.io/pocket-pal-staging/ (repo `sonjamesg/pocket-pal-staging`, pushed from `feature/pokemon-world`). Live `main` is untouched.
+
+## v18 (staging)
+- Ranch is 56×44 (was 30×24); gate **AB44–AC44** (bottom fence) leads to the 80×60 **WILD WOODS** outer world (`outer` in js/map-data.js, gate AN1–AO1). Walk onto a gate (or B in the woods) to switch maps.
+- `scripts/gen-maps.py` lays out both maps procedurally (organic blob lakes, meandering river, bridges, beaches); `scripts/gen-art.py` makes multi-tone grass variants, tall grass, flowers, rocks, 2×2 trees/pines, bridge, gate posts and 4-quadrant autotile atlases (water-auto0/1, path-auto, sand-auto) for rounded shorelines.
+- `scripts/build.sh` now also regenerates `assets/world/world-grid.*`.
