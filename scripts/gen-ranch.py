@@ -76,7 +76,7 @@ rect(4,46,33,46,'p'); rect(18,35,18,46,'p') if False else None
 # ponds: big rounded pond SE with beach ring, little duck pond W
 blob(70,57,11,6.5,'b',2,only='g'); blob(70,57,9,5,'w',2)
 blob(70,57,1.6,1.1,'g',9)
-blob(38,54,4.5,3,'b',3,only='g'); blob(38,54,3.2,2.2,'w',3)
+blob(38,54,4.0,2.7,'w',0); M[54][42]='g'   # v52: smooth oval duck pond, grass verge by the road
 rect(44,55,44,56,'p')
 # tall-grass weed patches (chores)
 for (cx,cy) in ((10,8),(28,7),(58,8),(78,9),(36,47),(78,40),(16,62),(56,62),(84,48),(6,46)):

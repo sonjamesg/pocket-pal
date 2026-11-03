@@ -3,8 +3,8 @@
 const AMB={bf:[],lf:[],sm:[]};
 function dayPhase(){const q=/[?&]hour=([\d.]+)/.exec(location.search)||/[?&]hour=([\d.]+)/.exec((parent&&parent.location&&parent.location.search)||'');if(q)return +q[1];const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h} // real local clock
 function skyTint(h){ // [r,g,b,a]
-  if(h>=7&&h<17)return null;if(h>=17&&h<19.5)return[255,170,70,.16*(1-Math.abs(h-18.25)/1.25)+.04];
-  if(h>=5.5&&h<7)return[255,190,120,.12];if(h>=19.5&&h<21)return[70,60,150,.22];return[30,40,110,.32]}
+  if(h>=7&&h<17)return null;if(h>=17&&h<19.5)return[255,150,50,.26*(1-Math.abs(h-18.25)/1.25)+.12];
+  if(h>=5.5&&h<7)return[255,190,120,.12];if(h>=19.5&&h<21)return[90,60,160,.3];return[30,40,110,.36]}
 const isDusk=h=>h>=18||h<6.5;
 function owExtras2(t,o){if(CUR!=='ranch')return;
   // door shadows + welcome mats on each doorstep

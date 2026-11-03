@@ -2,4 +2,5 @@
 const q=new URLSearchParams(location.search);
 setTimeout(()=>{const w=f.contentWindow,P=w.__pp;const D=P.DB;D.avatar='boy';D.playerName='T';D.introDone=true;D.wallet=500;P.openMap();
 setTimeout(()=>{try{const m=q.get('m')||'ranch',x=+q.get('x'),y=+q.get('y');if(m!=='ranch'||q.get('x')){w.setMap(m);Object.assign(P.ow,{map:m,x,y,px:x*16,py:y*16,mv:null})}
+ if(q.get('scene')){D.unl=Object.assign(D.unl||{},{dogs:1,cat:1,chicken:1,cow:1});P.S={scene:q.get('scene')};P.ui.cat=q.get('cat')==null?null:+q.get('cat');P.ui.sel=+(q.get('sel')||0)}
  if(q.get('k')){P.input&&0;for(const k of q.get('k').split(','))w.owInput(k)}}catch(e){document.title='ERR '+e}},800)},1500)</script>

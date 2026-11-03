@@ -27596,14 +27596,14 @@
     "AL52": {
       "x": 37,
       "y": 51,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AM52": {
       "x": 38,
       "y": 51,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AN52": {
       "x": 39,
@@ -28112,14 +28112,14 @@
     "AJ53": {
       "x": 35,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AK53": {
       "x": 36,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AL53": {
       "x": 37,
@@ -28136,26 +28136,26 @@
     "AN53": {
       "x": 39,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AO53": {
       "x": 40,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AP53": {
       "x": 41,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ53": {
       "x": 42,
       "y": 52,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR53": {
       "x": 43,
@@ -28634,14 +28634,14 @@
     "AI54": {
       "x": 34,
       "y": 53,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AJ54": {
       "x": 35,
       "y": 53,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AK54": {
       "x": 36,
@@ -28682,8 +28682,8 @@
     "AQ54": {
       "x": 42,
       "y": 53,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR54": {
       "x": 43,
@@ -29162,14 +29162,14 @@
     "AI55": {
       "x": 34,
       "y": 54,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AJ55": {
       "x": 35,
       "y": 54,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AK55": {
       "x": 36,
@@ -29210,8 +29210,8 @@
     "AQ55": {
       "x": 42,
       "y": 54,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR55": {
       "x": 43,
@@ -29696,8 +29696,8 @@
     "AJ56": {
       "x": 35,
       "y": 55,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AK56": {
       "x": 36,
@@ -29732,14 +29732,14 @@
     "AP56": {
       "x": 41,
       "y": 55,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AQ56": {
       "x": 42,
       "y": 55,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AR56": {
       "x": 43,
@@ -30224,8 +30224,8 @@
     "AJ57": {
       "x": 35,
       "y": 56,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AK57": {
       "x": 36,
@@ -30242,26 +30242,26 @@
     "AM57": {
       "x": 38,
       "y": 56,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AN57": {
       "x": 39,
       "y": 56,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AO57": {
       "x": 40,
       "y": 56,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "w",
+      "kind": "water"
     },
     "AP57": {
       "x": 41,
       "y": 56,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AQ57": {
       "x": 42,
@@ -30752,20 +30752,20 @@
     "AJ58": {
       "x": 35,
       "y": 57,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AK58": {
       "x": 36,
       "y": 57,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AL58": {
       "x": 37,
       "y": 57,
-      "tile": "b",
-      "kind": "sand"
+      "tile": "g",
+      "kind": "grass"
     },
     "AM58": {
       "x": 38,

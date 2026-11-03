@@ -30,6 +30,16 @@ class C:
       band=im.crop((0,split,s.w,split+1)); t=Image.new('RGBA',(s.w,s.h+grow),(0,0,0,0)); t.paste(im.crop((0,0,s.w,split)),(0,0))
       for i in range(grow): t.paste(band,(0,split+i))
       t.paste(im.crop((0,split,s.w,s.h)),(0,split+grow))
+      # v52 chunky roof volume: thick eave lip (roof underside) below the roof edge, wider than the wall
+      tp=t.load(); rowc=[im.getpixel((x,split-3)) for x in range(s.w)]
+      xs=[x for x in range(s.w) if rowc[x][3]>200 and sum(rowc[x][:3])<600]
+      if xs:
+        mid=rowc[(xs[0]+xs[-1])//2] if rowc[(xs[0]+xs[-1])//2][3]>200 else rowc[xs[0]]
+        lip=mix(mid,(40,20,60),.35); edge=(58,42,58,255)
+        x0,x1=max(0,xs[0]-1),min(s.w-1,xs[-1]+1)
+        for y in range(split-1,split+4):
+          for x in range(x0,x1+1): tp[x,y]=edge if y in (split-1,split+3) or x in (x0,x1) else (mix(lip,(255,255,255),.25) if y==split else lip)
+        split+=4
       sh=Image.new('RGBA',t.size,(0,0,0,0)); d=ImageDraw.Draw(sh)
       for i in range(6): d.line([(0,split+i),(s.w,split+i)],fill=(40,20,60,int(110*(1-i/6))))   # deep eave shadow
       a=t.split()[3]; sh.putalpha(Image.composite(sh.split()[3],Image.new('L',t.size,0),a)); t.alpha_composite(sh)

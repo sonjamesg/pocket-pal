@@ -1,7 +1,7 @@
 // ===== critters.js — cat / chicken / pig / horse / rabbit art =====
 // ===== critters (cat / chicken / pig) =====
 function critter(cx,cy,sp,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok';const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1;
-  if(IMG[sp]&&IMG[sp].naturalWidth){const sleep=pose==='sleep'||pose==='lay'||pose==='nap';let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;if(pose==='walk'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;const im=varImg(IMG[sp],o.sv),iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height,sc=28*sz/Math.max(iw,ih);g.save();g.translate(cx,cy+dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);g.imageSmoothingEnabled=false;g.drawImage(im,-iw/2,-ih+(sleep?4:0));g.restore();return}
+  if(IMG[sp]&&IMG[sp].naturalWidth){const sleep=pose==='sleep'||pose==='lay'||pose==='nap';let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;if(pose==='walk'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;const im=varImg(IMG[sp],o.sv),iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height,sc=(sp.startsWith('dog_')?62:28)*sz/Math.max(iw,ih);g.save();g.translate(cx,cy+dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);g.imageSmoothingEnabled=false;g.drawImage(im,-iw/2,-ih+(sleep?4:0));g.restore();return}
   const sleep=pose==='sleep'||pose==='lay'||pose==='nap',eat=pose==='eat'||pose==='sniff';
   let dy=0;if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*12;if(pose==='walk'||pose==='trot'||pose==='play')dy=-Math.abs(Math.sin(T/5))*2;
   g.save();g.translate(cx,cy);E(0,1,20*sz,4*sz,'#0003');g.translate(0,dy);g.scale(sz*(o.dir||1),sz);if(pose==='roll')g.rotate(Math.sin(T/8)*.6);
