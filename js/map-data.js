@@ -159,8 +159,8 @@ const MAP_LAYOUT=/*JSON-START*/{
    ]
   ],
   "petStore": [
-   44,
-   30
+   42,
+   4
   ],
   "legend": {
    "g": "grass",
@@ -187,7 +187,7 @@ const MAP_LAYOUT=/*JSON-START*/{
    "xxxxggggggggTxxxggggggggggxxggTxgggggggppgggggggxxgTxrgggggggggwwwgxxxxgPxPxxxxx",
    "PxggrrrrggggxxggggFJJggPxgggggxxgggggggppggggggggggxxggPxgggggggwwwgggggxxxxTxPx",
    "xxggrrgPxgggTxPxggFJgggxxggggggggggggggppggggggggggggggxxggggggggwwwgggPxrrgxxxx",
-   "PxgrrrrxxgrgxxxxggKFFKggPxgTxggggggggggppgggggggggKgggTxgPxPxggggwwwPxgxxrrrrgPx",
+   "PxgrrrrxxgrgxxxxggKFFKggPxgTxggggggggggpppppggggggKgggTxgPxPxggggwwwPxgxxrrrrgPx",
    "xxggggghhhrFJKKgggJJggggxxgxxgTxgggggggpphhhgggggggTxhxxgxxxxggggwwwxxgTxggTxgxx",
    "PxggggghgPxggggTxTxggPxggPxgggxxFFJFgggppggggggggggxxgggggggggppwwwTxhgxxggxxgPx",
    "xxgggggggxxPxggxxxxggxxwgxxTxgggKKKggggppgggggggggggggggggggggpBwwgxxhhggggPxgxx",
@@ -213,8 +213,8 @@ const MAP_LAYOUT=/*JSON-START*/{
    "xxgggFggggFJJhhgggggggPxgggggxxggxxPxggppgggggggwwPxggggggggggppgggggxxgggxxKJxx",
    "ggggJFKJggggggggggggggxxgggggggJKFFxxggppgggggggwwxxggggggggggppFJFggggggggTxKJg",
    "JFgTxTxgggggggggJKKFgggPxggggggFJKgPxggppFFgggggwwwFggggggggggppghhhPxgggggxxggg",
-   "PxgxxxxggggggghgFJJggggxxggFFJKghhhxxggppKgggpgggwwwggggggggggppghhgxxggggggggPx",
-   "xxgggggggggggghgggggggggggggFFKghhhhhhsppggggpgggggwwwggggggKFppghhhFFFgggggggxx",
+   "PxgxxxxggggggghgFJJggggxxggFFJKghhhxxggppKgggggggwwwggggggggggppghhgxxggggggggPx",
+   "xxgggggggggggghgggggggggggggFFKghhhhhhsppggggggggggwwwggggggKFppghhhFFFgggggggxx",
    "PxggpppppppppppppppppppppppppppppppppppppppppppppppppBBBppppppppppppppppppppggPx",
    "xxggpppppppppppppppppppppppppppppppppppppppppppppppppppBBBppppppppppppppppppggxx",
    "PxgggggggggggrhhppgggggggggggggggggggghhppgggKgggggggggggwwwggggggggggggggggggPx",
