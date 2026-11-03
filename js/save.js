@@ -7,7 +7,7 @@ let DB=loadDB();if(DB.wallet==null)DB.wallet=60;
 // v32: one wallet — fold any old per-pet coins (above the 20 starter) into DB.wallet once
 if(!DB.coinsMerged){Object.values(DB.pets||{}).forEach(p=>{if((p.coins||0)>20)DB.wallet+=p.coins-20;p.coins=0});DB.coinsMerged=1;try{localStorage.setItem('pocketpal_v9',JSON.stringify(DB))}catch(e){}}
 function saveDB(){try{localStorage.setItem(SAVE,JSON.stringify(DB))}catch(e){}}
-const DOG_PRICE={beagle:25,dachshund:30,lab:35,collie:40,poodle:45,corgi:55,husky:60,frenchie:75};
+const DOG_PRICE={beagle:25,dachshund:30,lab:35,collie:40,poodle:45,corgi:55,husky:60,frenchie:75,staffy:65};
 // economy (v22): starter 60, chores 5-12 each, Grandpa 30/day. Future: SPECIES_PRICE mid 40-60, premium 70-100; SLOT_PRICE ranch slot upgrades > a pet
 const SPECIES_PRICE={cat:40,rabbit:40,chicken:45,pig:55,sheep:60,cow:80,horse:100},SLOT_PRICE=[0,0,0,120,160,220];const priceOf=b=>DOG_PRICE[b]||40;
 function loadDB(){let d=null;try{d=JSON.parse(localStorage.getItem(SAVE))}catch(e){}

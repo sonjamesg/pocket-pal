@@ -49,8 +49,8 @@ const _owUpdateM=owUpdate;owUpdate=function(){_owUpdateM();const o=ui.ow;if(!o)r
   const m=wm();if(m.step===2&&CUR==='ranch'&&!o.mv&&inField(o.x,o.y)){const p=DB.pets[m.sheepId];if(p)delete p.carry;m.step=3;saveDB();sparkle(20,W/2,100);say((p?p.name:'Your sheep')+' loves the field! Now feed it so the wool grows.',240)}};
 // sheep naming
 const _finishNameM=finishName;finishName=function(n){if(!ui.nameSheep)return _finishNameM(n);const paid=ui.nameSheep===2;ui.nameSheep=null;ui.modal=null;S={scene:'map'};n=(n||'').trim().slice(0,8).toUpperCase()||'WOOLY';
-  const id='p'+now().toString(36)+Math.floor(Math.random()*1e4),p=fix({id,name:n,species:'sheep',breed:'sheep',scene:'main',stage:'adult',hunger:35,happy:55,xp:0,coat:5,plaque:0,wool:0,
-    stageStart:now(),born:now(),created:now(),last:now(),sleep:false,carry:paid?0:1,lastPlayed:now()});if(paid){delete p.carry;DB.wallet-=SPECIES_PRICE.sheep;DB.pets[id]=p;saveDB();sparkle(24,W/2,100);say(n+' is waiting in your SHEEP FIELD!',240);return}
+  const id='p'+now().toString(36)+Math.floor(Math.random()*1e4),p=fix({id,name:n,species:'sheep',breed:(paid&&ui.sheepType)||'sheep',scene:'main',stage:'adult',hunger:35,happy:55,xp:0,coat:5,plaque:0,wool:0,
+    stageStart:now(),born:now(),created:now(),last:now(),sleep:false,carry:paid?0:1,lastPlayed:now()});if(paid){delete p.carry;DB.wallet-=((typeof SHEEP_TYPES!=='undefined'&&SHEEP_TYPES.find(x=>x.id===ui.sheepType))||{p:SPECIES_PRICE.sheep}).p;ui.sheepType=null;DB.pets[id]=p;saveDB();sparkle(24,W/2,100);say(n+' is waiting in your SHEEP FIELD!',240);return}
   DB.pets[id]=p;const m=wm();m.step=2;m.sheepId=id;saveDB();sparkle(24,W/2,100);
   say(n+' follows you! Walk it home to the SHEEP FIELD.',260)};
 const SHEEP_NAMES=['WOOLY','FLUFFY','COTTON','DAISY'],DOG_NAMES=['BISCUIT','BUDDY','PIP','ROSIE'];
@@ -68,9 +68,9 @@ function owExtras(t,o){if(CUR==='ranch')for(const k in grows()){const e=grows()[
     if(p<1){const h=3+Math.floor(p*8);R(X+7,Y+14-h,2,h,'#2a8a2a');R(X+4,Y+14-h,3,2,'#4ac04a');R(X+9,Y+13-h,3,2,'#4ac04a')}
     else{const b=Math.round(Math.sin(t/8)*1.5);E(X+8,Y+6+b,5,5,'#2b2440');E(X+8,Y+6+b,4,4,GOOD_COL[CROP_GOOD[e.c]]||'#ffd84a');if((t>>3)%4===0)star(X+13,Y+1,2.5,'#fff')}}
   if(CUR==='ranch')fieldSheep().forEach((p,i)=>{const [sx,sy]=FIELD_SPOTS[i],bob=Math.sin(t/30+i)>0,X=sx*TS+8,Y=sy*TS+14;g.save();g.translate(X,Y);g.scale(.62,.62);
-    critter(0,0,'sheep','adult',{pose:(t>>6)%3===i%3?'eat':'idle',mood:'happy',dir:bob?1:-1,wool:woolNow(p)});g.restore();
+    critter(0,0,'sheep','adult',{pose:(t>>6)%3===i%3?'eat':'idle',mood:'happy',dir:bob?1:-1,wool:woolNow(p),sv:p.breed});g.restore();
     const lw=p.name.length*4+6;RR(X-lw/2,Y+1,lw,7,3,'#fff8');txt(p.name.slice(0,8),X,Y+6,'#5b4b8a',5);if(woolNow(p)>=100&&(t>>4)%2)txt('!',X+10,Y-18,'#e8402a',9)});
-  const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0});g.restore()}}}
+  const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0,sv:p.breed});g.restore()}}}
 // screen-space HUD: bucket + current job tracker (the full list lives only on the JOB BOARD)
 function owHud(t){if(DB.bucket>0){RR(W-96,1,36,14,4,'#9ad8ff','#2b2440');R(W-92,4,7,7,'#3a86e8');R(W-93,3,9,1,'#2b2440');txt('×'+DB.bucket,W-74,12,'#2b2440',9)}
   const nx=nextThing();RR(3,18,W-6,17,6,'#2b2440e8','#ffe36a');txt('▶ '+nx.t,W/2,30,'#ffe36a',9);drawGoalArrow(t,nx)}
@@ -121,7 +121,7 @@ function shearInput(k){const m=ui.mg;if(m.done){if(k==='a'||k==='b'){ui.mg=null;
     if(S.wool<=0){m.done=true;S.wool=0;S.happy=clamp(S.happy+10);addXP(3);DB.stock=DB.stock||{};DB.stock.wool=(DB.stock.wool||0)+FLEECE_BALES;DB.woolBales=(DB.woolBales||0)+1;const w=wm();if(w.step===3&&w.sheepId===S.id)w.step=4;saveDB();sfx('coin');sparkle(24,W/2,110);save(true)}}}
 function drawShear(t){const m=ui.mg;m.t++;R(0,0,W,H,'#e8f4d8');for(let x=0;x<W;x+=16)R(x,150,8,66,'#d8e8c0');RR(10,8,W-20,22,6,'#5a7a9a','#2b2440');txt('SHEARING SHED',W/2,23,'#fff',10);
   R(0,170,W,46,'#c8a070');for(let x=0;x<W;x+=24)R(x,170,1,46,'#a88050');
-  g.save();g.translate(W/2,176);g.scale(2.4,2.4);critter(0,0,'sheep','adult',{pose:m.done?'happy':'idle',mood:'happy',dir:1,wool:S.wool});g.restore();
+  g.save();g.translate(W/2,176);g.scale(2.4,2.4);critter(0,0,'sheep','adult',{pose:m.done?'happy':'idle',mood:'happy',dir:1,wool:S.wool,sv:S.breed});g.restore();
   const sx=W/2+30+Math.sin(t/4)*6,sy=120;g.strokeStyle='#9aa0b0';g.lineWidth=2;const op=Math.abs(Math.sin(t/3))*.5;[op,-op].forEach(a=>{g.beginPath();g.moveTo(sx,sy);g.lineTo(sx-Math.cos(a)*14,sy+Math.sin(a)*14);g.stroke()});RR(sx,sy-3,10,6,3,'#e8402a');
   RR(30,40,180,10,5,'#2b2440');RR(32,42,176*(1-(S.wool||0)/100),6,3,'#5ad07a');txt('Fleece off: '+Math.round(100-(S.wool||0))+'%',W/2,62,'#2b2440',9);
   if(m.done){R(0,0,W,H,'#0007');panel(30,70,W-60,80,'WOOL!');txt('A big fluffy fleece!',W/2,100,'#2b2440',10);txt('+'+FLEECE_BALES+' WOOL to your shop!',W/2,116,'#2a9a50',11);txt('Sell it at YOUR FARM SHOP',W/2,132,'#8a80a8',9);txt('A done',W/2,146,'#e0457b',10)}
@@ -139,7 +139,7 @@ function catalog(){return BKEYS.map(b=>({dog:b,n:BREEDS[b].n,p:priceOf(b)})).con
 function sheepOpts(){const o=[];if(wm().step===1)o.push('free');o.push('buy');return o}
 function storeInput(k){const C=catalog(),n=C.length;if(k==='left'){ui.sel=(ui.sel+n-1)%n;ui.opt=0}if(k==='right'){ui.sel=(ui.sel+1)%n;ui.opt=0}if(k==='b'||k==='start'){S={scene:'map'};return}
   const it=C[ui.sel];if(it.sp==='sheep'){const O=sheepOpts();if(k==='up'||k==='down')ui.opt=((ui.opt||0)+1)%O.length;
-    if(k==='a'){const c=O[ui.opt||0]||'buy';if(sheepList().length>=FIELD_SPOTS.length){say('Your SHEEP FIELD is full! ('+FIELD_SPOTS.length+' sheep)');return}if(c==='free'){ui.nameSheep=1;pickName(SHEEP_NAMES);return}if(DB.wallet<it.p){say('Need '+it.p+' coins. Do jobs to earn more!');return}ui.nameSheep=2;pickName(SHEEP_NAMES)}return}
+    if(k==='a'){const c=O[ui.opt||0]||'buy';if(sheepList().length>=Math.min(SHEEP_MAX,FIELD_SPOTS.length)){say('Field full — 4 sheep max!');return}if(c==='free'){ui.nameSheep=1;pickName(SHEEP_NAMES);return}if(DB.wallet<it.p){say('Need '+it.p+' coins. Do jobs to earn more!');return}ui.nameSheep=2;pickName(SHEEP_NAMES)}return}
   if(k==='a'){if(it.soon){say(it.n+'S coming soon!');return}buyDog(it.dog)}}
 function drawPetCatalog(t){bg(false);const C=catalog(),it=C[ui.sel%C.length],can=DB.wallet>=it.p;R(0,0,W,26,'#2b2440');txt('PET SHOP',8,18,'#ffe36a',13,'left');txt('● '+DB.wallet,W-8,18,'#ffd84a',12,'right');
   RR(14,32,W-28,124,12,'#fffc','#2b2440');

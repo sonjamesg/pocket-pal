@@ -87,7 +87,7 @@ function drawInt(t){owUpdate();const o=ui.ow,m=MAPS.int,cx=MW*TS<=W?(MW*TS-W)/2:
   if(!drawn)drawP();
   // cosy owned animals of this building's species, wandering in place
   const sp={coop:'chicken',cowbarn:'cow',stable:'horse',sheepshed:'sheep',sty:'pig'}[m.id];
-  if(sp&&typeof critter==='function'){const own=petList().filter(p=>spOf(p)===sp).slice(0,4);own.forEach((p,i)=>{const X=(3+i*3)*TS,Y=6*TS+Math.round(Math.sin(t/30+i)*2);g.save();g.translate(X,Y);g.scale(.75,.75);try{critter(0,0,sp,p.stage||'adult',{pose:'walk',mood:'happy',dir:Math.sin(t/80+i)>0?1:-1})}catch(e){}g.restore()})}
+  if(sp&&typeof critter==='function'){const own=petList().filter(p=>spOf(p)===sp).slice(0,4);own.forEach((p,i)=>{const X=(3+i*3)*TS,Y=6*TS+Math.round(Math.sin(t/30+i)*2);g.save();g.translate(X,Y);g.scale(.75,.75);try{critter(0,0,sp,p.stage||'adult',{pose:'walk',mood:'happy',sv:p.breed,dir:Math.sin(t/80+i)>0?1:-1})}catch(e){}g.restore()})}
   g.restore();
   // warm lighting vignette
   const vg=g.createRadialGradient(W/2,H/2,40,W/2,H/2,170);vg.addColorStop(0,'#0000');vg.addColorStop(1,house?'#40200030':'#20100040');g.fillStyle=vg;g.fillRect(0,0,W,H);

@@ -1,6 +1,6 @@
 // ===== animals.js — dog art, egg, food/toy icons =====
 // ===== dog art =====
-function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,o);
+function dog(cx,cy,bid,stage,o={}){if(BREEDS[bid]&&BREEDS[bid].sp)return critter(cx,cy,BREEDS[bid].sp,stage,Object.assign({sv:bid},o));
   const B=BREEDS[bid]||BREEDS.lab,T=ui.anim,pose=o.pose||'idle',coat=o.coat||0,mood=o.mood||'ok',plq=o.plaque||0,pt=o.pt||0;
   let c=B.c,d=B.d,l=B.l;const sen=stage==='senior';
   const sz={puppy:.62,youngster:.75,teen:.88,adult:1,senior:1}[stage]||1,hk={puppy:1.38,youngster:1.22,teen:1.1,adult:1,senior:1}[stage]||1;

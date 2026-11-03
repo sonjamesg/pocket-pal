@@ -19,6 +19,7 @@ const BREEDS={
  frenchie:{n:'FRENCH BULLDOG',c:'#dcc6a4',d:'#3a2e2a',l:'#f1e6d2',ear:'bat',tail:'stub',bl:17,bh:13,leg:10,hr:12,sn:4,fur:.4,mask:true,desc:'Big bat ears, little snorts'},
  dachshund:{n:'DACHSHUND',c:'#a8552a',d:'#6e3216',l:'#c97a48',ear:'long',tail:'whip',bl:28,bh:10,leg:7,hr:10,sn:11,fur:.6,desc:'Long sausage body, brave!'},
  poodle:{n:'POODLE',c:'#f3e4d0',d:'#dcc4a8',l:'#fffaf2',ear:'pom',tail:'pom',bl:19,bh:12,leg:17,hr:10,sn:9,fur:1.5,curly:true,desc:'Curly coat — grows FAST'},
+ staffy:{n:'WHITE STAFFY',c:'#fbf8f2',d:'#e6dccc',l:'#ffffff',ear:'flop',tail:'whip',bl:21,bh:13,leg:10,hr:13,sn:6,fur:.3,desc:'Big grin, strong & cuddly'},
  corgi:{n:'CORGI',c:'#e38b3a',d:'#b0602a',l:'#fff6ea',ear:'pointy',tail:'stub',bl:24,bh:12,leg:7,hr:11,sn:8,fur:.8,white:true,desc:'Short legs, huge smile'},
  husky:{n:'HUSKY',c:'#6d7484',d:'#3e4452',l:'#f4f6fa',ear:'pointy',tail:'curl',bl:23,bh:13,leg:15,hr:11,sn:9,fur:1.1,white:true,eye:'#4fb0ff',desc:'Ice-blue eyes, loves to run'},
  beagle:{n:'BEAGLE',c:'#c98a48',d:'#2e2622',l:'#fffaf2',ear:'flop',earC:'#9a6030',tail:'whip',bl:20,bh:12,leg:12,hr:11,sn:8,fur:.5,saddle:true,white:true,desc:'Super sniffer nose'},
@@ -29,6 +30,14 @@ const BREEDS={
  rabbit:{sp:'rabbit',n:'RABBIT',c:'#dcdce6',d:'#b0b0c0',l:'#ffffff',bl:16,bh:12,leg:10,hr:10,sn:3,fur:0,desc:'Hops, flops ears & munches greens'},
  sheep:{sp:'sheep',n:'SHEEP',c:'#f4efe0',d:'#3a3440',l:'#ffffff',bl:22,bh:14,leg:9,hr:9,sn:4,fur:0,desc:'Baa! Grows wool fast — shear it for coins'},
  collie:{n:'BORDER COLLIE',c:'#2a2630',d:'#16131a',l:'#ffffff',ear:'semi',tail:'plume',bl:22,bh:12,leg:15,hr:10,sn:9,fur:1.2,white:true,desc:'Clever! Learns tricks fast'}};
+const SHEEP_TYPES=[
+ {id:'sheep',n:'WHITE SHEEP',p:60,desc:'Soft white wool'},
+ {id:'sheep_black',n:'BLACK SHEEP',p:80,desc:'Dark wool, cheeky face',f:[.35,.32,.4]},
+ {id:'sheep_brown',n:'BROWN SHEEP',p:90,desc:'Cosy chocolate wool',f:[.82,.6,.42]},
+ {id:'sheep_spot',n:'SPOTTY SHEEP',p:110,desc:'Black spots all over!',spot:1},
+ {id:'sheep_pink',n:'PINK FLUFFY',p:150,desc:'Extra fluffy & pink',f:[1,.78,.88]},
+ {id:'sheep_gold',n:'GOLDEN SHEEP',p:200,desc:'Rare shiny gold wool',f:[1,.86,.45]}];
+const SHEEP_MAX=4;
 const BKEYS=Object.keys(BREEDS).filter(k=>!BREEDS[k].sp);
 const FOODS=[
  {id:'kibble',n:'KIBBLE',v:22},{id:'wet',n:'WET FOOD',v:28,joy:3},{id:'chicken',n:'CHICKEN',v:24,joy:6},{id:'salmon',n:'SALMON',v:22,joy:5,d:'Shiny coat'},
