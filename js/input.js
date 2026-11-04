@@ -42,7 +42,7 @@ function gridIn(k,n,go){if(k==='left')ui.sel=(ui.sel+n-1)%n;if(k==='right')ui.se
 function openAct(i){const a=ACTIONS[i];ui.sel=0;
   if(a==='FEED')S.scene='food';if(a==='PLAY')S.scene='games';if(a==='TRICKS')S.scene='tricks';if(a==='TOYS')S.scene='toys';if(a==='CARE')S.scene='care';
   if(a==='WALK'){if(S.hunger<10){say('Too hungry for a walk — feed first!');return}startWalk()}
-  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+15);if(S.species==='sheep')S.wool=Math.min(100,(S.wool||0)+8);addXP(1);hearts(4);setPose('happy',60);say('Brushed! Happy +15'+(S.species==='sheep'?'  Wool +8%':''));save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
+  if(a==='CUDDLE'){careAct('cuddle');return}if(a==='BRUSH'){S.happy=clamp(S.happy+15);/* v60: brushing no longer adds wool */addXP(1);hearts(4);setPose('happy',60);say('Brushed! Happy +15');save();return}if(a==='SHEAR'){startShear();return}if(a==='SLEEP'){S.sleep=true;say('Zzz... (A to wake)')}save(true)}
 function careAct(id){
   if(id==='cuddle'){S.scene='main';S.happy=clamp(S.happy+TUNE.petAmt);addXP(1);hearts(5);setPose('happy',70);say(rnd({dog:['*wag wag*','*licks your face*','Belly rubs!','Love you!'],cat:['*purrrr*','*head boop*','Mrrow!'],chicken:['*cluck cluck*','*happy bok*','*fluffs feathers*'],pig:['*oink oink!*','*happy snort*','Belly scratch!'],horse:['*nicker*','*soft neigh*','Carrot please!'],rabbit:['*nose twitch*','*happy hop*','*binky!*'],sheep:['*baa-aa!*','*soft baa*','*fluffy nuzzle*']}[S.species]||['Love you!']));save()}
   if(id==='teeth'){S.scene='teeth';ui.mg={bx:0,last:null,scrub:0,done:false,t:0}}
