@@ -57,5 +57,5 @@ owExtras=function(t,o){_x(t,o);if(CUR!=='ranch')return;
   if(ui.hose!=null){const [hx,hy]=HOSES[ui.hose];g.strokeStyle='#2a9a40';g.lineWidth=2;g.beginPath();g.moveTo(hx*TS+14,hy*TS+9);const mx=(hx*TS+o.px)/2+8,my=Math.max(hy*TS,o.py)+14;g.quadraticCurveTo(mx,my,o.px+12,o.py+6);g.stroke();
     const [dx,dy]=DV[o.dir];for(let i=0;i<6;i++){const s=((t*2+i*9)%24)/24;R(o.px+8+dx*(4+s*20)+(i%3-1)*s*6,o.py+6+dy*(4+s*20)+((i>>1)%3-1)*s*6,2,2,'#9ad8ff')}}};
 owHud=function(t){_hud(t);let y=52;if(ui.hose!=null){RR(W-62,y,58,12,4,'#40c060','#2b2440');txt('HOSE ON',W-33,y+9,'#fff',7);RR(W-62,y+13,58,11,4,'#fff','#2b2440');txt('B: put back',W-33,y+21,'#2b2440',6.5);y+=12;y+=14}
-  if(fertN()>0){RR(W-62,y,58,12,4,'#c89a60','#2b2440');txt('FERT ×'+fertN(),W-33,y+9,'#2b2440',7)}};}
+  };}
 GOODS.fert={n:'POO FERTILISER',p:5};GOOD_COL.fert='#7a4a24';
