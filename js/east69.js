@@ -58,3 +58,20 @@ const TREE_LINES=['A big leafy tree.','Another big leafy tree.',"It's a tree!",'
 // east hay fields are scenery, not your crops
 {const _ot=owThing;owThing=function(x,y){if(CUR==='ranch'&&x>=88&&OWBASE[y]&&OWBASE[y][x]==='W')return{hayfield:1};return _ot(x,y)}}
 {const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.hayfield){treeStreak=0;say('Rolling fields of golden HAY, swaying in the breeze.',140);return}}return _oi(k)}}
+// --- gate UX: A while facing the gate walks you through; louder hint; WILD WOODS "PET SHOP" arrow ---
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],c=OWBASE[o.y+dy]&&OWBASE[o.y+dy][o.x+dx];if(c==='G'){owTry(o.dir);return}}return _oi(k)}}
+{const _oh=owHud;owHud=function(t){_oh(t);const o=ui.ow;if(!o||ui.msgT>0||(CUR!=='ranch'&&CUR!=='outer'))return;const gt=MAPS[CUR].gate;if(!gt)return;
+  const near=gt.some(([gx,gy])=>Math.abs(gx-o.x)<=2&&Math.abs(gy-o.y)<=3);if(!near)return;const s=CUR==='ranch'?'Walk into the gate ▼ WILD WOODS + PET SHOP':'Walk into the gate ▲ back to the RANCH';
+  RR(10,H-48,W-20,16,8,(t>>4)%2?'#ffe14a':'#fff3a0','#2b2440');txt(s,W/2,H-37,'#2b2440',7)}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='outer'||!STORE)return;const gx=MAPS.outer.gate[0][0],X=(gx-4)*TS,Y=3*TS+4,f=()=>{R(X+7,Y,3,16,'#5a3418');RR(X-6,Y-12,40,13,3,'#ff5a8b','#2b2440');txt('PET SHOP ▶',X+14,Y-3,'#fff',5)};
+  if(typeof P3D!=='undefined'&&P3D)p3later(X+8,Y+16,f);else f()}}
+// --- chunky toy-diorama blooms on every flower bed (Y): stems, layered petals w/ shade + highlight, bobbing ---
+const BLOOM_C=[['#ff5a8b','#c8306a','#ffc0d8'],['#ffd84a','#d09a10','#fff3a8'],['#ffffff','#c8c8e0','#ffffff'],['#9a6aff','#6a3ad0','#d8c4ff'],['#ff8a3a','#c85a10','#ffd0a0']];
+function bloom(X,Y,c,s,t){const [m,d,l]=c;R(X-.5,Y,1.5,6*s,'#3a8a2a');E(X+2.2*s,Y+3*s,2*s,1*s,'#4aa83a');E(X,Y+6*s,3*s,1.2*s,'#0a281430');
+  const r=2.6*s;for(let i=0;i<5;i++){const a=i*1.2566+t;E(X+Math.cos(a)*r,Y+Math.sin(a)*r*.75+.6,r*.85,r*.7,d)}
+  for(let i=0;i<5;i++){const a=i*1.2566+t;E(X+Math.cos(a)*r*.9,Y+Math.sin(a)*r*.7-.4,r*.75,r*.6,m)}
+  E(X-r*.5,Y-r*.7,r*.45,r*.3,l);E(X,Y,r*.45,r*.4,'#ffb020');E(X-.4,Y-.5,r*.2,r*.18,'#fff6c0')}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const [cx,cy]=CAMC,x0=Math.max(0,((cx-W)/TS)|0),x1=Math.min(MW-1,((cx+W)/TS)|0),y0=Math.max(0,((cy-H)/TS)|0),y1=Math.min(MH-1,((cy+H)/TS)|0);
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){if(OWBASE[y][x]!=='Y')continue;const h=((x*73856093)^(y*19349663))>>>0;
+    [[4,6],[11,5],[7,12],[13,13],[3,13]].forEach(([fx,fy],i)=>{const X=x*TS+fx,Y=y*TS+fy-4,c=BLOOM_C[(h>>(i*3))%5],s=.8+((h>>(i+2))%3)*.15,sw=Math.sin(t/40+x+i)*.6,
+      f=()=>bloom(X+sw,Y,c,s,(h%7)*.3);if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+6,f);else f()})}}}
