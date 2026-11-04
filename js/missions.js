@@ -197,6 +197,7 @@ function tone(f,d,type,v,f2,delay){const a=AC;if(!a||DB.mute)return;const t0=a.c
 function sfx(k){if(!AC)return;if(k==='click')tone(880,.04,'square',.025);if(k==='blip')tone(620,.05,'triangle',.03);if(k==='coin'){tone(988,.08,'square',.04);tone(1319,.18,'square',.04,0,.08)}
   if(k==='water')tone(500,.25,'sine',.05,180);if(k==='snip'){tone(2400,.03,'square',.02);tone(1800,.03,'square',.02,0,.04)}
   if(k==='baa'){for(let i=0;i<4;i++)tone(i%2?380:340,.1,'sawtooth',.03,0,i*.09)}
+  if(k==='woof'){tone(320,.09,'sawtooth',.05,170);tone(260,.12,'sawtooth',.045,140,.16)}
   if(k==='fanfare')[523,659,784,1047].forEach((f,i)=>tone(f,.16,'square',.04,0,i*.12))}
 const _sayM=say;say=function(m,t){_sayM(m,t);sfx('blip')};
 const _careActM=careAct;careAct=function(id){if(id==='cuddle'&&S.species==='sheep')sfx('baa');return _careActM(id)};

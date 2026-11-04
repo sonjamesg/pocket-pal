@@ -62,6 +62,7 @@ function bubble(t,x,y,w){const L=[];let line='';t.split(' ').forEach(wd=>{if((li
   RR(x,y,w,L.length*11+8,8,'#fff','#2b2440');L.forEach((l,i)=>txt(l,x+w/2,y+12+i*11,'#2b2440',8))}
 function drawGroom(t){const m=ui.mg;m.t++;salonBg();
   dogAt(156,140,1.15,m.ph==='done'?'happy':m.ph==='cut'?'idle':'sit',0,-1);
+  /* v100: occasional bark on the grooming table */if(m.bk==null)m.bk=90+Math.floor(Math.random()*120);if(--m.bk<=0){m.bk=300+Math.floor(Math.random()*360);m.bkS=45;if(!document.hidden)sfx('woof')}if(m.bkS>0){m.bkS--;g.save();g.font='bold 10px monospace';g.fillStyle='#fff';g.strokeStyle='#123';g.lineWidth=3;g.strokeText('WOOF!',176,92);g.fillText('WOOF!',176,92);g.restore()}
   if(m.ph==='done'){g.save();g.translate(152-S.stage.length,98);g.fillStyle='#ff5a8b';g.beginPath();g.moveTo(0,0);g.lineTo(-8,-5);g.lineTo(-8,5);g.fill();g.beginPath();g.moveTo(0,0);g.lineTo(8,-5);g.lineTo(8,5);g.fill();E(0,0,2.5,2.5,'#e0457b');g.restore()}
   cecily(70,176,t,m.ph==='cut'&&t%30<20);
   const line={intro:m.mat?"Hi, I'm Cecily! Oh dear, "+S.name+"'s fur is matted. Let's fix it gently!":"Hi, I'm Cecily! Ready for a lovely trim, "+S.name+"?",
