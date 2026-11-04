@@ -30,7 +30,7 @@ function lamps(t){const night=nightNow(),[cx,cy]=CAMC;lampList().forEach(([x,y])
 function nightGlow(t){if(!nightNow()||CUR!=='ranch')return;const cv=g.canvas,k=cv.width/W,kv=cv.height/H;g.save();g.setTransform(k,0,0,kv,0,0);g.globalCompositeOperation='lighter';
   const pt=(wx,wy,up)=>{if(typeof P3D!=='undefined'&&P3D&&P3C){const [sx,sy,s]=proj(wx,wy);return[sx,sy-up*s,s]}return[wx-CAMC[0]+W/2,wy-CAMC[1]+H/2-up,1]};
   const pool=(X,Y,r,a)=>{if(X<-r||Y<-r||X>W+r||Y>H+r)return;const gr=g.createRadialGradient(X,Y,1,X,Y,r);gr.addColorStop(0,'rgba(255,205,110,'+a+')');gr.addColorStop(1,'rgba(255,190,90,0)');g.fillStyle=gr;g.fillRect(X-r,Y-r,2*r,2*r)};
-  lampList().forEach(([x,y])=>{const wx=x*TS+8,wy=y*TS+14,fl=.04*Math.sin(t/7+x),[a,b,s]=pt(wx,wy,25),[c,d,s2]=pt(wx,wy,0);pool(a,b,11*s,.9);pool(c,d,34*s2,.42+fl)});
+  lampList().forEach(([x,y])=>{const wx=x*TS+8,wy=y*TS+14,fl=.04*Math.sin(t/7+x),[a,b,s]=pt(wx,wy,25),[c,d,s2]=pt(wx,wy,0);pool(Math.round(a),Math.round(b),11*s,.9);pool(Math.round(c),Math.round(d),34*s2,.42+fl*.5)});
   const win=(wx,wy,up)=>{const [X,Y,s]=pt(wx,wy,up);pool(X,Y,11*s,.8);g.fillStyle='rgba(255,225,130,.85)';g.fillRect(X-3*s,Y-2.5*s,6*s,5*s);const [c,d,s2]=pt(wx,wy+6,0);pool(c,d,18*s2,.25)};
   for(const [bx,by,bw,bh] of BARNS){const wy=(by+bh)*TS;win(bx*TS+bw*4,wy,20);win(bx*TS+bw*12,wy,20)}
   win(HOME[0]*TS+12,(HOME[1]+2)*TS,18);win(HOME[0]*TS+36,(HOME[1]+2)*TS,18);

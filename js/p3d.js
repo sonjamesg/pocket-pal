@@ -32,7 +32,7 @@ function p3SideWalls(xl,xr,yFar,yNear,h,col,trim){if(!P3D||!P3C)return;const C=P
 // deferred billboards queued during the ground pass (field animals, crops) — drawn upright after the warp
 let P3Q=[];let P3GROUND=false;
 function p3later(wx,wy,fn){if(P3D&&P3GROUND){P3Q.push([wy,wx,fn]);return}fn()}
-function p3flush(maxY){const keep=[];P3Q.sort((a,b)=>a[0]-b[0]);for(const q of P3Q){if(maxY!=null&&q[0]>maxY){keep.push(q);continue}withProj(q[1],q[0],q[2])}P3Q=keep}
+function p3flush(maxY){const keep=[];P3Q.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);for(const q of P3Q){if(maxY!=null&&q[0]>maxY){keep.push(q);continue}withProj(q[1],q[0],q[2])}P3Q=keep}
 // cast shadow for a billboard (soft parallelogram toward lower-right, like LA's sun)
 function p3shadow(wx,wy,w,h){if(!P3D)return;const C=P3C,[sx,sy,s]=proj(wx,wy),X=sx+C.cx,Y=sy+C.cy;g.fillStyle='rgba(10,40,20,.22)';g.beginPath();g.moveTo(X-w*s/2,Y);g.lineTo(X+w*s/2,Y);g.lineTo(X+w*s/2+h*.35*s,Y+h*.18*s);g.lineTo(X-w*s/2+h*.35*s,Y+h*.18*s);g.closePath();g.fill()}
 
