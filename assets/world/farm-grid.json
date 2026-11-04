@@ -11768,26 +11768,26 @@
     "AN22": {
       "x": 39,
       "y": 21,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AO22": {
       "x": 40,
       "y": 21,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AP22": {
       "x": 41,
       "y": 21,
-      "tile": "Y",
-      "kind": "flower bed"
+      "tile": "p",
+      "kind": "path"
     },
     "AQ22": {
       "x": 42,
       "y": 21,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AR22": {
       "x": 43,

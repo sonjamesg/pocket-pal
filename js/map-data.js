@@ -96,7 +96,7 @@ const MAP_LAYOUT=/*JSON-START*/{
   "fxxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggggggYgppgYggggggggggggggggggggggggggggggggggggJgxxf",
   "fPxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggggggYgppgYggggggggggggggggggggggggggggggggggggTxTxf",
   "fxxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfKgggggYgppgYgKggggggggggggggggggggggggggggggggggxxxxf",
-  "fPxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggggggYgppgYggggggggggggggggggggggggggggggggggggTxPxf",
+  "fPxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggggppppppgYggggggggggggggggggggggggggggggggggggTxPxf",
   "fxxfCCCCCcCCCCCCCCffWWWWWWWcWWWWWWfggggggYgppJYggggggggggggggggggggggggggggggggggggxxxxf",
   "fTxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggggggggppggggggggggggggggggggggggggggggggggggggggPxf",
   "fxxfCCCCCCCCCCCCCCffWWWWWWWWWWWWWWfggpgggggppggggggggppgggggggggppgggggggggggppggggggxxf",
@@ -323,8 +323,8 @@ const MAP_LAYOUT=/*JSON-START*/{
    "silo"
   ],
   [
-   47,
-   6,
+   39,
+   19,
    2,
    2,
    "well"

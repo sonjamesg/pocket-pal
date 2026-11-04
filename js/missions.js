@@ -122,7 +122,7 @@ function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0007');
   const at=j.tag==='NEW'?'A: TAKE JOB':j.tag==='PAUSED'?'A: START AGAIN':j.tag==='REWARD!'?'A: GET REWARD':'A: OK';pill(W/2-50,100,j.tag==='DONE'?'#9b8ad0':'#ff5a8b',at)}
 // goal arrow: bouncing arrow over the target, or an edge arrow pointing to it
 function goalTile(nx){const k=nx.k,m=wm();if(CUR==='ranch'){if(k==='wool1')return MAPS.ranch.gate[0];if(k==='wool2')return[52,47];if(k==='wool3'){const i=fieldSheep().findIndex(p=>p.id===m.sheepId);return i>=0?FIELD_SPOTS[i]:[52,47]}
-    if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[47,6];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
+    if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[39.5,19];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
   if(CUR==='outer'){if(k==='wool1'||k==='job_dog'||k==='job_flock')return[STORE[0]+1,STORE[1]+1];return MAPS.outer.gate[0]}return null}
 function drawGoalArrow(t,nx){const T=goalTile(nx);if(!T)return;const ox=CAMC[0]-W/2,oy=CAMC[1]-H/2,sx=T[0]*TS+8-ox,sy=T[1]*TS-oy,b=Math.abs(Math.sin(t/10))*4;
   if(sx>8&&sx<W-8&&sy>40&&sy<H-10){g.fillStyle='#ffe36a';g.strokeStyle='#2b2440';g.lineWidth=1.5;g.beginPath();g.moveTo(sx-6,sy-14-b);g.lineTo(sx+6,sy-14-b);g.lineTo(sx,sy-5-b);g.closePath();g.fill();g.stroke();return}
