@@ -124,6 +124,6 @@ if(typeof KM!=='undefined')KM.f='follow';
   if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f()}}
 // v95: FOLLOW / UNFOLLOW in the dog's visit menu (uses DB.follow like F / LB)
 function setFollow(on){if(!S||!S.id)return;DB.follow=on?S.id:null;saveDB();sfx&&sfx('click');if(on&&typeof achInc==='function')achInc('follow');syncActs();say(on?S.name+' will follow you on the map!':S.name+' will stay home.',150)}
-{const _sa=syncActs;syncActs=function(){_sa();if(spOf(S)==='dog'){ACTIONS=ACTIONS.filter(a=>a!=='FOLLOW'&&a!=='UNFOLLOW');ACTIONS.splice(Math.max(0,ACTIONS.indexOf('WALK')+1),0,DB.follow===S.id?'UNFOLLOW':'FOLLOW');if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}}}
+{const _sa=syncActs;syncActs=function(){_sa();if(spOf(S)==='dog'){ACTIONS=ACTIONS.filter(a=>a!=='FOLLOW'&&a!=='UNFOLLOW');ACTIONS.push(DB.follow===S.id?'UNFOLLOW':'FOLLOW');if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}}}
 {const _oa=openAct;openAct=function(i){const a=ACTIONS[i];if(a==='FOLLOW'){setFollow(true);return}if(a==='UNFOLLOW'){setFollow(false);return}return _oa(i)}}
 {const _tf=toggleFollow;toggleFollow=function(){_tf();try{syncActs()}catch(e){}}}
