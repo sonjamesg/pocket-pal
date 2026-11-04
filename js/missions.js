@@ -102,14 +102,24 @@ function jobsInput(k){const J=jobs(),n=J.length;
     if(m.step===0){m.step=1;saveDB();S={scene:'map'};say('Job taken! Go to the PET SHOP for your FREE sheep.',240);return}
     if(m.step===5){m.step=6;DB.wallet=(DB.wallet||0)+MISSION_REWARD;saveDB();S={scene:'map'};sfx('coin');celebrate('WOOL FARM STARTED!','+'+MISSION_REWARD+' coins  •  New jobs on the board!');return}
     S={scene:'map'};say(m.step>=6?'You finished this job! Keep shearing for coins.':WOOL_STEPS[m.step],240)}}
-function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0006');RR(8,8,W-16,H-14,6,'#c48c50','#382010');R(12,22,W-24,H-32,'#e0b070');
-  RR(W/2-56,2,112,20,5,'#6a4020','#382010');txt('JOB BOARD',W/2,17,'#ffe36a',12);const J=jobs();if(ui.jsel>=J.length)ui.jsel=0;
-  J.slice(0,5).forEach((j,i)=>{const y=28+i*26,on=i===ui.jsel;RR(16,y,W-32,23,4,on?'#fffbe8':'#f4ecd4',on?'#e8402a':'#8a7050');
-    txt(j.n,24,y+16,'#2b2440',10,'left');const tc=j.tag==='NEW'||j.tag==='REWARD!'?'#e8402a':j.tag==='DONE'?'#2a9a50':'#5b4b8a';RR(W-80,y+4,58,15,5,tc);txt(j.tag,W-51,y+15,'#fff',9)});
-  const j=J[ui.jsel],y0=28+Math.min(5,J.length)*26+2;RR(16,y0,W-32,H-y0-22,5,'#fff','#382010');wrapMsg(j.d,W-48,9).slice(0,3).forEach((l,k)=>txt(l,24,y0+13+k*11,'#2b2440',9,'left'));
-  if(ui.jconf){RR(30,H/2-30,W-60,56,6,'#fffbe8','#e8402a');txt('CANCEL THIS JOB?',W/2,H/2-10,'#e8402a',11);txt('Animals & coins stay safe.',W/2,H/2+4,'#2b2440',9);txt('A: YES, CANCEL   B: NO',W/2,H/2+18,'#2b2440',9);return}
-  if(j.tag==='ACTIVE'){RR(W-96,H-21,80,16,5,'#e8402a','#382010');txt('◀▶ CANCEL JOB',W-56,H-10,'#fff',8);txt('A: OK',60,H-10,'#382010',10);return}
-  txt(j.tag==='NEW'?'A: TAKE JOB':j.tag==='PAUSED'?'A: START AGAIN':j.tag==='REWARD!'?'A: GET REWARD':'A: OK',W/2,H-10,'#382010',10)}
+function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0007');
+  /* v58: chunky wood frame + parchment */RR(5,9,W-10,H-12,10,'#382010');RR(7,10,W-14,H-15,9,'#a8703c');for(let k=0;k<6;k++){R(9,16+k*34,W-18,1,'#8a5a2e');R(9,17+k*34,W-18,1,'#c48c50')}
+  RR(13,24,W-26,H-33,7,'#5a3418');RR(14,25,W-28,H-35,6,'#fff6de');R(16,27,W-32,2,'#fffdf4');
+  for(const[x,y]of[[11,13],[W-14,13],[11,H-8],[W-14,H-8]]){E(x+1,y+1,2.4,2.4,'#382010');E(x+1,y,2.2,2.2,'#e8c870')}
+  RR(W/2-58,1,116,22,8,'#382010');RR(W/2-57,1,114,20,7,'#ff8fb1');RR(W/2-55,3,110,8,5,'#ffb3cb');otxt('JOB BOARD',W/2,16,'#fff',12);
+  const J=jobs();if(ui.jsel>=J.length)ui.jsel=0;const TC={NEW:['#ff5a8b','#b8264f'],'REWARD!':['#ffb020','#a06000'],DONE:['#48c070','#22784a'],PAUSED:['#9b8ad0','#5b4b8a'],ACTIVE:['#4aa8e8','#1f6aa0']};
+  J.slice(0,5).forEach((j,i)=>{const y=30+i*24,on=i===ui.jsel,dn=j.tag==='DONE';
+    if(on)RR(17,y-1,W-34,23,7,'#ff5a8b');RR(18,y,W-36,21,6,on?'#fff':dn?'#f1ead8':'#fbf3df',on?'#ff5a8b':'#d8c49c');R(20,y+19,W-40,1,on?'#ffd0de':'#e6d6b4');
+    const c=TC[j.tag]||TC.ACTIVE;RR(22,y+4,4,13,2,c[0]);
+    txt((on?'▶ ':'')+j.n,30,y+14,dn&&!on?'#8a7a68':'#2b2440',9.5,'left',W-120);
+    const cw=Math.max(40,j.tag.length*6+12),cx=W-24-cw;RR(cx,y+5,cw,13,6,c[1]);RR(cx,y+4,cw,12,6,c[0]);txt(j.tag,cx+cw/2,y+13,'#fff',8)});
+  const j=J[ui.jsel],y0=30+Math.min(5,J.length)*24+3,dh=H-y0-27;RR(18,y0,W-36,dh,6,'#efe6ff','#5b4b8a');
+  const ln=j.d.split(' Reward ● '),rw=ln[1];wrapMsg(ln[0],W-56,9).slice(0,rw?2:3).forEach((l,k)=>txt(l,25,y0+12+k*11,'#2b2440',9,'left'));
+  if(rw){const ry=y0+dh-14;RR(W-86,ry,64,13,6,'#ffe36a','#a06000');E(W-77,ry+6.5,4,4,'#f0b020');E(W-77,ry+6,2.6,2.6,'#ffe36a');txt('+'+rw,W-50,ry+10,'#6a3a00',9)}
+  if(ui.jconf){R(0,0,W,H,'#0005');RR(26,H/2-34,W-52,62,10,'#382010');RR(28,H/2-33,W-56,58,9,'#fff6de','#e8402a');txt('CANCEL THIS JOB?',W/2,H/2-13,'#e8402a',11);txt('Animals & coins stay safe.',W/2,H/2+2,'#2b2440',9);txt('A: YES, CANCEL   B: NO',W/2,H/2+17,'#5b4b8a',9);return}
+  const pill=(x,w,c,tx,tc)=>{RR(x,H-23,w,16,8,'#382010');RR(x,H-24,w,15,8,c);txt(tx,x+w/2,H-13,tc||'#fff',8.5)};
+  if(j.tag==='ACTIVE'){pill(22,70,'#ff5a8b','A: OK');pill(W-104,82,'#e8402a','◀▶ CANCEL JOB');return}
+  const at=j.tag==='NEW'?'A: TAKE JOB':j.tag==='PAUSED'?'A: START AGAIN':j.tag==='REWARD!'?'A: GET REWARD':'A: OK';pill(W/2-50,100,j.tag==='DONE'?'#9b8ad0':'#ff5a8b',at)}
 // goal arrow: bouncing arrow over the target, or an edge arrow pointing to it
 function goalTile(nx){const k=nx.k,m=wm();if(CUR==='ranch'){if(k==='wool1')return MAPS.ranch.gate[0];if(k==='wool2')return[52,47];if(k==='wool3'){const i=fieldSheep().findIndex(p=>p.id===m.sheepId);return i>=0?FIELD_SPOTS[i]:[52,47]}
     if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[47,6];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
