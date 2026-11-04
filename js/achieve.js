@@ -14,7 +14,7 @@ const dogs=()=>_pl().filter(p=>_sp(p)==='dog'),trickMax=id=>Math.max(0,...dogs()
 const ACH_TIERS=[
  {n:'SPROUT',c:['#7ad46a','#3a8a2a'],L:[
   ['hello','👋','HOWDY!','Read the JOB BOARD',()=>wm().step>=1?1:0,1],
-  ['jump','🦘','BOING!','Jump 5 times (Space / C / X)',()=>achC('jump'),5],
+  ['jump','🦘','BOING!','Jump 5 times (A / Space / C / X)',()=>achC('jump'),5],
   ['sheep1','🐑','FIRST SHEEP','Get your first sheep',()=>_sl().length,1],
   ['tree','🌳','TREE HUGGER','Look at 5 trees in a row',()=>achC('treeMax'),5],
   ['feed','🥕','SNACK TIME','Feed your animals 5 times',()=>achC('feed'),5]]},
@@ -58,30 +58,61 @@ setInterval(()=>{if(S&&S.scene!=='title')achCheck()},1000);
 {const _ou=owUpdate;let ls=-1,lm='';owUpdate=function(){_ou();const o=ui.ow;if(!o)return;if(lm!==CUR){if(CUR==='outer'&&!achC('woods'))achInc('woods');lm=CUR}
   if(ls>=0&&o.step>ls&&typeof nightNow==='function'&&nightNow()&&S.scene==='map')achInc('night',o.step-ls);ls=o.step;
   if(CUR==='ranch'&&DB.follow&&DB.pets[DB.follow]&&_sp(DB.pets[DB.follow])==='dog'&&!achC('herd')&&o.x>=46&&o.x<=58&&o.y>=46&&o.y<=54&&(typeof fieldSheep!=='function'||fieldSheep().length))achInc('herd')}}
-// ---- board ----
-function openAch(){S={scene:'ach'};ui.atier=ui.atier||0;ui.asel=0;ui.msgT=0;sfx&&sfx('click');achCheck()}
-{const _i0=input0;input0=function(k){if(S.scene!=='ach')return _i0(k);const T=ACH_TIERS[ui.atier];
-  if(k==='left'){ui.atier=(ui.atier+4)%5;ui.asel=0}if(k==='right'){ui.atier=(ui.atier+1)%5;ui.asel=0}if(k==='up')ui.asel=(ui.asel+T.L.length-1)%T.L.length;if(k==='down')ui.asel=(ui.asel+1)%T.L.length;
-  if(k==='b'||k==='start'||k==='select'){S={scene:'map'}}if(k==='a'){sfx&&sfx('blip')}}}
-function drawAch(t){drawOverworld(t);R(0,0,W,H,'#0007');const A=achD();
+// ---- board (v83: frozen backdrop, CLAIM ★ flow, COMPLETED tab, star bank) ----
+const ACH_W=[1,1,2,2,3];// stars per claim by tier
+function achMig(){const A=achD();A.cl=A.cl||{};if(A.stars==null)A.stars=0;if(!A.mig){for(const a of ACH_ALL)if(A.u[a.id]&&A.u[a.id]<1793818800000&&!A.cl[a.id]){A.cl[a.id]=A.u[a.id];A.stars+=ACH_W[a.ti]}A.mig=1;try{saveDB()}catch(e){}}return A}
+let achSnap=null,achFx=[],achShow=0,achPop=0;
+function achRows(){const A=achMig();if(ui.atier===5)return ACH_ALL.filter(a=>A.cl[a.id]).sort((x,y)=>A.cl[y.id]-A.cl[x.id]);return ACH_ALL.filter(a=>a.ti===ui.atier&&!A.cl[a.id]).sort((x,y)=>(!!A.u[y.id])-(!!A.u[x.id]))}
+function openAch(){try{achSnap=document.createElement('canvas');achSnap.width=cv.width;achSnap.height=cv.height;achSnap.getContext('2d').drawImage(cv,0,0)}catch(e){achSnap=null}
+  S={scene:'ach'};ui.atier=ui.atier||0;ui.asel=0;ui.msgT=0;achFx=[];const A=achMig();achShow=A.stars;sfx&&sfx('click');achCheck()}
+function achClaim(a){const A=achMig();if(!A.u[a.id]||A.cl[a.id])return;const n=ACH_W[a.ti];A.cl[a.id]=Date.now();A.stars+=n;saveDB();achPop=20;
+  const i=ui.asel,y=62+i*27;for(let k=0;k<10+n*6;k++)achFx.push({x:W-40,y:y+12,vx:(Math.random()-.5)*5,vy:-Math.random()*4-1,t:0,d:k*1.5,s:k<n*4});
+  try{sfx('fanfare')}catch(e){}try{sparkle(20,W-40,y+12)}catch(e){}const L=achRows();ui.asel=Math.max(0,Math.min(ui.asel,L.length-1))}
+{const _i0=input0;input0=function(k){if(S.scene!=='ach')return _i0(k);const L=achRows(),n=Math.max(1,L.length);
+  if(k==='left'){ui.atier=(ui.atier+5)%6;ui.asel=0;sfx&&sfx('blip')}if(k==='right'){ui.atier=(ui.atier+1)%6;ui.asel=0;sfx&&sfx('blip')}
+  if(k==='up')ui.asel=(ui.asel+n-1)%n;if(k==='down')ui.asel=(ui.asel+1)%n;
+  if(k==='b'||k==='start'||k==='select'){S={scene:'map'};achSnap=null}
+  if(k==='a'){const a=L[ui.asel];if(a&&ui.atier<5&&achD().u[a.id])achClaim(a);else sfx&&sfx('blip')}}}
+function drawAch(t){if(achSnap)g.drawImage(achSnap,0,0,W,H);else R(0,0,W,H,'#2a1a10');R(0,0,W,H,'#0009');const A=achMig();
   RR(5,9,W-10,H-12,10,'#382010');RR(7,10,W-14,H-15,9,'#a8703c');for(let k=0;k<6;k++){R(9,16+k*34,W-18,1,'#8a5a2e');R(9,17+k*34,W-18,1,'#c48c50')}
   RR(13,24,W-26,H-33,7,'#5a3418');RR(14,25,W-28,H-35,6,'#fff6de');for(const[x,y]of[[11,13],[W-14,13],[11,H-8],[W-14,H-8]]){E(x+1,y+1,2.4,2.4,'#382010');E(x+1,y,2.2,2.2,'#e8c870')}
   RR(W/2-66,1,132,22,8,'#382010');RR(W/2-65,1,130,20,7,'#ffc83a');RR(W/2-63,3,126,8,5,'#ffe08a');otxt('🏆 ACHIEVEMENTS',W/2,16,'#fff',11);
-  const got=ACH_ALL.filter(a=>A.u[a.id]).length;txt('★'+got+'/'+ACH_ALL.length,W-20,50,'#5a3418',8,'right');
-  // tier tabs
-  ACH_TIERS.forEach((T,i)=>{const x=18+i*((W-48)/5),w=(W-48)/5-2,on=i===ui.atier,done=T.L.every(a=>A.u[a[0]]);RR(x,27,w,12,5,on?T.c[0]:'#e8dcc0',on?T.c[1]:'#c8b48c');txt((done?'★':'')+(i+1),x+w/2,36,on?'#fff':'#8a7058',8)});
-  const T=ACH_TIERS[ui.atier];txt('◀ TIER '+(ui.atier+1)+': '+T.n+' ▶',W/2-8,50,T.c[1],9);
-  T.L.forEach((r,i)=>{const a=ACH_ALL.find(x=>x.id===r[0]),y=55+i*27,on=i===ui.asel,u=!!A.u[a.id],v=achVal(a);
-    if(on)RR(17,y-1,W-34,26,7,T.c[0]);RR(18,y,W-36,24,6,u?'#fffbe8':on?'#fff':'#f3ead6',u?'#ffc83a':on?T.c[0]:'#d8c49c');
-    RR(21,y+3,18,18,5,u?'#ffe36a':'#d8ccb4');g.globalAlpha=u?1:.45;txt(a.ic,30,y+17,'#000',11);g.globalAlpha=1;
-    txt(a.n,43,y+10,u?'#2b2440':'#6a5a48',8,'left',W-110);txt(a.d,43,y+20,'#8a7a68',6.5,'left',W-110);
-    if(u){RR(W-58,y+6,36,12,6,'#48c070');txt('DONE ✓',W-40,y+14.5,'#fff',7)}else{RR(W-62,y+9,40,7,3.5,'#d8ccb4');RR(W-62,y+9,Math.max(3,40*v/a.goal),7,3.5,T.c[0]);txt(v+'/'+a.goal,W-42,y+7,'#6a5a48',6.5)}});
-  const c=woolCycles();RR(18,H-30,W-36,15,7,'#efe6ff','#5b4b8a');
-  const nx=Object.keys(FARM_CYC).find(id=>c<FARM_CYC[id]);txt('🧶 Wool cycles: '+c+(nx?'  •  '+FARM_NM[nx]+' at '+FARM_CYC[nx]:'  •  All farms open!'),W/2,H-19.5,'#5b4b8a',7);
-  txt('◀▶ tier  ▲▼ pick  B close',W/2,H-6,'#fff',6.5)}
+  // star bank (counts up as stars land)
+  if(achShow<A.stars&&t%3===0)achShow++;if(achShow>A.stars)achShow=A.stars;if(achPop>0)achPop--;const sc=1+achPop/40;
+  RR(W-62,3,52,17,8,'#382010');RR(W-61,3,50,15,7,'#fff3a0','#d89a10');otxt('★',W-52,15,'#ffc83a',11*sc);txt(''+achShow,W-28,14.5,'#5a3418',10*sc);
+  const ready=ACH_ALL.filter(a=>A.u[a.id]&&!A.cl[a.id]).length;if(ready){const p=.6+.4*Math.sin(t/6);g.globalAlpha=p;RR(10,3,48,15,7,'#ff5a8b');g.globalAlpha=1;txt(ready+' to CLAIM!',34,13.5,'#fff',6.5)}
+  // tabs: tiers 1-5 + 🏆 completed
+  const tw=(W-36)/6;for(let i=0;i<6;i++){const x=18+i*tw,w=tw-2,on=i===ui.atier,T=ACH_TIERS[i],
+    rd=i<5&&T.L.some(r=>A.u[r[0]]&&!A.cl[r[0]]),done=i<5&&T.L.every(r=>A.cl[r[0]]);
+    RR(x,27,w,12,5,on?(i<5?T.c[0]:'#ffc83a'):'#e8dcc0',on?(i<5?T.c[1]:'#a06000'):rd?'#ff5a8b':'#c8b48c');txt(i<5?(done?'★':'')+(i+1):'🏆',x+w/2,36,on?'#fff':'#8a7058',8);if(rd&&!on)E(x+w-2,28,2.5,2.5,'#ff5a8b')}
+  const L=achRows();
+  if(ui.atier===5){txt('◀ COMPLETED  •  '+L.length+'/'+ACH_ALL.length+' ▶',W/2,50,'#a06000',9)}
+  else{const T=ACH_TIERS[ui.atier];txt('◀ TIER '+(ui.atier+1)+': '+T.n+'  •  '+ACH_W[ui.atier]+'★ each ▶',W/2,50,T.c[1],8.5)}
+  const top=Math.max(0,Math.min(ui.asel-2,L.length-5));
+  if(!L.length){txt(ui.atier===5?'Nothing yet — claim a ★ to fill your scrapbook!':'Tier complete! ★ Check the 🏆 tab',W/2,110,'#8a7a68',7.5)}
+  L.slice(top,top+5).forEach((a,j)=>{const i=top+j,y=55+j*27,on=i===ui.asel,T=ACH_TIERS[a.ti],cl=!!A.cl[a.id],rd=!cl&&!!A.u[a.id],v=achVal(a),pl=.5+.5*Math.sin(t/5);
+    if(on){g.globalAlpha=.55+.45*pl;RR(16,y-2,W-32,28,8,T.c[0]);g.globalAlpha=1}
+    RR(18,y,W-36,24,6,cl?'#fffbe8':rd?'#fff4c8':on?'#fff':'#f3ead6',cl?'#e8c870':rd?'#ffc83a':on?T.c[1]:'#d8c49c');
+    if(cl){g.save();g.translate(30,y+12);g.rotate(-.12);RR(-9,-9,18,18,3,'#fff','#c8b48c');g.restore()}else RR(21,y+3,18,18,5,rd?'#ffe36a':'#d8ccb4');
+    g.globalAlpha=cl||rd?1:.5;txt(a.ic,30,y+17,'#000',11);g.globalAlpha=1;
+    txt(a.n,43,y+10,cl||rd?'#2b2440':'#6a5a48',8,'left',W-115);
+    if(cl){const d=new Date(A.cl[a.id]);txt('Tier '+(a.ti+1)+' • '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2),43,y+20,'#a08a68',6.5,'left',W-115);
+      g.save();g.translate(W-42,y+12);g.rotate(-.18);RR(-18,-7,36,14,4,'#ffe36a','#c88a10');txt('+'+ACH_W[a.ti]+'★',0,3.5,'#a05a00',8);g.restore()}
+    else{txt(a.d,43,y+20,'#8a7a68',6.5,'left',W-115);
+      if(rd){const s=1+.08*Math.sin(t/4);g.save();g.translate(W-42,y+12);g.scale(s,s);g.globalAlpha=.35+.3*pl;RR(-23,-9,46,18,9,'#ffe36a');g.globalAlpha=1;RR(-20,-7,40,14,7,'#ff8a3a','#c05a10');RR(-18,-6,36,4,3,'#ffb878');txt('CLAIM ★',0,3.5,'#fff',7);g.restore()}
+      else{RR(W-64,y+10,44,7,3.5,'#d8ccb4');RR(W-64,y+10,Math.max(4,44*v/a.goal),7,3.5,T.c[0]);g.globalAlpha=.5;R(W-62,y+11,Math.max(2,40*v/a.goal),1.5,'#fff');g.globalAlpha=1;
+        const sx=W-64+((t*1.5)%60)-8;if(v>0&&sx<W-64+44*v/a.goal-3&&sx>W-64){g.globalAlpha=.6;R(sx,y+10,3,7,'#fff');g.globalAlpha=1}txt(v+'/'+a.goal,W-42,y+8,'#6a5a48',6.5)}}});
+  if(L.length>5){txt(top>0?'▲':'',W-20,58,'#a08a68',6);txt(top+5<L.length?'▼':'',W-20,H-34,'#a08a68',6)}
+  // next reward tease
+  const near=ACH_ALL.filter(a=>!A.u[a.id]).map(a=>[a,achVal(a)/a.goal]).sort((x,y)=>y[1]-x[1])[0];const c=woolCycles(),nx=Object.keys(FARM_CYC).find(id=>c<FARM_CYC[id]);
+  RR(18,H-30,W-36,15,7,'#efe6ff','#5b4b8a');txt(near&&near[1]>0&&t%240<120?'✨ SO CLOSE: '+near[0].n+' → +'+ACH_W[near[0].ti]+'★':'🧶 Wool cycles: '+c+(nx?'  •  '+FARM_NM[nx]+' at '+FARM_CYC[nx]:'  •  All farms open!'),W/2,H-19.5,'#5b4b8a',7,'center',W-44);
+  txt('◀▶ tab  ▲▼ pick  A claim  B close',W/2,H-6,'#fff',6.5);
+  // flying stars → header bank
+  achFx=achFx.filter(p=>{if(p.d>0){p.d--;return true}p.t++;if(p.t<14){p.x+=p.vx;p.y+=p.vy;p.vy+=.3}else{p.x+=(W-52-p.x)*.2;p.y+=(11-p.y)*.2}
+    const k=Math.min(1,p.t/6);g.globalAlpha=k;otxt(p.s?'★':'✦',p.x,p.y,p.s?'#ffc83a':'#fff3a0',p.s?10:7);g.globalAlpha=1;if(p.t>30){achPop=Math.max(achPop,12);return false}return true})}
 function drawAchToast(){if(!achToast&&achQ.length){achToast={a:achQ.shift(),t:0};try{sfx('fanfare')}catch(e){}try{sparkle(24,W/2,30)}catch(e){}}if(!achToast)return;const z=achToast;z.t++;
   const k=z.t<15?z.t/15:z.t>165?Math.max(0,(190-z.t)/25):1,y=-34+k*40;RR(20,y,W-40,32,9,'#382010');RR(21,y,W-42,30,8,'#ffe36a','#a06000');RR(26,y+4,22,22,6,'#fff');txt(z.a.ic,37,y+20,'#000',13);
-  txt('🏆 ACHIEVEMENT UNLOCKED!',54,y+12,'#a05a00',7.5,'left');txt(z.a.n,54,y+24,'#2b2440',9.5,'left',W-100);if(z.t>190)achToast=null}
+  txt('🏆 READY TO CLAIM ★ at the board!',54,y+12,'#a05a00',7.5,'left');txt(z.a.n,54,y+24,'#2b2440',9.5,'left',W-100);if(z.t>190)achToast=null}
 // v73: ACHIEVEMENTS BOARD prop next to the JOB BOARD (walk up + A). Gold-trimmed clone of the job board with a trophy plaque.
 function mkAchBoard(){const src=IMG.p_jobboard;if(!src||!src.naturalWidth)return false;const T=14,c=document.createElement('canvas');c.width=src.naturalWidth;c.height=src.naturalHeight+T;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
   x.drawImage(src,0,T);x.globalCompositeOperation='source-atop';x.fillStyle='rgba(255,200,40,.38)';x.fillRect(0,0,c.width,c.height);x.globalCompositeOperation='source-over';
