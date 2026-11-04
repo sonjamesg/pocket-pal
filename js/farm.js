@@ -5,7 +5,7 @@ const POO_PENS=[['sheep',47,47,10,6],['cow',61,27,8,4],['chicken',50,27,8,4],['p
 function pooOK(x,y){const c=(MAP_LAYOUT.rows[y]||'')[x];return (c==='g'||c==='c')&&!PROPS.some(p=>x>=p[0]&&x<p[0]+p[2]&&y>=p[1]&&y<p[1]+p[3])}
 function pooPens(){return POO_PENS.filter(z=>typeof ownSp==='function'&&ownSp(z[0])>0)}
 function inPen(x,y){return POO_PENS.some(z=>x>=z[1]&&y>=z[2]&&x<z[1]+z[3]&&y<z[2]+z[4])}
-function isCropT(x,y){const c=OWBASE[y]&&OWBASE[y][x];return CROPC.includes(c)||c==='Y'}
+function isCropT(x,y){const c=OWBASE[y]&&OWBASE[y][x];if(CUR==='ranch'&&x>=88)return false;return CROPC.includes(c)||c==='Y'}
 // tile art: dry soil until watered; real crop only when READY
 function cropTile(c,x,y){const e=grows()[wetKey(x,y)];if(!e)return 'field';const p=growP(e);return p>=1?{U:'pumpkin',C:'corn',W:'wheat',c:'corn'}[c]:p<.35?'fieldwet':'sprout'}
 function hoseAt(x,y){return HOSES.findIndex(h=>h[0]===x&&h[1]===y)}

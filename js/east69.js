@@ -1,0 +1,60 @@
+// ===== east69.js — v69: hay fields art guard, pens w/ roaming animals, endless edge forest, closed WEST road,
+// JUMP (Space / C / pad X or Y — never over farm fences), tree-examine joke chain, street lamps + night windows =====
+// --- endless forest beyond the world edge (perimeter is invisible-solid 'x'; we paint trees past it) ---
+function edgeForest(trees,x0,x1,y0,y1){const sx=Math.floor((x0-6)/2)*2-1,sy=Math.floor((y0-6)/2)*2-1;
+  for(let gy=sy;gy<=y1+4;gy+=2)for(let gx=sx;gx<=x1+4;gx+=2){if(!(gx<0||gy<0||gx>=MW-1||gy>=MH-1))continue;
+    if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=1&&Math.abs(b-gy)<=1))continue;
+    const h=((gx*73856093)^(gy*19349663))>>>0,j=((h>>4)%7-3)/10;trees.push([gx+j,gy+(((h>>8)%5)-2)/10,h%3?'pine2':'tree2'])}}
+// --- pens: decorative roamers (Clucky Hollow chickens, Muddy Trotters pigs, Gallop Ridge horses) ---
+const PEN_ROAM={chickPen:['chicken',.5,[['chicken_white',0],['chicken_brown',1.1],['chicken_rooster',2.3],['chicken_white',3.2],['chicken_brown',4.4],['chicken_white',5.1],['chicken_brown',.7]]],
+  pigPen:['pig',.6,[[null,0],[null,1.6],[null,2.9],[null,4.2],[null,5.3]]],
+  horsePen:['horse',.7,[[null,0],['horse_donkey',1.9],[null,3.3],[null,4.6],[null,5.7]]]};
+function penRoamers(t){for(const k in PEN_ROAM){const P=MAP_LAYOUT[k];if(!P)continue;const [px,py,pw,ph]=P,[sp,sc,L]=PEN_ROAM[k];
+  L.forEach(([sv,ph0],i)=>{const q=t/(sp==='chicken'?500:900)+ph0,X=(px+1.5+(pw-3)*(0.5+0.45*Math.sin(q*1.3+i)))*TS,Y=(py+2+(ph-3.5)*(0.5+0.45*Math.sin(q*0.9+i*2.1)))*TS,dir=Math.cos(q*1.3+i)>0?1:-1,
+    eat=Math.sin(t/120+i*3)>.4,f=()=>{g.save();g.translate(X,Y);g.scale(sc,sc);try{critter(0,0,sp,'adult',{pose:eat?'eat':'walk',mood:'happy',sv:sv||undefined,dir})}catch(e){}g.restore()};
+    if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f()})}}
+// --- closed west road barrier ---
+function westBarrier(t){const w=MAP_LAYOUT.westRoad;if(!w)return;const X=w[0]*TS,Y=w[1]*TS,f=()=>{R(X+2,Y-6,3,40,'#5a3418');R(X+11,Y-6,3,40,'#5a3418');
+  for(let i=0;i<2;i++){const by=Y+2+i*16;R(X-4,by,24,7,'#fff');for(let s=0;s<24;s+=6)R(X-4+s,by,3,7,'#e83a3a');R(X-4,by+7,24,1,'#2b2440')}
+  RR(X+18,Y-14,46,14,3,'#ffe9a0','#6a4020');txt('OPENING',X+41,Y-8,'#c03020',5);txt('SOON!',X+41,Y-2,'#c03020',5)};
+  if(typeof P3D!=='undefined'&&P3D)p3later(X+8,Y+31,f);else f()}
+// --- street lamps + night window light ---
+let LAMPS=null;function lampList(){if(LAMPS)return LAMPS;LAMPS=[];const Rw=MAP_LAYOUT.rows,isP=(x,y)=>'pG'.includes((Rw[y]||'')[x]);
+  for(let y=1;y<MAP_LAYOUT.height-1;y++)for(let x=1;x<MAP_LAYOUT.width-1;x++){if(Rw[y][x]!=='g')continue;
+    const hz=isP(x,y+1)&&isP(x+1,y+1)&&isP(x-1,y+1)&&!isP(x,y-1),vt=isP(x+1,y)&&isP(x+1,y-1)&&isP(x+1,y+1)&&!isP(x-1,y);
+    if((hz&&x%8===0)||(vt&&y%7===0&&!hz))LAMPS.push([x,y])}return LAMPS}
+const nightNow=()=>{const h=dayPhase();return h>=19.25||h<6.5};
+function lamps(t){const night=nightNow(),[cx,cy]=CAMC;lampList().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+14;if(Math.abs(X-cx)>W||Math.abs(Y-cy)>H)return;
+  const f=()=>{E(X,Y+1,4,1.5,'#0004');R(X-1,Y-22,3,23,'#3a3048');R(X-2,Y-1,5,2,'#2b2440');RR(X-4,Y-29,9,8,2,night?'#fff2a0':'#d8e8f0','#2b2440');R(X-3,Y-31,7,2,'#2b2440')};
+  if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+1,f);else f()})}
+function nightGlow(t){if(!nightNow()||CUR!=='ranch')return;const cv=g.canvas,k=cv.width/W,kv=cv.height/H;g.save();g.setTransform(k,0,0,kv,0,0);g.globalCompositeOperation='lighter';
+  const pt=(wx,wy,up)=>{if(typeof P3D!=='undefined'&&P3D&&P3C){const [sx,sy,s]=proj(wx,wy);return[sx,sy-up*s,s]}return[wx-CAMC[0]+W/2,wy-CAMC[1]+H/2-up,1]};
+  const pool=(X,Y,r,a)=>{if(X<-r||Y<-r||X>W+r||Y>H+r)return;const gr=g.createRadialGradient(X,Y,1,X,Y,r);gr.addColorStop(0,'rgba(255,205,110,'+a+')');gr.addColorStop(1,'rgba(255,190,90,0)');g.fillStyle=gr;g.fillRect(X-r,Y-r,2*r,2*r)};
+  lampList().forEach(([x,y])=>{const wx=x*TS+8,wy=y*TS+14,fl=.04*Math.sin(t/7+x),[a,b,s]=pt(wx,wy,25),[c,d,s2]=pt(wx,wy,0);pool(a,b,11*s,.9);pool(c,d,34*s2,.42+fl)});
+  const win=(wx,wy,up)=>{const [X,Y,s]=pt(wx,wy,up);pool(X,Y,11*s,.8);g.fillStyle='rgba(255,225,130,.85)';g.fillRect(X-3*s,Y-2.5*s,6*s,5*s);const [c,d,s2]=pt(wx,wy+6,0);pool(c,d,18*s2,.25)};
+  for(const [bx,by,bw,bh] of BARNS){const wy=(by+bh)*TS;win(bx*TS+bw*4,wy,20);win(bx*TS+bw*12,wy,20)}
+  win(HOME[0]*TS+12,(HOME[1]+2)*TS,18);win(HOME[0]*TS+36,(HOME[1]+2)*TS,18);
+  homePets().slice(0,6).forEach((p,i)=>{const [hx,hy]=HSLOT[i];win(hx*TS+24,(hy+2)*TS,14)});
+  PROPS.forEach(([px,py,pw,ph,id])=>{if(id==='farmshop')win(px*TS+pw*8,(py+ph)*TS,14)});
+  g.restore()}
+{const _ts=tiltShift;tiltShift=function(){_ts();try{nightGlow(ui.anim||0)}catch(e){}}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;penRoamers(t);westBarrier(t);lamps(t)}}
+// --- signs ---
+{const _fs=farmSign;farmSign=function(x,y){if(CUR==='ranch'&&x<8)return 'ROAD CLOSED — the WEST ROAD is OPENING SOON! Come back later, explorer!';return _fs(x,y)}}
+// --- JUMP: hop on the spot / while walking; can leap ONE small thing (rock, hay bale, flower bed, 1-tile stream) but NEVER fences, trees or buildings ---
+const JUMP_D=14,HOP_OK='ryYw';
+function owJump(){const o=ui.ow;if(!o||o.jt>0)return;o.jt=1;sfx&&sfx('blip');if(o.mv)return;const [dx,dy]=DV[o.dir],c=OWBASE[o.y+dy]&&OWBASE[o.y+dy][o.x+dx];
+  const n2x=o.x+2*dx,n2y=o.y+2*dy;if(c&&HOP_OK.includes(c)&&owSolid(o.x+dx,o.y+dy)&&!owSolid(n2x,n2y)&&!(OWBASE[n2y]&&OWBASE[n2y][n2x]==='w')){
+    // must not be part of a barn/prop footprint (owSolid covers those) and never a fence: 'f' is not in HOP_OK
+    o.mv={tx:n2x,ty:n2y,t:0,hop:1};o.step++}}
+{const _ou=owUpdate;owUpdate=function(){const o=ui.ow;if(o&&o.mv&&o.mv.hop)o.mv.t-=1/16;_ou();if(o&&o.jt>0){o.jt++;o.jh=Math.sin(Math.PI*Math.min(1,o.jt/JUMP_D))*9;if(o.jt>=JUMP_D&&!(o.mv&&o.mv.hop)){o.jt=0;o.jh=0}}}}
+{const _in=input;input=function(k){if(k==='jump'){if(!ui.modal&&S.scene==='map'&&ui.ow)owJump();return}return _in(k)}}
+if(typeof KM!=='undefined'){KM[' ']='jump';KM.c='jump'}
+// --- tree examine joke chain (only when looking at trees one after another) ---
+const TREE_LINES=['A big leafy tree.','Another big leafy tree.',"It's a tree!",'STOP LOOKING AT TREES!','STOP IT AHHHH'];let treeStreak=0;
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);
+    if(th&&th.tree){const n=treeStreak%5;treeStreak++;say(n===0&&th.tree==='apple'?'An apple tree heavy with red apples!':TREE_LINES[n],n>=3?200:140);if(n===4)sfx&&sfx('blip');return}treeStreak=0}
+  else if(k==='b')treeStreak=0;return _oi(k)}}
+// east hay fields are scenery, not your crops
+{const _ot=owThing;owThing=function(x,y){if(CUR==='ranch'&&x>=88&&OWBASE[y]&&OWBASE[y][x]==='W')return{hayfield:1};return _ot(x,y)}}
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.hayfield){treeStreak=0;say('Rolling fields of golden HAY, swaying in the breeze.',140);return}}return _oi(k)}}
