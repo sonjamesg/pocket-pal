@@ -160,3 +160,10 @@ const FARM_SELL={cowfarm:['cow','ROSIE','MOO MEADOW'],chickfarm:['chicken','HATT
  openCowShop=function(){S={scene:'store'};ui.cowShop=1;ui.farmShop=0;ui.cat=0;ui.sel=0;ui.msgT=0};
  // farmer needs a little 'N' greeting
  Object.assign(INT_MSG,{});}
+// v107: farmer portraits (Grandpa-style) when a specialty farmer is talking
+const FARMER_PORT={ROSIE:['#60b254',0],HATTIE:['#e8a020',40],PERCY:['#e88aa0',300],GRACE:['#8c5a32',200]};
+{const _say=say;say=function(m,d){const r=_say.apply(this,arguments);const k=Object.keys(FARMER_PORT).find(n=>String(m).includes(n));ui.msgWho=k&&/Farmer|ROSIE/.test(String(m))?{n:k,m:ui.msg}:null;return r}}
+{const _dm=drawMsg;drawMsg=function(y){_dm(y);const w=ui.msgWho;if(!w||w.m!==ui.msg)return;const [col,hue]=FARMER_PORT[w.n],im=IMG.npc_rosie,bx=8,by=y<H/2?Math.min(H-80,y+60):H-118;
+  RR(bx,by,52,52,6,'#fff','#2b2440');R(bx+3,by+3,46,40,'#bfe3ff');R(bx+3,by+30,46,13,'#8fd06a');
+  if(im&&im.naturalWidth){g.save();g.imageSmoothingEnabled=false;if(hue)g.filter='hue-rotate('+hue+'deg)';g.drawImage(im,0,0,16,14,bx+5,by+3,42,37);g.restore()}else{E(bx+26,by+20,12,12,'#ffd6aa');R(bx+14,by+30,24,12,col)}
+  RR(bx,by+42,52,12,4,col,'#2b2440');txt(w.n,bx+26,by+51,'#fff',7)}}
