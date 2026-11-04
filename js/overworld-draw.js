@@ -38,7 +38,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
         const dn=y<MH-1?OWBASE[y+1][x]:'p';if(!'pGBbw'.includes(dn))R(X,Y+14,TS,2,'#c9934a')}continue}
     if(P3D&&c==='g'&&hh%11===0&&!BARNS.some(b=>x>=b[0]-1&&x<=b[0]+b[2]&&y>=b[1]-4&&y<b[1]+b[3])&&!(x>=HOME[0]-1&&x<=HOME[0]+3&&y>=HOME[1]-4&&y<HOME[1]+2))p3later(X+8,Y+12,()=>grassTuft(X+8,Y+12,hh));
     if(TREE_SP[c]){trees.push([x,y,TREE_SP[c]]);continue}if(c==='f'){fences.push([x,y]);continue}
-    const n=(CUR==='ranch'&&x<88&&'CWUc'.includes(c)&&typeof cropTile==='function')?cropTile(c,x,y):{U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
+    const n=(CUR==='ranch'&&x<88&&'CWUcY'.includes(c)&&typeof cropTile==='function')?cropTile(c,x,y):{U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
     if(P3D&&n&&'pumpkin corn wheat sprout tallgrass hay sign rock'.includes(n)&&ok(n==='hay'?'p_hay':n)){if(n!=='tallgrass'&&n!=='rock'&&n!=='hay'&&ok('field'))g.drawImage(IMG.field,X,Y);const im=IMG[n==='hay'?'p_hay':n];p3later(X+8,Y+15,()=>{E(X+8,Y+15,6,2,'#0a281430');g.drawImage(im,X,Y)})}
     else if(n==='hay'&&ok('p_hay'))g.drawImage(IMG.p_hay,X,Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',sign:'#c89a60',tallgrass:'#309028',flower0:'#f05868',flower1:'#f8e048',flower2:'#fff',rock:'#8890a0'}[n])}
   if(typeof edgeForest==='function')edgeForest(trees,x0,x1,y0,y1);

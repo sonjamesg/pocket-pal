@@ -72,8 +72,8 @@ function bloom(X,Y,c,s,t){const [m,d,l]=c;R(X-.5,Y,1.5,6*s,'#3a8a2a');E(X+2.2*s,
   for(let i=0;i<5;i++){const a=i*1.2566+t;E(X+Math.cos(a)*r*.9,Y+Math.sin(a)*r*.7-.4,r*.75,r*.6,m)}
   E(X-r*.5,Y-r*.7,r*.45,r*.3,l);E(X,Y,r*.45,r*.4,'#ffb020');E(X-.4,Y-.5,r*.2,r*.18,'#fff6c0')}
 {const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const [cx,cy]=CAMC,x0=Math.max(0,((cx-W)/TS)|0),x1=Math.min(MW-1,((cx+W)/TS)|0),y0=Math.max(0,((cy-H)/TS)|0),y1=Math.min(MH-1,((cy+H)/TS)|0);
-  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){if(OWBASE[y][x]!=='Y')continue;const h=((x*73856093)^(y*19349663))>>>0;
-    [[4,7],[12,6],[8,13]].forEach(([fx,fy],i)=>{const X=x*TS+fx,Y=y*TS+fy-8,c=BLOOM_C[(h>>>(i*3))%5],s=1.5+((h>>>(i+2))%3)*.25,sw=Math.sin(t/40+x+i)*.6,
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){if(OWBASE[y][x]!=='Y')continue;const ge=grows()[wetKey(x,y)];if(!ge)continue;const gp=Math.min(1,growP(ge));if(gp<.35)continue;const gs=gp>=1?1:.45+gp*.35;const h=((x*73856093)^(y*19349663))>>>0;
+    [[4,7],[12,6],[8,13]].forEach(([fx,fy],i)=>{const X=x*TS+fx,Y=y*TS+fy-8,c=BLOOM_C[(h>>>(i*3))%5],s=(1.5+((h>>>(i+2))%3)*.25)*gs,sw=Math.sin(t/40+x+i)*.6,
       f=()=>bloom(X+sw,Y,c,s,(h%7)*.3);if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+6,f);else f()})}}}
 // --- v69: pulling weeds is no longer a coin chore/job: tall grass is just scenery ---
 {const _ot=owThing;owThing=function(x,y){const r=_ot(x,y);if(r&&r.weed)return null;return r}}
