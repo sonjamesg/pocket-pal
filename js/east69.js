@@ -50,6 +50,10 @@ function owJump(){const o=ui.ow;if(!o||o.jt>0)return;o.jt=1;sfx&&sfx('blip');if(
 {const _ou=owUpdate;owUpdate=function(){const o=ui.ow;if(o&&o.mv&&o.mv.hop)o.mv.t-=1/16;_ou();if(o&&o.jt>0){o.jt++;o.jh=Math.sin(Math.PI*Math.min(1,o.jt/JUMP_D))*9;if(o.jt>=JUMP_D&&!(o.mv&&o.mv.hop)){o.jt=0;o.jh=0}}}}
 {const _in=input;input=function(k){if(k==='jump'){if(!ui.modal&&S.scene==='map'&&ui.ow)owJump();return}return _in(k)}}
 if(typeof KM!=='undefined'){KM[' ']='jump';KM.c='jump'}
+// Controller A (and keyboard A): jump while walking when nothing to use in front of you
+{const _oi=owInput;owInput=function(k){if(k==='a'&&!ui.modal&&S.scene==='map'&&ui.ow){const o=ui.ow,[dx,dy]=DV[o.dir],th=typeof owThing==='function'?owThing(o.x+dx,o.y+dy):null;
+  const use=th&&(th.prop||th.pet||th.empty||th.home||th.barn||th.store||th.hose!=null||th.poo||th.bed||th.crop||th.weed||th.sheepP||th.rag||(typeof owHint==='function'&&owHint(th)));
+  if(!use){owJump();return}}return _oi(k)}}
 // --- tree examine joke chain (only when looking at trees one after another) ---
 const TREE_LINES=['A big leafy tree.','Another big leafy tree.',"It's a tree!",'STOP LOOKING AT TREES!','STOP IT AHHHH'];let treeStreak=0;
 {const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);
