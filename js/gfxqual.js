@@ -2,13 +2,18 @@
 // levels: 2=HIGH 1=MED 0=LOW. Session-only (sessionStorage) so a hitch never locks low forever.
 const GFX={lvl:2,avg:16.7,last:0,bad:0,good:0,toast:0,
   ok(f){const L=this.lvl;if(f==='blur')return L>=2;if(f==='glow')return L>=1;if(f==='shadow'||f==='ambient')return L>=1;return true},
-  dpr(){return Math.min(this.lvl>=2?2:this.lvl>=1?1.5:1,window.devicePixelRatio||1)},
+  dpr(){const c=this.mob?(this.lvl>=2?1.5:this.lvl>=1?1.25:1):(this.lvl>=2?2:this.lvl>=1?1.5:1);return Math.min(c,window.devicePixelRatio||1)},
   mode:'auto',
-  set(l){l=Math.max(0,Math.min(2,l));if(l===this.lvl)return;const down=l<this.lvl;this.lvl=l;this.bad=this.good=0;try{sessionStorage.setItem('pf_gfx',l)}catch(e){}
+  set(l){l=Math.max(0,Math.min(2,l));if(l===this.lvl)return;const down=l<this.lvl;this.lvl=l;this.bad=this.good=0;try{sessionStorage.setItem('pf_gfx',l);if(this.mode==='auto'&&this.mob)localStorage.setItem('pf_gfx_auto',l)}catch(e){}
     if(down&&!this.toasted){this.toasted=1;this.toast=150}try{fit()}catch(e){}},
   tick(now){if(this.mode!=='auto'){this.last=now;return}if(this.last){let dt=now-this.last;if(dt<250&&!document.hidden){this.avg+=(dt-this.avg)*.05;const fps=1000/this.avg;
-      if(fps<(this.lvl>=2?40:28)){if(++this.bad>120)this.set(this.lvl-1)}else this.bad=Math.max(0,this.bad-1);
-      if(this.lvl<2&&fps>55){if(++this.good>300)this.set(this.lvl+1)}else this.good=0}}this.last=now}};
+      if(fps<(this.lvl>=2?40:28)){if(++this.bad>(this.mob?45:120))this.set(this.lvl-1)}else this.bad=Math.max(0,this.bad-1);
+      if(this.lvl<(this.mob?1:2)&&fps>55){if(++this.good>300)this.set(this.lvl+1)}else this.good=0}}this.last=now}};
+// v98: phones start lighter — Android/mobile default MED (Android low-RAM → LOW), DPR capped harder; auto drops sooner and remembers per device
+GFX.mob=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches);
+GFX.droid=/Android/i.test(navigator.userAgent);
+if(GFX.mob)GFX.lvl=(GFX.droid&&(navigator.deviceMemory||8)<=4)?0:1;
+try{const s=localStorage.getItem('pf_gfx_auto');if(s!=null)GFX.lvl=Math.min(GFX.lvl,+s)}catch(e){}
 try{const s=sessionStorage.getItem('pf_gfx');if(s!=null)GFX.lvl=+s}catch(e){}
 // v88: persisted Options — graphics mode (auto/high/med/low) + sound
 const GFXM={high:2,med:1,low:0};
