@@ -16,7 +16,7 @@ let _p3buf=null;
 function p3dWarp(sky){const cv=g.canvas,C=P3C;g.restore();if(!_p3buf)_p3buf=document.createElement('canvas');const b=_p3buf;if(b.width!==cv.width||b.height!==cv.height){b.width=cv.width;b.height=cv.height}
   const bx=b.getContext('2d');bx.setTransform(1,0,0,1,0,0);bx.clearRect(0,0,b.width,b.height);bx.drawImage(cv,0,0);
   const k=cv.width/W,kv=cv.height/H,A=P3.A;g.save();g.setTransform(1,0,0,1,0,0);g.fillStyle=sky||'#9ad8f0';g.fillRect(0,0,cv.width,cv.height);g.imageSmoothingEnabled=true;
-  const step=Math.max(1,Math.round(kv));for(let Y=0;Y<cv.height;Y+=step){const y=Y/kv,v=p3v(y),v2=p3v(y+step/kv),s=1/(1-v/P3.F),hw=(W/2)/s;
+  const step=Math.max(1,Math.round(kv))*(typeof GFX!=='undefined'?(GFX.lvl<=0?3:GFX.lvl===1?2:1):1);for(let Y=0;Y<cv.height;Y+=step){const y=Y/kv,v=p3v(y),v2=p3v(y+step/kv),s=1/(1-v/P3.F),hw=(W/2)/s;
     const sx=(C.camX-hw-C.ox)*A*k,sw=2*hw*A*k,sy=(C.camY+v-C.oy)*A*kv,sh=Math.max(.5,(v2-v)*A*kv);g.drawImage(b,sx,sy,sw,sh,0,Y,cv.width,step)}
   // soft distance haze toward the horizon (far = lighter / bluer)
   const gr=g.createLinearGradient(0,0,0,cv.height*.45);gr.addColorStop(0,'rgba(200,235,255,.35)');gr.addColorStop(1,'rgba(200,235,255,0)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height*.45);
