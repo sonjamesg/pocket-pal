@@ -73,5 +73,25 @@ function bloom(X,Y,c,s,t){const [m,d,l]=c;R(X-.5,Y,1.5,6*s,'#3a8a2a');E(X+2.2*s,
   E(X-r*.5,Y-r*.7,r*.45,r*.3,l);E(X,Y,r*.45,r*.4,'#ffb020');E(X-.4,Y-.5,r*.2,r*.18,'#fff6c0')}
 {const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const [cx,cy]=CAMC,x0=Math.max(0,((cx-W)/TS)|0),x1=Math.min(MW-1,((cx+W)/TS)|0),y0=Math.max(0,((cy-H)/TS)|0),y1=Math.min(MH-1,((cy+H)/TS)|0);
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){if(OWBASE[y][x]!=='Y')continue;const h=((x*73856093)^(y*19349663))>>>0;
-    [[4,6],[11,5],[7,12],[13,13],[3,13]].forEach(([fx,fy],i)=>{const X=x*TS+fx,Y=y*TS+fy-4,c=BLOOM_C[(h>>(i*3))%5],s=.8+((h>>(i+2))%3)*.15,sw=Math.sin(t/40+x+i)*.6,
+    [[4,7],[12,6],[8,13]].forEach(([fx,fy],i)=>{const X=x*TS+fx,Y=y*TS+fy-8,c=BLOOM_C[(h>>>(i*3))%5],s=1.5+((h>>>(i+2))%3)*.25,sw=Math.sin(t/40+x+i)*.6,
       f=()=>bloom(X+sw,Y,c,s,(h%7)*.3);if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+6,f);else f()})}}}
+// --- v69: pulling weeds is no longer a coin chore/job: tall grass is just scenery ---
+{const _ot=owThing;owThing=function(x,y){const r=_ot(x,y);if(r&&r.weed)return null;return r}}
+// --- HORSE FOOD: proper horse diet, NO apples ---
+SFOODS.horse=[{id:'hay',n:'HAY',v:26},{id:'haylage',n:'HAYLAGE',v:28,joy:3},{id:'greens',n:'FRESH GRASS',v:18,d:'Free grazing!'},{id:'horsenuts',n:'HORSE NUTS',v:24,joy:2},
+  {id:'garlic',n:'GARLIC BRICK',v:6,joy:8,d:'Lick — keeps flies off'},{id:'mineral',n:'MINERAL LICK',v:4,joy:6,d:'Salts + vitamins'},{id:'beet',n:'SUGAR BEET',v:20,joy:5},{id:'carrot',n:'CARROT',v:12,joy:8},{id:'oats',n:'OATS',v:20,joy:4}];
+// --- RAGWORT in the horse fields: toxic to horses — pull it out! (A when facing it). Regrows over time. ---
+const RAG_PENS=()=>{const L=[[72,26,13,5]];if(MAP_LAYOUT.horsePen){const [x,y,w,h]=MAP_LAYOUT.horsePen;L.push([x+1,y+1,w-2,h-2])}return L},RAG_MAX=4,RAG_MS=8*60e3;
+function ragL(){if(!DB.rag)DB.rag={l:[],t:0};const R=DB.rag,n=Date.now();if(!R.t)R.t=n-RAG_MS*RAG_MAX;
+  RAG_PENS().forEach((P,pi)=>{const mine=R.l.filter(r=>r[2]===pi);let k=Math.min(RAG_MAX-mine.length,Math.floor((n-R.t)/RAG_MS));
+    for(let tries=0;k>0&&tries<30;tries++){const x=P[0]+Math.floor(Math.random()*P[2]),y=P[1]+Math.floor(Math.random()*P[3]);const c=MAP_LAYOUT.rows[y][x];if((c==='g'||c==='h')&&!R.l.some(r=>r[0]===x&&r[1]===y)){R.l.push([x,y,pi]);k--}}});
+  if(n-R.t>=RAG_MS)R.t=n;return R.l}
+let _ragC=0;
+{const _ot=owThing;owThing=function(x,y){if(CUR==='ranch'&&ragL().some(r=>r[0]===x&&r[1]===y))return{ragwort:1,tx:x,ty:y};return _ot(x,y)}}
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv&&CUR==='ranch'){const [dx,dy]=DV[o.dir],x=o.x+dx,y=o.y+dy,L=ragL(),i=L.findIndex(r=>r[0]===x&&r[1]===y);
+    if(i>=0){L.splice(i,1);const c=4+Math.floor(Math.random()*4);DB.wallet=(DB.wallet||0)+c;saveDB();sfx&&sfx('click');say('Pulled out RAGWORT! It\'s poisonous to horses — good job keeping them safe. +'+c+' coins',200);return}}return _oi(k)}}
+if(typeof owHint==='function'){const _h=owHint;owHint=function(th){if(th&&th.ragwort)return 'A: pull the RAGWORT (bad for horses!)';return _h(th)}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;ragL().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+14,f=()=>{E(X,Y+1,6,2,'#0a281440');
+    for(let i=-1;i<=1;i++){R(X+i*3,Y-10+Math.abs(i)*2,1.5,11-Math.abs(i)*2,'#3a7a22');E(X+i*4,Y-3,3,1.5,'#4a9a2a')}
+    [[-4,-12],[0,-14],[4,-11],[-2,-9],[3,-15]].forEach(([a,b])=>{E(X+a,Y+b,2.4,2,'#e8b810');E(X+a-.5,Y+b-.6,1.2,1,'#fff27a');E(X+a,Y+b,.8,.8,'#c07a00')})};
+    if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+1,f);else f()})}}
