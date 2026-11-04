@@ -60,3 +60,7 @@ drawPetCatalog=function(t){
   RR(30,162,W-60,28,14,lk?'#2b2440':it.soon?'#a99fc8':it.free?'#2a9a50':can?'#ff5a8b':'#c8c0d8','#fff');otxt(lab,W/2,181,lk?'#ffe36a':'#fff',it.free||lk?11:13);if(lk){RR(W/2-46,72,92,14,7,'#2b2440');txt('🔒 LOCKED',W/2,83,'#ffe36a',9)}
   L.forEach((_,i)=>E(W/2-(L.length-1)*5+i*10,197,3,3,i===ui.sel%L.length?c.col:'#c8c0d8'));
   txt((L.length>1?'◀ ▶ look   ':'')+'A '+(it.free?'take':'buy')+'   B back',W/2,H-3,'#2b2440',8)};
+// v97: one of each — a bought animal leaves the shop stock for good (DB.sold persists even if the pet is later released)
+function soldKeys(){const S=DB.sold||(DB.sold={});let ch=0;for(const id in DB.pets){const p=DB.pets[id];if(!p||!p.breed)continue;const k=(p.species||'dog')+':'+p.breed;if(!S[k]){S[k]=1;ch=1}}if(ch)saveDB();return S}
+{const _ci=catItems;catItems=function(c){const L=_ci(c),S=soldKeys(),R2=L.filter(it=>it.free||it.soon||!S[(it.dog?'dog':it.sp)+':'+(it.dog||it.sv)]);
+  return R2.length?R2:[{sp:c.id==='dogs'?'dog':c.id,dog:c.id==='dogs'?BKEYS[0]:undefined,n:'SOLD OUT',p:0,soon:1,desc:'You own them all!'}]}}
