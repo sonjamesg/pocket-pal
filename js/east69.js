@@ -52,7 +52,7 @@ function owJump(){const o=ui.ow;if(!o||o.jt>0)return;o.jt=1;sfx&&sfx('blip');if(
 if(typeof KM!=='undefined'){KM[' ']='jump';KM.c='jump'}
 // Controller A (and keyboard A): jump while walking when nothing to use in front of you
 {const _oi=owInput;owInput=function(k){if(k==='a'&&!ui.modal&&S.scene==='map'&&ui.ow){const o=ui.ow,[dx,dy]=DV[o.dir],th=typeof owThing==='function'?owThing(o.x+dx,o.y+dy):null;
-  const use=th&&(th.prop||th.pet||th.empty||th.home||th.barn||th.store||th.hose!=null||th.poo||th.bed||th.crop||th.weed||th.sheepP||th.rag||(typeof owHint==='function'&&owHint(th)));
+  const use=th&&(th.prop||th.pet||th.empty||th.home||th.barn||th.store||th.gate||th.tree||th.hose!=null||th.poo||th.bed||th.crop||th.weed||th.sheepP||th.rag||th.hayfield||(typeof owHint==='function'&&owHint(th)));
   if(!use){owJump();return}}return _oi(k)}}
 // --- tree examine joke chain (only when looking at trees one after another) ---
 const TREE_LINES=['A big leafy tree.','Another big leafy tree.',"It's a tree!",'STOP LOOKING AT TREES!','STOP IT AHHHH'];let treeStreak=0;
