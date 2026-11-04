@@ -92,3 +92,10 @@ cv.addEventListener('pointerdown',e=>{if(!S||S.scene!=='map'||ui.modal)return;co
 // job board pointer to the trophy board
 {const _dj=drawJobs;drawJobs=function(t){_dj(t);txt('SELECT / 🏆 = ACHIEVEMENTS',W/2,H-1.5,'#ffe36a',6)}}
 if(window.__pp)Object.assign(window.__pp,{openAch,achCheck,ACH_ALL,woolCycles});
+// v71 safety net: one throwing decor layer must never kill the building/prop draw
+{const _x=owExtras;owExtras=function(t,o){try{_x(t,o)}catch(e){console.warn('owExtras',e)}}}
+{const _h=owHud;owHud=function(t){try{_h(t)}catch(e){console.warn('owHud',e)}}}
+{const _ts=tiltShift;tiltShift=function(){try{_ts()}catch(e){console.warn('tilt',e)}}}
+{const _b=bloom;bloom=function(...a){try{_b(...a)}catch(e){}}}
+if(typeof lamps==='function'){const _l=lamps;lamps=function(t){try{_l(t)}catch(e){}}}
+if(typeof penRoamers==='function'){const _p=penRoamers;penRoamers=function(t){try{_p(t)}catch(e){}}}
