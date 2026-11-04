@@ -95,3 +95,13 @@ if(typeof owHint==='function'){const _h=owHint;owHint=function(th){if(th&&th.rag
     for(let i=-1;i<=1;i++){R(X+i*3,Y-10+Math.abs(i)*2,1.5,11-Math.abs(i)*2,'#3a7a22');E(X+i*4,Y-3,3,1.5,'#4a9a2a')}
     [[-4,-12],[0,-14],[4,-11],[-2,-9],[3,-15]].forEach(([a,b])=>{E(X+a,Y+b,2.4,2,'#e8b810');E(X+a-.5,Y+b-.6,1.2,1,'#fff27a');E(X+a,Y+b,.8,.8,'#c07a00')})};
     if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+1,f);else f()})}}
+// --- PET FOLLOW: press F (keyboard) or LB/RB (controller) on the map to have your dog walk behind you; press again for the next pet / off ---
+function followPets(){return petList().filter(p=>(p.species||'dog')==='dog'||spOf(p)==='dog').concat(petList().filter(p=>!((p.species||'dog')==='dog'||spOf(p)==='dog')&&['cat'].includes(spOf(p))))}
+function toggleFollow(){const L=followPets();if(!L.length){say('You need a pet first! Get a puppy at the PET SHOP in the WILD WOODS.',180);return}
+  const i=L.findIndex(p=>p.id===DB.follow),n=i+1<L.length?L[i+1]:null;DB.follow=n?n.id:null;saveDB();sfx&&sfx('click');say(n?n.name+' is following you! (F / LB to swap or stop)':'Your pet went back home.',150)}
+{const _in=input;input=function(k){if(k==='follow'){if(!ui.modal&&S.scene==='map'&&ui.ow)toggleFollow();return}return _in(k)}}
+if(typeof KM!=='undefined')KM.f='follow';
+{const _ou=owUpdate;owUpdate=function(){_ou();const o=ui.ow;if(!o)return;const T=ui.trail||(ui.trail=[]),l=T[T.length-1];if(!l||l[0]!==o.px||l[1]!==o.py||l[3]!==CUR){T.push([o.px,o.py,o.dir,CUR]);if(T.length>60)T.shift()}}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);const p=DB.follow&&DB.pets[DB.follow];if(!p||!ui.trail||ui.trail.length<2)return;const T=ui.trail,q=T[Math.max(0,T.length-14)];if(q[3]!==CUR)return;
+  const X=q[0]+8,Y=q[1]+14,mv=!!o.mv,f=()=>{E(X,Y,6,2,'#0004');g.save();g.translate(X,Y-2);g.scale(.42,.42);try{const sp=spOf(p);if(sp==='dog')dog(0,0,p.breed,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,coat:p.coat||0});else critter(0,0,sp,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,sv:p.breed})}catch(e){}g.restore()};
+  if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f()}}

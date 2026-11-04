@@ -10,7 +10,7 @@ const DZ=.25;
 function tick(){requestAnimationFrame(tick);const L=list();let g=L[gp.idx];if(!g){g=L.find(x=>x);if(!g)return;gp.idx=g.index}
   const B=i=>{const b=g.buttons[i];return!!b&&(b.pressed||b.value>.5)};const ax=g.axes[0]||0,ay=g.axes[1]||0;
   const sx=Math.abs(ax)>DZ&&Math.abs(ax)>=Math.abs(ay),sy=Math.abs(ay)>DZ&&Math.abs(ay)>Math.abs(ax);
-  const now={up:B(12)||(sy&&ay<0),down:B(13)||(sy&&ay>0),left:B(14)||(sx&&ax<0),right:B(15)||(sx&&ax>0),a:B(0),b:B(1),start:B(9),select:B(8),jump:B(2)||B(3)};
+  const now={up:B(12)||(sy&&ay<0),down:B(13)||(sy&&ay>0),left:B(14)||(sx&&ax<0),right:B(15)||(sx&&ax>0),a:B(0),b:B(1),start:B(9),select:B(8),jump:B(2)||B(3),follow:B(4)||B(5)};
   for(const k in now){if(now[k]&&!gp.prev[k]){if(!held[k])held[k]=performance.now();try{input(k)}catch(e){console.warn(e)}}else if(!now[k]&&gp.prev[k])held[k]=0}
   gp.prev=now}
 requestAnimationFrame(tick);
