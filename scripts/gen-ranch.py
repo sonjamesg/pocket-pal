@@ -2,7 +2,7 @@
 """v23 spacious ranch (88x68): buildings spread out with yards/paths, crop fields, windmill, silo,
 orchard, flower beds, rounded ponds. Rewrites ONLY the ranch part of js/map-data.js (outer world kept)."""
 # NOTE v59/v62: js/map-data.js was hand-edited after generation (wider gates, sheep shed/sty y=41, shop path col 39 rows 11-13,
-# mud-pen fence col 22, well moved to [39,19] + path row 21 cols 39-42, silo 3-wide w/ path col 70 rows 22-32). Re-running this script will LOSE those edits.
+# mud-pen fence col 22, well moved to [39,19] + path row 21 cols 39-42, silo 3-wide w/ path col 70 rows 22-32; v65: cow pen fence 60-69x26-31, trough 66,28, map widened 88->112 with MOO MEADOW FARM + paddock east of col 87). Re-running this script will LOSE those edits.
 import json, math, os, random, re
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P=os.path.join(ROOT,'js','map-data.js'); src=open(P).read()
