@@ -10,7 +10,8 @@ function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;
       const blink=(ph,ex)=>{const f=(t+ph)%200;if(f<7){ex.forEach(([x,y,c])=>{const[a,b]=P(x,y);g.fillStyle=c;g.fillRect(Math.round(a-2),Math.round(b-1.5),4,3);g.fillStyle='#2b2440';g.fillRect(Math.round(a-2),Math.round(b),4,1)})}};
       blink(0,[[322,246,'#f2ede4'],[352,246,'#f2ede4']]);
       if(dip<=0.3)blink(97,[[713,276,'#f0d2c0']]);
-      for(let i=0;i<4;i++){const cx=((t*0.25*(1+i*0.3)+i*90)%(W+80))-40,cy=10+i*9+Math.sin(t/60+i)*2;g.fillStyle='rgba(255,255,255,0.55)';g.beginPath();g.ellipse(cx,cy,16,5,0,0,7);g.ellipse(cx+10,cy-3,10,5,0,0,7);g.fill()}
+      for(let i=0;i<4;i++){const cx=((t*0.18*(1+i*0.3)+i*90)%(W+100))-50,cy=10+i*9+Math.sin(t/80+i)*1.5;[[0,0,14,.42],[11,-4,11,.5],[-10,1,10,.38],[20,1,9,.36],[4,-7,8,.45]].forEach(([dx,dy,r,a])=>{const rg=g.createRadialGradient(cx+dx,cy+dy-r*.3,0,cx+dx,cy+dy,r);rg.addColorStop(0,'rgba(255,255,255,'+a+')');rg.addColorStop(.6,'rgba(250,250,255,'+(a*.6)+')');rg.addColorStop(1,'rgba(235,240,255,0)');g.fillStyle=rg;g.beginPath();g.ellipse(cx+dx,cy+dy,r*1.4,r*.75,0,0,7);g.fill()})}
+      if(AC&&!DB.mute&&!(window.OPT_MUTE)&&Math.random()<1/150){const b=1800+Math.random()*1400,n=1+(Math.random()*3|0);for(let k=0;k<n;k++)tone(b,.07,'sine',.012,b*1.35,k*.11)}
       if(!ui.gate){g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}}
     else if(!LOGO.err){g.fillStyle='#2b2440';g.fillRect(0,0,W,H);requestAnimationFrame(frame);return}else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26)}
     if(ui.gate){/* v57 title gate: logo + gentle flashing START GAME */const pu=1+0.04*Math.sin(t/14);g.save();g.translate(W/2,H-14);g.scale(pu,pu);g.fillStyle='rgba(0,0,0,0.45)';g.fillRect(-66,-10,132,26);RR(-64,-12,128,24,12,'#ff2f6e','#fff');otxt('START GAME',0,5,'#fff',14);g.restore()}
