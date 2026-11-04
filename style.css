@@ -103,3 +103,5 @@ html.no-pads #screenwrap{grid-column:1!important;grid-row:1!important;width:100%
 @media (pointer:coarse){#tvdock{top:calc(4px + env(safe-area-inset-top));bottom:auto;right:4px;opacity:.55;gap:4px}#tvdock .tvpill{min-height:26px;padding:0 8px;font-size:10px!important;border-width:1px}}
 /* v101: touch phones — hide TV/Full dock entirely */
 @media (pointer:coarse) and (hover:none){#tvdock{display:none!important}}
+
+@media (max-width:900px),(pointer:coarse),(any-pointer:coarse),(hover:none){#tvdock{display:none!important}}

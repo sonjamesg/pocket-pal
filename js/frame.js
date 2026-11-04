@@ -1,7 +1,7 @@
 // ===== frame.js — main render loop per scene (incl. title logo anim) =====
 function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';if(g.filter!==undefined)g.filter='none';/* v53: reset leaked transform (HUD gap bug) */ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(ui.poseT>0){ui.poseT--;if(!ui.poseT)ui.pose='idle'}
   const sc=S.scene;
-  if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,k=Math.max(W/iw,H/ih),dw=iw*k,dh=ih*k,ox=(W-dw)/2,oy=(H-dh)/2;g.drawImage(LOGO.img,ox,oy,dw,dh);
+  if(sc==='title'){if(LOGO.ok){const iw=LOGO.img.width,ih=LOGO.img.height,k=Math.max(W/iw,H/ih),dw=iw*k,dh=ih*k,ox=(W-dw)/2,oy=(H-dh)/2;{const _f=g.filter;if(ui.gate)g.filter='contrast(1.18) saturate(1.25)';g.drawImage(LOGO.img,ox,oy,dw,dh);g.filter=_f;}
       const P=(x,y)=>[ox+x*1.25*k,oy+y*1.25*k];
       const eat=(t%240),dip=eat<90?Math.sin(eat/90*Math.PI)*4:0;
       if(dip>0.3){const sx=850,sy=305,sw=110,sh=100,[dx,dy]=P(sx/1.25,sy/1.25);g.fillStyle='#e9e1cc';g.fillRect(dx+2,dy,sw*k-4,dip+1);g.drawImage(LOGO.img,sx,sy,sw,sh,dx,dy+dip,sw*k,sh*k);
@@ -13,7 +13,7 @@ function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;
       for(let i=0;i<4;i++){const cx=((t*0.25*(1+i*0.3)+i*90)%(W+80))-40,cy=10+i*9+Math.sin(t/60+i)*2;g.fillStyle='rgba(255,255,255,0.55)';g.beginPath();g.ellipse(cx,cy,16,5,0,0,7);g.ellipse(cx+10,cy-3,10,5,0,0,7);g.fill()}
       if(!ui.gate){g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}}
     else if(!LOGO.err){g.fillStyle='#2b2440';g.fillRect(0,0,W,H);requestAnimationFrame(frame);return}else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26)}
-    if(ui.gate){/* v57 title gate: logo + gentle flashing START GAME */const al=0.35+0.65*(0.5+0.5*Math.sin(t/22));g.globalAlpha=al;RR(66,H-21,108,18,9,'#ff5a8b','#fff');txt('START GAME',W/2,H-8,'#fff',11);g.globalAlpha=1}
+    if(ui.gate){/* v57 title gate: logo + gentle flashing START GAME */const pu=1+0.04*Math.sin(t/14);g.save();g.translate(W/2,H-14);g.scale(pu,pu);g.fillStyle='rgba(0,0,0,0.45)';g.fillRect(-66,-10,132,26);RR(-64,-12,128,24,12,'#ff2f6e','#fff');otxt('START GAME',0,5,'#fff',14);g.restore()}
     else{const it=titleItems();if(ui.tsel>=it.length)ui.tsel=0;it.forEach((c,i)=>{const y=124+i*24,on=i===ui.tsel;RR(60,y,120,20,10,on?'#ff5a8b':'#fffc',on?'#fff':'#2b244055');txt((on?'▶ ':'')+c,W/2,y+14,on?'#fff':'#5b4b8a',11)});
     const n=petList().length;if(!ACC.token)txt('New? Login with a new name to start',W/2,206,'#fff',9);else if(it[ui.tsel]==='NEW GAME')txt('Start over: new rancher & avatar',W/2,206,'#fff',9);else txt((DB.playerName||'RANCHER')+' • '+n+' pet'+(n===1?'':'s')+' • '+(DB.wallet||0)+' coins',W/2,206,'#fff',9)}}
   else if(sc==='list'){bg(false);otxt('MY PETS',W/2,22,'#fff',15);const L=petList(),rows=L.concat([null]),top=Math.max(0,Math.min(ui.psel-3,rows.length-5));
