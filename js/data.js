@@ -53,10 +53,10 @@ const TOYS=[{id:'ball',n:'TENNIS BALL',p:0},{id:'squeak',n:'SQUEAKY BONE',p:15},
 const GAMES=[{id:'fetch',n:'FETCH',d:'Tap A when the ball hits the zone'},{id:'simon',n:'MEMORY',d:'Repeat the pad pattern'},{id:'dash',n:'DASH',d:'▲▼ dodge rocks, grab hearts'}];
 const TRICKS=[{id:'sit',n:'SIT'},{id:'twirl',n:'TWIRL'},{id:'dance',n:'DANCE'},{id:'lay',n:'LAY DOWN'},{id:'roll',n:'ROLL OVER'}];
 const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH TEETH',d:'Scrub away plaque'},{id:'groom',n:"TARA SCISSOR HOUNDS",d:'Cecily trims the coat'}];
-const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED','PLAY','TOYS','CARE','SLEEP'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP'],sheep:['FEED','CUDDLE','BRUSH','SHEAR','SLEEP']};
+const ACTS={dog:['FEED','PLAY','WALK','TRICKS','CARE'],cat:['FEED','PLAY','CARE'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP'],sheep:['FEED','CUDDLE','BRUSH','SHEAR','SLEEP']};
 // v28 sheep wool: % per real HOUR. Fed+happy: 0->100 in ~3 min. Hungry or sad: 1/3 speed (~9 min). Sheep get hungry faster than dogs.
 const WOOL={fast:100*20,slow:100*20/3,hunger:7,happy:3.5,need:40,coins:0}; // v32: hunger/happy decay close to dogs (6/3 per hr)
-let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}
+let ACTIONS=ACTS.dog;const CARE_X=[{id:'toys',n:'TOYS',d:'Pick a toy to play with'},{id:'sleep',n:'SLEEP',d:'Tuck in for a nap'}];function careList(){return (S.species==='cat'?CARE.slice(0,2):CARE).concat(CARE_X)}
 // ===== v43 animal TYPES (variants) for cats / chickens / cows =====
 const ANIMAL_TYPES={
  cat:[{id:'cat_tabby',n:'TABBY CAT',p:60,desc:'Stripy! Keeps mice away'},{id:'cat_black',n:'BLACK CAT',p:70,desc:'Gold eyes, mouse catcher'},{id:'cat_ginger',n:'GINGER CAT',p:80,desc:'Cuddly — care bonus coins'}],
