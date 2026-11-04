@@ -135,8 +135,28 @@ function setFollow(on){if(!S||!S.id)return;DB.follow=on?S.id:null;saveDB();sfx&&
 {const _sa=syncActs;syncActs=function(){_sa();if(spOf(S)==='dog'){ACTIONS=ACTIONS.filter(a=>a!=='FOLLOW'&&a!=='UNFOLLOW');ACTIONS.push(DB.follow===S.id?'UNFOLLOW':'FOLLOW');if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}}}
 {const _oa=openAct;openAct=function(i){const a=ACTIONS[i];if(a==='FOLLOW'){setFollow(true);return}if(a==='UNFOLLOW'){setFollow(false);return}return _oa(i)}}
 {const _tf=toggleFollow;toggleFollow=function(){_tf();try{syncActs()}catch(e){}}}
-// v103: PET SHOP sells only dogs, cats, bunnies. Farm animals come from their farms (cow stays for ROSIE's Moo Meadow shop only).
-{const keep=['dogs','cat','rabbit','cow'],K=SHOP_CATS.filter(c=>keep.includes(c.id)).sort((a,b)=>keep.indexOf(a.id)-keep.indexOf(b.id));SHOP_CATS.length=0;K.forEach(c=>SHOP_CATS.push(c));
+// v107: PET SHOP sells only dogs, cats, bunnies (+ the free WOOL-job sheep). Farm animals are sold by their farmers.
+const FARM_SELL={cowfarm:['cow','ROSIE','MOO MEADOW'],chickfarm:['chicken','HATTIE','CLUCKY HOLLOW'],pigfarm:['pig','PERCY','MUDDY TROTTERS'],horsefarm:['horse','GRACE','GALLOP RIDGE']};
+{const _K=SHOP_CATS.slice(),PET=['dogs','cat','rabbit'],FARM=['cow','chicken','pig','horse','sheep'];
  const dog=SHOP_CATS.find(c=>c.id==='dogs');if(dog){delete dog.ok;delete dog.need}
- const hideCow=fn=>function(){if(ui.cowShop)return fn.apply(this,arguments);const i=SHOP_CATS.findIndex(c=>c.id==='cow'),c=i>=0?SHOP_CATS.splice(i,1)[0]:null;try{return fn.apply(this,arguments)}finally{if(c)SHOP_CATS.splice(i,0,c)}};
- storeInput=hideCow(storeInput);drawPetCatalog=hideCow(drawPetCatalog);}
+ const vis=()=>_K.filter(c=>{if(ui.farmShop)return c.id===ui.farmShop;if(ui.cowShop)return c.id==='cow';return PET.includes(c.id)||(c.id==='sheep'&&typeof wm==='function'&&wm().step===1)}).sort((a,b)=>(a.id==='sheep'?-1:0)-(b.id==='sheep'?-1:0));
+ const scope=fn=>function(){const keep=SHOP_CATS.slice();SHOP_CATS.length=0;vis().forEach(c=>SHOP_CATS.push(c));try{return fn.apply(this,arguments)}finally{const cur=ui.cat!=null?SHOP_CATS[ui.cat]:null;SHOP_CATS.length=0;keep.forEach(c=>SHOP_CATS.push(c));if(cur)ui._catId=cur.id}};
+ storeInput=scope(storeInput);drawPetCatalog=scope(drawPetCatalog);
+ const _co=catOpen;catOpen=function(c){if(ui.farmShop&&c.id===ui.farmShop)return true;return _co(c)};
+ const _os=openStore;openStore=function(){ui.farmShop=0;return _os()};
+ const _fn=finishName;finishName=function(n){const r=_fn(n);ui.farmShop=0;return r};
+ // farmer NPC tile in each specialty farm
+ [['chickfarm',2,5],['pigfarm',2,5],['horsefarm',6,7]].forEach(([id,y,x])=>{const d=INT[id];if(!d)return;const R=d.rows.slice();R[y]=R[y].slice(0,x)+'N'+R[y].slice(x+1);INT[id]=Object.assign({},d,{rows:R})});
+ for(const k of ['chickfarm','pigfarm','horsefarm'])delete FARM_SOON[k];
+ Object.assign(BARN_MSG,{chickfarm:'CLUCKY HOLLOW — Farmer HATTIE sells CHICKENS. Walk in!',pigfarm:'MUDDY TROTTERS — Farmer PERCY sells PIGS. Walk in!',horsefarm:'GALLOP RIDGE — Farmer GRACE sells HORSES. Walk in!'});
+ const _oi=owInput;owInput=function(k){const o=ui.ow,id=MAPS.int&&MAPS.int.id,F=FARM_SELL[id];
+  if(CUR==='int'&&F&&id!=='cowfarm'&&k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],c=OWBASE[o.y+dy]&&OWBASE[o.y+dy][o.x+dx];
+   if(c==='N'){sfx&&sfx('blip');if(typeof farmOpen==='function'&&!farmOpen(id)){say('Farmer '+F[1]+': "Not open yet! Come back after '+FARM_CYC[id]+' WOOL CYCLES."',220);return}
+    say('Farmer '+F[1]+': "Welcome to '+F[2]+'! Have a look at my animals."',140);setTimeout(()=>{if(S.scene==='map'&&CUR==='int'){ui.farmShop=F[0];S={scene:'store'};ui.cowShop=0;ui.cat=0;ui.sel=0;ui.msgT=0}},900);return}}
+  return _oi(k)};
+ const _si=storeInput;storeInput=function(k){if(ui.farmShop&&(k==='b'||k==='start')){const F=Object.values(FARM_SELL).find(f=>f[0]===ui.farmShop);ui.farmShop=0;ui.cat=null;S={scene:'map'};say('Come back any time! — '+(F?F[1]:'the farmer'),160);return}return _si(k)};
+ const _dc=drawPetCatalog;drawPetCatalog=function(t){if(!ui.farmShop)return _dc(t);const c=_K.find(c=>c.id===ui.farmShop),F=Object.values(FARM_SELL).find(f=>f[0]===ui.farmShop),n=c.n;c.n=F?F[2]:n;try{return _dc(t)}finally{c.n=n}};
+ // cow shop index: Rosie opens with only the cow category visible
+ openCowShop=function(){S={scene:'store'};ui.cowShop=1;ui.farmShop=0;ui.cat=0;ui.sel=0;ui.msgT=0};
+ // farmer needs a little 'N' greeting
+ Object.assign(INT_MSG,{});}

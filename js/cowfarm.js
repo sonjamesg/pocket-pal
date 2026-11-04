@@ -17,7 +17,7 @@ function openCowShop(){const i=SHOP_CATS.findIndex(c=>c.id==='cow');S={scene:'st
   let swap=null;if(k==='a'&&ui.cat!=null){const c=SHOP_CATS[ui.cat],L=catItems(c),it=L[ui.sel%L.length];if(it&&it.sv==='cow_bull'){swap=TYPE_NAMES.cow;TYPE_NAMES.cow=['BRUNO','TANK','BIG TED','DUKE']}}
   try{return _si(k)}finally{if(swap)TYPE_NAMES.cow=swap}}}
 {const _os=openStore;openStore=function(){ui.cowShop=0;return _os()}}
-{const _dc=drawPetCatalog;drawPetCatalog=function(t){const c=SHOP_CATS.find(c=>c.id==='cow'),n=c.n;if(ui.cowShop)c.n='MOO MEADOW';try{_dc(t)}finally{c.n=n}}}
+{const _dc=drawPetCatalog;drawPetCatalog=function(t){const c=SHOP_CATS.find(c=>c.id==='cow');if(!c)return _dc(t);const n=c.n;if(ui.cowShop)c.n='MOO MEADOW';try{_dc(t)}finally{c.n=n}}}
 {const _fn=finishName;finishName=function(n){const r=_fn(n);ui.cowShop=0;return r}}
 // roaming cows in the big paddock (decor: the farm's herd, incl. the BULL)
 const HERD=[['cow_white',0],['cow_brown',1.7],['cow_bull',3.1],['cow_black',4.4],['cow_jersey',5.6],['cow_white',2.4]];
