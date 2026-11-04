@@ -143,8 +143,12 @@ function drawShear(t){const m=ui.mg;m.t++;R(0,0,W,H,'#e8f4d8');for(let x=0;x<W;x
   else txt('Tap A to shear ✂   B stop',W/2,H-8,'#2b2440',9)}
 // ---- scene routing ----
 const _input0M=input0;input0=function(k){au();if(ui.cele){if(ui.cele.t>30&&(k==='a'||k==='b'||k==='start')){ui.cele=null;sfx('click')}return}if(k==='a')sfx('click');if(ui.msgT>0&&(S.scene==='map'||S.scene==='jobs'||S.scene==='sell')&&(k==='a'||k==='b')){if((ui.msgC||0)<ui.msg.length){ui.msgC=ui.msg.length;ui.msgT=Math.max(ui.msgT,120)}else ui.msgT=0;return}if(S.scene==='store'&&!ui.modal)return storeInput(k);if(S.scene==='sell')return sellInput(k);if(S.scene==='jobs')return jobsInput(k);if(S.scene==='shear')return shearInput(k);return _input0M(k)};
-const _frameM=frame;frame=function(){const sc=S.scene;if(sc!=='jobs'&&sc!=='shear'&&sc!=='store'&&sc!=='sell'){_frameM();drawCele();return}ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);
-  if(sc==='jobs')drawJobs(t);else if(sc==="store")drawPetCatalog(t);else if(sc==='sell')drawSell(t);else drawShear(t);
+const _frameM=frame;frame=function(){const sc=S.scene;if(sc!=='jobs'&&sc!=='shear'&&sc!=='store'&&sc!=='sell'){_frameM();drawCele();return}ui.anim++;const t=ui.anim;
+  /* v110: full ctx reset — this path bypassed frame.js resets, so a leaked transform/alpha/filter/clip from the last map frame could paint the shop invisibly (black) */
+  g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';if(g.filter!==undefined)g.filter='none';g.imageSmoothingEnabled=false;g.clearRect(0,0,W,H);
+  try{if(sc==='store'&&ui.cat!=null&&!(ui.cat>=0&&ui.cat<8))ui.cat=null;
+  if(sc==='jobs')drawJobs(t);else if(sc==="store")drawPetCatalog(t);else if(sc==='sell')drawSell(t);else drawShear(t);}catch(e){console.error('scene draw',sc,e);g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';if(g.filter!==undefined)g.filter='none';
+    g.fillStyle='#ffe6f0';g.fillRect(0,0,W,H);try{txt('Oops! Press B to go back',W/2,H/2,'#2b2440',10)}catch(_){}if(sc==='store'){ui.cat=null;ui.farmShop=0;ui.cowShop=0}}
   ui.fx=ui.fx.filter(f=>{f.x+=f.vx;f.y+=f.vy;f.vy+=.06;f.t--;g.globalAlpha=Math.min(1,f.t/20);if(f.ch==='wool'){E(f.x,f.y,3,2.5,'#fffaf0');E(f.x+2,f.y-1,2,2,'#f0e8d8')}else star(f.x,f.y,4,['#ffd84a','#ff5a8b','#a07cff'][f.t%3]);g.globalAlpha=1;return f.t>0});
   if(ui.msgT>0){ui.msgT--;drawMsg(H-40)}if(ui.modal)drawModal(t);drawCele();requestAnimationFrame(frame)};
 
