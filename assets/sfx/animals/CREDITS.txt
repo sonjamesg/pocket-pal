@@ -1,0 +1,15 @@
+Animal SFX from BigSoundBank (Joseph Sardin) — CC0 / "Free and royalty-free", https://bigsoundbank.com/licenses.html
+Trimmed to ~2.2s, mono, normalised.
+cow1.mp3    https://bigsoundbank.com/cow-moos-2-s2382.html
+cow2.mp3    https://bigsoundbank.com/cow-moos-3-s2383.html
+sheep1.mp3  https://bigsoundbank.com/sheep-1-s2343.html
+sheep2.mp3  https://bigsoundbank.com/sheep-3-s2345.html
+hen1.mp3    https://bigsoundbank.com/annoyed-hen-s0453.html
+rooster.mp3 https://bigsoundbank.com/rooster-s0104.html
+pig1.mp3    https://bigsoundbank.com/grumpy-pig-1-s1658.html
+pig2.mp3    https://bigsoundbank.com/grumpy-pig-2-s1659.html
+horse1.mp3  https://bigsoundbank.com/horse-neighing-3-s0863.html
+horse2.mp3  https://bigsoundbank.com/horse-neighing-4-s1541.html
+goat.mp3    https://bigsoundbank.com/bleating-goat-1-s0279.html
+duck.mp3    https://bigsoundbank.com/ducks-s0276.html
+Custom: put James's horse recording at assets/sfx/custom/horse.mp3 (auto-detected).
