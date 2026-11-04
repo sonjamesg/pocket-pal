@@ -10,11 +10,11 @@ const INT={
  sty:{name:'PIG STY',floor:'mud',rows:["############","############","#tttt..hh..#","#.MMMM.....#","#.MMMMMM...#","#..MMMM....#","#..........#","#||||..||||#","#..........#","#####DD#####"]},
  feedshed:{name:'FEED SHED',floor:'wood',rows:["##########","##########","#kkkk.kkk#","#........#","#xx....xx#","#........#","#h......w#","#...rr...#","####DD####"]},
  toolshed:{name:'TOOL SHED',floor:'wood',rows:["##########","##########","#TTT..WWW#","#........#","#x......x#","#........#","#w.....xx#","#...rr...#","####DD####"]},
- house:{name:'RANCH HOUSE',floor:'house',rows:["##############","##############","#BB.ff..O..bb#","#..........bb#","#.P...KK.....#","#....cKKc....#","#.....rrrr..P#","#.....rrrr...#","#............#","######DD######"]}
+ house:{name:'RANCH HOUSE',floor:'house',rows:["##############","##############","#BBPfff.CCObb#","#..a...a.L.bb#","#P..rrrr..KK.#","#...rrrr.cKKc#","#....YYY....P#","#x..........w#","#P....rr....L#","######DD######"]}
 };
 const INT_MSG={t:'A feed trough — full of fresh feed.','|':'A sturdy wooden stall.',h:'Soft golden hay.',n:'Nesting boxes — eggs will go here!',p:'A perch for sleepy chickens.',m:'Shiny milk cans.',w:'A barrel of clean water.',
   k:'Sacks of animal feed.',x:'A wooden crate of supplies.',T:'Pitchfork, rake and shovel.',W:'Grandpa\'s old workbench.',S:'Saddles and bridles for the horses.',b:'Your cosy bed. Sweet dreams!',
-  K:'The kitchen table. Grandpa\'s old cowboy hat sits on it.',c:'A rocking chair.',f:'A crackling fireplace — so warm!',B:'Shelves of farming books.',P:'A happy house plant.',O:'An old iron stove. Smells like pie!'};
+  K:'The kitchen table. Grandpa\'s old cowboy hat sits on it.',c:'A rocking chair.',f:'A crackling fireplace — so warm!',B:'Shelves of farming books.',P:'A happy house plant.',O:'An old iron stove. Smells like pie!',a:'A squishy armchair by the fire. Perfect for a nap.',Y:'A big comfy sofa piled with knitted cushions.',L:'A warm lamp glowing softly.',C:'The kitchen nook — copper pots, bread and a jar of honey.'};
 let INT_FROM=null;
 MAPS.int={name:'',w:12,h:10,gate:[[5,9]],rows:INT.coop.rows.map(r=>r.split(''))};
 function intEnter(id,fx,fy){const d=INT[id],o=ui.ow;INT_FROM={id,x:fx,y:fy};MAPS.int={name:d.name,id,floor:d.floor,w:d.rows[0].length,h:d.rows.length,gate:[],rows:d.rows.map(r=>r.split(''))};
@@ -55,7 +55,17 @@ function drawIntObj(c,X,Y,x,y,t){const rows=OWBASE,L=x>0?rows[y][x-1]:'',Rr=rows
   case 'b':if(U!=='b'){R(X,Y+1,16,15,'#7a4a22');R(X+1,Y+2,14,6,'#f8f8f0');}else{R(X,Y,16,14,'#7a4a22');R(X+1,Y,14,12,'#c84a4a');for(let i=2;i<12;i+=4)R(X+1,Y+i,14,1,'#e86a6a');R(X+1,Y+12,14,2,'#5a3418')}if(L==='b')R(X-1,Y,2,16,'#0000');break;
   case 'K':R(X,Y+2,16,10,'#b07a44');R(X,Y+2,16,2,'#d49e60');R(X,Y+11,16,1,'#5a3418');if(U!=='K'&&L==='K')E(X+3,Y+6,5,2,'#6a4020');if(U!=='K'&&L!=='K'){E(X+10,Y+7,3,2,'#fff');R(X+9,Y+5,2,2,'#c04848')}break;
   case 'c':E(X+8,Y+14,5,2,'#0003');R(X+3,Y+2,10,4,'#8a5a2e');R(X+3,Y+7,10,4,'#b07a44');R(X+3,Y+11,2,4,'#5a3418');R(X+11,Y+11,2,4,'#5a3418');break;
-  case 'f':R(X,Y-8,16,24,'#8a8a94');for(let i=0;i<24;i+=4)R(X+(i%8?0:4),Y-8+i,16,1,'#6a6a74');R(X+3,Y+4,10,10,'#2a1a14');const fl=(t>>3)%2;E(X+8,Y+12,4,3+fl,'#f08020');E(X+8,Y+12,2,2,'#ffe060');R(X-1,Y+2,18,2,'#5a3418');break;
+  case 'f':{const l=L==='f',r=Rr==='f',fl=(t>>2)%3;R(X,Y-22,16,38,'#9a8a7a');for(let i=0;i<38;i+=5){const o=((i/5)|0)%2?0:6;R(X+o,Y-22+i,1,5,'#6a5a50');R(X,Y-22+i,16,1,'#7a6a5c')}
+    if(!l)R(X,Y-22,3,38,'#7a6a5c');if(!r)R(X+13,Y-22,3,38,'#7a6a5c');R(X-(l?0:2),Y-2,16+(l?0:2)+(r?0:2),4,'#6a3a1a');R(X-(l?0:2),Y-2,16+(l?0:2)+(r?0:2),1,'#a86a3a');
+    R(X+(l?0:4),Y+3,16-(l?0:4)-(r?0:4),12,'#1a0e0a');if(!l&&!r)break;
+    if(!l||!r){R(X+(l?2:6),Y+11,8,3,'#5a3418');}else{R(X,Y+12,16,3,'#5a3418');E(X+8,Y+11,6+fl,6+fl,'#f0802088');E(X+8,Y+11,5,4+fl,'#f08020');E(X+5,Y+11,2,3,'#ffb030');E(X+11,Y+10,2,3+fl%2,'#ffb030');E(X+8,Y+12,2.5,2,'#ffe880');
+      R(X+3,Y-14,10,6,'#5a3418');E(X+8,Y-11,3,2.5,'#c0c0c8');R(X+4,Y-20,3,4,'#f0e0c0');R(X+10,Y-19,2,3,'#6ac050')}break}
+  case 'a':{E(X+8,Y+15,7,2,'#0004');const c='#c0583a',d='#8a3a24';RR(X+1,Y+1,14,9,4,c);RR(X,Y+5,4,9,2,d);RR(X+12,Y+5,4,9,2,d);RR(X+3,Y+8,10,5,2,'#e07a50');R(X+3,Y+13,2,3,'#4a2810');R(X+11,Y+13,2,3,'#4a2810');R(X+4,Y+3,8,1,'#e88a60');RR(X+5,Y+5,6,4,2,'#f0d070');break}
+  case 'Y':{const l=L==='Y',r=Rr==='Y';E(X+8,Y+15,8,2,'#0004');R(X,Y+2,16,8,'#3a7a6a');R(X,Y+2,16,1,'#5a9a8a');R(X,Y+9,16,5,'#4a8a7a');if(!l)RR(X,Y+4,4,10,2,'#2a5a4a');if(!r)RR(X+12,Y+4,4,10,2,'#2a5a4a');if(!l&&!r)break;
+    RR(X+4,Y+4,8,5,2,['#f0c040','#e86a6a','#f0e0c0'][x%3]);R(X+6,Y+5,4,1,'#fff6');if(!l||!r)R(X+(l?13:2),Y+13,2,3,'#4a2810');break}
+  case 'L':{E(X+8,Y+15,5,2,'#0004');const gl=g.createRadialGradient(X+8,Y-6,1,X+8,Y-6,22);gl.addColorStop(0,'#ffd88060');gl.addColorStop(1,'#ffd88000');g.fillStyle=gl;g.fillRect(X-14,Y-28,44,44);R(X+7,Y-2,2,16,'#5a3418');R(X+4,Y+13,8,2,'#5a3418');g.fillStyle='#f0c070';g.beginPath();g.moveTo(X+4,Y-2);g.lineTo(X+12,Y-2);g.lineTo(X+10,Y-10);g.lineTo(X+6,Y-10);g.fill();R(X+5,Y-3,6,1,'#ffe8a8');break}
+  case 'C':{R(X,Y-4,16,18,'#8a5a2e');R(X,Y-5,16,3,'#e0d0b8');R(X+1,Y,14,1,'#5a3418');R(X+7,Y+1,1,12,'#5a3418');R(X+4,Y+5,1,2,'#d4a060');R(X+10,Y+5,1,2,'#d4a060');
+    R(X,Y-20,16,2,'#6a4020');if(L==='C'){E(X+5,Y-8,4,2.5,'#c87a3a');R(X+2,Y-9,6,1,'#e8a060');RR(X+10,Y-11,4,6,1,'#f0b830');R(X+10,Y-12,4,2,'#fff');E(X+6,Y-24,3,3,'#c87a3a');R(X+9,Y-26,1,6,'#3a2010')}else{RR(X+2,Y-10,9,5,2,'#d89a50');R(X+4,Y-9,5,1,'#f0c070');E(X+12,Y-24,3,3,'#a86a3a');R(X+5,Y-27,1,7,'#3a2010');E(X+5,Y-19,2.5,2,'#c87a3a')}break}
   case 'B':R(X,Y-10,16,26,'#6a4020');for(const yy of [-6,0,6])R(X+1,Y+yy,14,1,'#4a2810');[['#c04848',-9],['#3a6ad8',-3],['#48a048',3],['#e8c040',9]].forEach(([cc,yy],i)=>{for(let k=0;k<4;k++)R(X+2+k*3,Y+yy,2,5,k%2?cc:'#f0e0c0')});break;
   case 'P':E(X+8,Y+14,5,2,'#0003');R(X+5,Y+9,6,6,'#c86a3a');R(X+5,Y+9,6,1,'#e88a5a');E(X+8,Y+6,5,4,'#3a9a44');E(X+6,Y+5,2,2,'#6cc85a');E(X+11,Y+7,2,2,'#1f6a34');break;
   case 'O':R(X+1,Y-4,14,18,'#3a3a44');R(X+2,Y-3,12,4,'#5a5a64');R(X+4,Y+4,8,6,'#1a1a20');E(X+8,Y+8,2,1,'#f08020');R(X+6,Y-12,3,8,'#3a3a44');break;
@@ -90,9 +100,10 @@ function drawInt(t){owUpdate();const o=ui.ow,m=MAPS.int,cx=MW*TS<=W?(MW*TS-W)/2:
   // cosy owned animals of this building's species, wandering in place
   const sp={coop:'chicken',cowbarn:'cow',stable:'horse',sheepshed:'sheep',sty:'pig'}[m.id];
   if(sp&&typeof critter==='function'){const own=petList().filter(p=>spOf(p)===sp).slice(0,4);own.forEach((p,i)=>{const X=(3+i*3)*TS,Y=6*TS+Math.round(Math.sin(t/30+i)*2);withProj(X,Y,()=>{g.save();g.translate(X,Y);g.scale(.75,.75);try{critter(0,0,sp,p.stage||'adult',{pose:'walk',mood:'happy',sv:p.breed,dir:Math.sin(t/80+i)>0?1:-1})}catch(e){}g.restore()})})}
+  if(house)for(let x=0;x<MW;x++)if(OWBASE[2][x]==='f'&&OWBASE[2][x-1]==='f'&&OWBASE[2][x+1]==='f')withProj(x*TS+8,3*TS,()=>{const fx=x*TS+8,fy=2*TS+12,rr=46+Math.sin(t/7)*3,gl=g.createRadialGradient(fx,fy,4,fx,fy,rr);gl.addColorStop(0,'#ffa04048');gl.addColorStop(1,'#ffa04000');g.fillStyle=gl;g.fillRect(fx-rr,fy-rr,rr*2,rr*2)});
   g.restore();
   // warm lighting vignette
-  const vg=g.createRadialGradient(W/2,H/2,40,W/2,H/2,170);vg.addColorStop(0,'#0000');vg.addColorStop(1,house?'#40200030':'#20100040');g.fillStyle=vg;g.fillRect(0,0,W,H);
+  const vg=g.createRadialGradient(W/2,H/2,40,W/2,H/2,170);vg.addColorStop(0,'#0000');vg.addColorStop(1,house?'#4a200058':'#20100040');g.fillStyle=vg;g.fillRect(0,0,W,H);
   R(0,0,W,16,'#2b2440cc');txt(m.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy),hint=th&&th.obj?'A: look':th&&th.exit?'Walk out the door':null;
   if(ui.msgT>0){}else if(hint){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(hint,W/2,H-19,'#2b2440',8)}else txt('✚ walk  A look  B leave',W/2,H-4,'#fff',7)}
