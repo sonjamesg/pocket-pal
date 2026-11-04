@@ -28,3 +28,8 @@ const HERD=[['cow_white',0],['cow_brown',1.7],['cow_bull',3.1],['cow_black',4.4]
 // after Rosie's speech bubble closes (A or timeout) -> open her cow shop
 setInterval(()=>{if(ui.rosieAsk&&!(ui.msgT>0)){ui.rosieAsk=0;if(S.scene==='map'&&CUR==='int'&&MAPS.int&&MAPS.int.id==='cowfarm'){sfx&&sfx('click');openCowShop()}}},150);
 INT_MSG.Q='ROSIE\'s farm counter — fresh MILK bottles on top.';
+// v102: YOUR cows roam the ranch cow pen by the COW BARN (fenced x60-69, y26-31)
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const C=(typeof petList==='function'?petList():[]).filter(p=>spOf(p)==='cow').slice(0,6);if(!C.length)return;
+  const px=61,py=27,pw=8,ph=4;C.forEach((p,i)=>{const k=t/700+i*1.9,X=(px+.6+(pw-1.2)*(0.5+0.45*Math.sin(k*1.1+i)))*TS,Y=(py+.9+(ph-1.4)*(0.5+0.42*Math.sin(k*.8+i*2.3)))*TS,dir=Math.cos(k*1.1+i)>0?1:-1,eat=Math.sin(t/110+i*2)>.3,
+    f=()=>{E(X,Y+2,9,3,'#0004');g.save();g.translate(X,Y);g.scale(.55,.55);try{critter(0,0,'cow',p.stage||'adult',{pose:eat?'eat':'walk',mood:'happy',sv:p.breed,dir})}catch(e){}g.restore();g.save();g.font='bold 7px sans-serif';g.textAlign='center';g.fillStyle='#fff';g.strokeStyle='#2b2440';g.lineWidth=2;g.strokeText(p.name||'COW',X,Y-20);g.fillText(p.name||'COW',X,Y-20);g.restore()};
+    if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f()})}}
