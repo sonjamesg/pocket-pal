@@ -3,7 +3,7 @@
 // when you stand near a pen (≥14s apart, per-species ≥25s). Respects DB.mute and hidden tab.
 // CUSTOM HORSE HOOK: drop James's recording at assets/sfx/custom/horse.mp3 — if present it's used for ~2/3 of horse calls.
 const ASFX={dir:'assets/sfx/animals/',vol:.55,
-  set:{cow:['cow1','cow2'],sheep:['sheep1','sheep2'],chicken:['hen1','rooster'],pig:['pig1','pig2'],horse:['horse1','horse2'],goat:['goat'],duck:['duck']},
+  set:{cow:['cow1','cow2'],sheep:['sheep1','sheep2'],chicken:['hen1','rooster'],pig:['pig1','pig2'],horse:['horse1','horse2'],goat:['goat'],duck:['duck'],dog:['bark1','bark2'],pup:['pup1','pup2']},
   custom:{horse:'assets/sfx/custom/horse.mp3'},have:{},last:{},lastAny:0,amb:0};
 for(const sp in ASFX.custom)fetch(ASFX.custom[sp],{method:'HEAD'}).then(r=>{if(r.ok)ASFX.have[sp]=1}).catch(()=>{});
 function animalSfx(sp,o={}){sp=sp==='bull'?'cow':sp;const L=ASFX.set[sp];if(!L||(typeof DB!=='undefined'&&DB.mute)||document.hidden)return;

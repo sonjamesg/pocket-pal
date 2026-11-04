@@ -123,7 +123,7 @@ if(typeof KM!=='undefined')KM.f='follow';
 {const _ox=owExtras;owExtras=function(t,o){_ox(t,o);const p=DB.follow&&DB.pets[DB.follow];if(!p||!ui.trail||ui.trail.length<2)return;const T=ui.trail,q=T[Math.max(0,T.length-14)];if(q[3]!==CUR)return;
   const W2=ui.fw||(ui.fw={bk:240,jp:0,bs:0,pc:2400,poos:[]}),mv=!!o.mv;
   /* v102: following = walking. occasional hop+bark, mood up, rare poo */
-  if(--W2.bk<=0){W2.bk=420+Math.random()*600|0;W2.jp=18;W2.bs=50;if(!document.hidden&&sfx)sfx('woof')}
+  if(--W2.bk<=0){W2.bk=420+Math.random()*600|0;W2.jp=18;W2.bs=50;if(!document.hidden){/* v113: one real bark — cute yip for puppy/youngster, proper bark when older */const pup=['egg','puppy','youngster'].includes(p.stage||'puppy');if(typeof animalSfx==='function')animalSfx(pup?'pup':'dog',{cd:2000,vol:pup?.8:.9});else if(sfx)sfx('woof')}}
   if(mv&&p.happy!=null&&t%60===0){p.happy=Math.min(100,p.happy+0.6);if(p.xp!=null)p.xp+=0.2}
   if(mv&&--W2.pc<=0){W2.pc=3600+Math.random()*3600|0;if(W2.poos.filter(z=>z[2]===CUR).length<2)W2.poos.push([q[0]+8,q[1]+14,CUR])}
   const pl=T[T.length-1];W2.poos=W2.poos.filter(z=>{if(z[2]!==CUR)return true;if(Math.abs(pl[0]+8-z[0])<10&&Math.abs(pl[1]+14-z[1])<10){p.happy=Math.min(100,(p.happy||0)+3);saveDB();sfx&&sfx('coin');say('Picked up '+p.name+"'s poo. Good owner! 💩",120);return false}g.save();g.font='9px sans-serif';g.textAlign='center';g.fillText('💩',z[0],z[1]);g.restore();return true});

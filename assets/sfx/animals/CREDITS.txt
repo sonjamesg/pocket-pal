@@ -15,3 +15,7 @@ duck.mp3    https://bigsoundbank.com/ducks-s0276.html
 Custom: put James's horse recording at assets/sfx/custom/horse.mp3 (auto-detected).
 
 Custom horse (James recording): assets/sfx/custom/horse.mp3 — preferred ~2/3 of horse neighs when present.
+v113 dog barks (single bark, trimmed + normalised):
+bark1.mp3   https://bigsoundbank.com/barking-dog-s0916.html (adult)
+bark2.mp3   https://bigsoundbank.com/barking-dog-2-s2954.html (adult)
+pup1.mp3 / pup2.mp3  https://bigsoundbank.com/barking-of-a-spitz-s0682.html (single yips, pitched up ~22% for puppy)
