@@ -4,7 +4,7 @@
 function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
   // v91: staggered rows (3 wide, offset every other row) so off-map crowns don't pile up
   for(let gy=sy,r=0;gy<=y1+4;gy+=2,r++){const sx=Math.floor((x0-6)/3)*3-1+(((gy%2+2)>>0)%2?0:0)+(r%2?1.5:0);for(let gx=sx;gx<=x1+4;gx+=3){if(!(gx<0||gy<0||gx>=MW-1||gy>=MH-1))continue;
-    if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=2.6&&Math.abs(b-gy)<=4))continue; // v91: wide clear corridor at gates
+    if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=2.6&&Math.abs(b-gy)<=4))continue; if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=3.5&&(b===0?gy<=1:gy>=b-1)))continue; // v97: open road corridor off-map past gate // v91: wide clear corridor at gates
     const h=((Math.round(gx*2)*73856093)^(gy*19349663))>>>0,j=((h>>4)%5-2)/10;trees.push([gx+j,gy+(((h>>8)%5)-2)/10,h%3?'pine2':'tree2'])}}
   // v91: thin overlapping trees (map tiles + edge) — drop any whose trunk sits too close to one already kept
   const GT=MAPS[CUR].gate||[],nearGate=t=>GT.some(([a,b])=>t[0]>a-2.2&&t[0]<a+1.2&&Math.abs(t[1]-b)<3);
@@ -12,6 +12,9 @@ function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
     for(let dy=-1;dy<=1&&!bad;dy++)for(let dx=-1;dx<=1&&!bad;dx++){const L=G.get(K(cx+dx,cy+dy));if(L)for(const u of L)if(Math.abs(u[0]-t[0])<1.6&&Math.abs(u[1]-t[1])<1.3){bad=true;break}}
     if(bad)continue;keep.push(t);const k=K(cx,cy);(G.get(k)||G.set(k,[]).get(k)).push(t)}
   trees.length=0;trees.push(...keep)}
+// v97: dirt road continues off-map past each gate so the way to the RANCH / PET SHOP reads clearly
+function gateRoad(){const gt=MAPS[CUR].gate;if(!gt)return;const xs=gt.map(q=>q[0]),gy=gt[0][1],X=(Math.min(...xs)-1)*TS,w=(xs.length+2)*TS,up=gy===0,len=14*TS;
+  const Y0=up?-len:(gy+1)*TS;R(X-TS,Y0,w+2*TS,len,'#4f9a36');R(X,Y0,w,len,'#c9934a');R(X+3,Y0,w-6,len,'#e0c080');for(let k=0;k<len;k+=11)R(X+6+(k*7)%(w-14),Y0+k,3,2,'#b88a50')}
 // --- pens: decorative roamers (Clucky Hollow chickens, Muddy Trotters pigs, Gallop Ridge horses) ---
 const PEN_ROAM={chickPen:['chicken',.5,[['chicken_white',0],['chicken_brown',1.1],['chicken_rooster',2.3],['chicken_white',3.2],['chicken_brown',4.4],['chicken_white',5.1],['chicken_brown',.7]]],
   pigPen:['pig',.6,[[null,0],[null,1.6],[null,2.9],[null,4.2],[null,5.3]]],

@@ -46,6 +46,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
     const n=(CUR==='ranch'&&x<88&&'CWUcY'.includes(c)&&typeof cropTile==='function')?cropTile(c,x,y):{U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
     if(P3D&&n&&'pumpkin corn wheat sprout tallgrass hay sign rock'.includes(n)&&ok(n==='hay'?'p_hay':n)){if(n!=='tallgrass'&&n!=='rock'&&n!=='hay'&&ok('field'))g.drawImage(IMG.field,X,Y);const im=IMG[n==='hay'?'p_hay':n];p3later(X+8,Y+15,()=>{E(X+8,Y+15,6,2,'#0a281430');g.drawImage(im,X,Y)})}
     else if(n==='hay'&&ok('p_hay'))g.drawImage(IMG.p_hay,X,Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',sign:'#c89a60',tallgrass:'#309028',flower0:'#f05868',flower1:'#f8e048',flower2:'#fff',rock:'#8890a0'}[n])}
+  if(typeof gateRoad==='function')gateRoad();
   if(typeof edgeForest==='function')edgeForest(trees,x0,x1,y0,y1);
   // v79: cull trees whose 2x2 sprite would poke through a building/prop (expanded AABB; roofs extend north)
   {const bx=bldBoxes();if(bx.length){const hit=(x,y)=>bx.some(([a,b,c,d])=>x+1>=a&&x<=c&&y+1>=b&&y<=d);for(let i=trees.length-1;i>=0;i--)if(hit(trees[i][0],trees[i][1]))trees.splice(i,1)}}
