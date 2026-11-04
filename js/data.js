@@ -67,6 +67,6 @@ BREEDS.cow={sp:'cow',n:'COW',c:'#f4f0e8',d:'#3a3030',l:'#ffffff',bl:24,bh:14,leg
 Object.keys(ANIMAL_TYPES).forEach(sp=>ANIMAL_TYPES[sp].forEach(t=>{BREEDS[t.id]=Object.assign({},BREEDS[sp],{n:t.n,desc:t.desc})}));
 SP.cow={baby:'CALF',house:'COW BARN',food:'COW FEED'};ACTS.cow=['FEED','PLAY','CUDDLE','SLEEP'];
 SFOODS.cow=[{id:'greens',n:'FRESH GRASS',v:18},{id:'hay',n:'HAY',v:30},{id:'corn',n:'CORN',v:22,joy:3},{id:'apple',n:'APPLE',v:12,joy:8}];
-// v43 DAILY WOOL: after the tutorial's first shear, a full coat takes ~24 real hours (36h if hungry/sad)
-function woolRate(fed){const tut=DB.missions&&DB.missions.wool&&(DB.missions.wool.step||0)<4;return tut?(fed?WOOL.fast:WOOL.slow):(fed?100/24:100/36)}
-function woolETA(p,w){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=(100-w)/woolRate(fed);return h<1?'Ready in '+Math.max(1,Math.ceil(h*60))+' min':h>=20?'Wool TOMORROW ('+Math.ceil(h)+'h)':'Ready in '+Math.ceil(h)+'h'}
+// v43 DAILY WOOL: after the tutorial's first shear, (v59) a full coat takes ~6 real hours (9h if hungry/sad)
+function woolRate(fed){const tut=DB.missions&&DB.missions.wool&&(DB.missions.wool.step||0)<4;return tut?(fed?WOOL.fast:WOOL.slow):(fed?100/6:100/9)}
+function woolETA(p,w){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=(100-w)/woolRate(fed);return h<1?'Ready in '+Math.max(1,Math.ceil(h*60))+' min':'Ready in '+Math.ceil(h)+'h'}

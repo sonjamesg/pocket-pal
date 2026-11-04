@@ -233,27 +233,27 @@
       "name": "SHEEP SHED",
       "origin": [
         50,
-        42
+        41
       ],
       "size": [
         4,
         3
       ],
-      "grid": "AY43",
-      "doorGrid": "BA45"
+      "grid": "AY42",
+      "doorGrid": "BA44"
     },
     {
       "name": "PIG STY",
       "origin": [
         60,
-        42
+        41
       ],
       "size": [
         4,
         3
       ],
-      "grid": "BI43",
-      "doorGrid": "BK45"
+      "grid": "BI42",
+      "doorGrid": "BK44"
     },
     {
       "name": "FEED SHED",
@@ -6470,8 +6470,8 @@
     "AN12": {
       "x": 39,
       "y": 11,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AO12": {
       "x": 40,
@@ -7016,8 +7016,8 @@
     "AN13": {
       "x": 39,
       "y": 12,
-      "tile": "J",
-      "kind": "J"
+      "tile": "p",
+      "kind": "path"
     },
     "AO13": {
       "x": 40,
@@ -7544,8 +7544,8 @@
     "AN14": {
       "x": 39,
       "y": 13,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AO14": {
       "x": 40,
@@ -9488,8 +9488,8 @@
     "L18": {
       "x": 11,
       "y": 17,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "M18": {
       "x": 12,
@@ -9584,8 +9584,8 @@
     "AB18": {
       "x": 27,
       "y": 17,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "AC18": {
       "x": 28,
@@ -14108,8 +14108,8 @@
     "BZ26": {
       "x": 77,
       "y": 25,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "CA26": {
       "x": 78,
@@ -14492,8 +14492,8 @@
     "BB27": {
       "x": 53,
       "y": 26,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "BC27": {
       "x": 54,
@@ -15824,8 +15824,8 @@
     "L30": {
       "x": 11,
       "y": 29,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "M30": {
       "x": 12,
@@ -15920,8 +15920,8 @@
     "AB30": {
       "x": 27,
       "y": 29,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "AC30": {
       "x": 28,
@@ -17132,8 +17132,8 @@
     "BB32": {
       "x": 53,
       "y": 31,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "BC32": {
       "x": 54,
@@ -17276,8 +17276,8 @@
     "BZ32": {
       "x": 77,
       "y": 31,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "CA32": {
       "x": 78,
@@ -18992,8 +18992,8 @@
     "L36": {
       "x": 11,
       "y": 35,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "M36": {
       "x": 12,
@@ -19064,8 +19064,8 @@
     "X36": {
       "x": 23,
       "y": 35,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y36": {
       "x": 24,
@@ -19586,14 +19586,14 @@
     "W37": {
       "x": 22,
       "y": 36,
-      "tile": "c",
-      "kind": "tilled soil / mud"
+      "tile": "f",
+      "kind": "fence"
     },
     "X37": {
       "x": 23,
       "y": 36,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y37": {
       "x": 24,
@@ -20114,14 +20114,14 @@
     "W38": {
       "x": 22,
       "y": 37,
-      "tile": "c",
-      "kind": "tilled soil / mud"
+      "tile": "f",
+      "kind": "fence"
     },
     "X38": {
       "x": 23,
       "y": 37,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y38": {
       "x": 24,
@@ -20642,14 +20642,14 @@
     "W39": {
       "x": 22,
       "y": 38,
-      "tile": "c",
-      "kind": "tilled soil / mud"
+      "tile": "f",
+      "kind": "fence"
     },
     "X39": {
       "x": 23,
       "y": 38,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y39": {
       "x": 24,
@@ -21170,14 +21170,14 @@
     "W40": {
       "x": 22,
       "y": 39,
-      "tile": "c",
-      "kind": "tilled soil / mud"
+      "tile": "f",
+      "kind": "fence"
     },
     "X40": {
       "x": 23,
       "y": 39,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y40": {
       "x": 24,
@@ -21698,14 +21698,14 @@
     "W41": {
       "x": 22,
       "y": 40,
-      "tile": "c",
-      "kind": "tilled soil / mud"
+      "tile": "f",
+      "kind": "fence"
     },
     "X41": {
       "x": 23,
       "y": 40,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y41": {
       "x": 24,
@@ -22214,8 +22214,8 @@
     "U42": {
       "x": 20,
       "y": 41,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "V42": {
       "x": 21,
@@ -22232,8 +22232,8 @@
     "X42": {
       "x": 23,
       "y": 41,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "g",
+      "kind": "grass"
     },
     "Y42": {
       "x": 24,
@@ -23216,8 +23216,8 @@
     "L44": {
       "x": 11,
       "y": 43,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "M44": {
       "x": 12,
@@ -23984,14 +23984,14 @@
     "AZ45": {
       "x": 51,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BA45": {
       "x": 52,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BB45": {
       "x": 53,
@@ -24044,14 +24044,14 @@
     "BJ45": {
       "x": 61,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BK45": {
       "x": 62,
       "y": 44,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BL45": {
       "x": 63,
@@ -25040,8 +25040,8 @@
     "AZ47": {
       "x": 51,
       "y": 46,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "BA47": {
       "x": 52,
@@ -25100,8 +25100,8 @@
     "BJ47": {
       "x": 61,
       "y": 46,
-      "tile": "f",
-      "kind": "fence"
+      "tile": "p",
+      "kind": "path"
     },
     "BK47": {
       "x": 62,
