@@ -61,8 +61,8 @@ let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2
 const ANIMAL_TYPES={
  cat:[{id:'cat_tabby',n:'TABBY CAT',p:60,desc:'Stripy! Keeps mice away'},{id:'cat_black',n:'BLACK CAT',p:70,desc:'Gold eyes, mouse catcher'},{id:'cat_ginger',n:'GINGER CAT',p:80,desc:'Cuddly — care bonus coins'}],
  chicken:[{id:'chicken_brown',n:'BROWN HEN',p:30,desc:'Lays brown EGGS to sell'},{id:'chicken_white',n:'WHITE HEN',p:35,desc:'Lays white EGGS to sell'},{id:'chicken_rooster',n:'ROOSTER',p:50,desc:'Guards the flock! Wakes you'}],
- cow:[{id:'cow_white',n:'WHITE COW',p:150,desc:'Gives MILK to sell'},{id:'cow_brown',n:'BROWN COW',p:180,desc:'MILK makes CHEESE!'},{id:'cow_black',n:'BLACK COW',p:200,desc:'Lots of MILK & CHEESE'}]};
-const TYPE_MAX={cat:4,chicken:6,cow:4};
+ cow:[{id:'cow_white',n:'WHITE COW',p:150,desc:'Gives MILK to sell'},{id:'cow_brown',n:'BROWN COW',p:180,desc:'MILK makes CHEESE!'},{id:'cow_black',n:'BLACK COW',p:200,desc:'Lots of MILK & CHEESE'},{id:'cow_jersey',n:'JERSEY COW',p:220,desc:'Golden & gentle — creamy MILK'},{id:'cow_bull',n:'BULL',p:300,desc:'Big strong horns — gentle giant!'}]};
+const TYPE_MAX={cat:4,chicken:6,cow:6};
 BREEDS.cow={sp:'cow',n:'COW',c:'#f4f0e8',d:'#3a3030',l:'#ffffff',bl:24,bh:14,leg:10,hr:10,sn:5,fur:0,desc:'Moo! Lives in the COW BARN'};
 Object.keys(ANIMAL_TYPES).forEach(sp=>ANIMAL_TYPES[sp].forEach(t=>{BREEDS[t.id]=Object.assign({},BREEDS[sp],{n:t.n,desc:t.desc})}));
 SP.cow={baby:'CALF',house:'COW BARN',food:'COW FEED'};ACTS.cow=['FEED','PLAY','CUDDLE','SLEEP'];

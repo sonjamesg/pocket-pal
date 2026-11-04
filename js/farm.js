@@ -1,12 +1,17 @@
 // ===== farm.js — v44 dry fields until watered, HOSES by the fields, big BUCKET splash, POO -> FERTILISER =====
 const CROPC='CWUc',HOSES=[[9,16,'CORN'],[25,16,'WHEAT'],[9,32,'PUMPKIN']],HOSE_LEN=16,POO_MAX=4,POO_MS=120e3;
-const POO_ZONES=[[61,24,8,2],[74,24,8,2]]; // in front of COW BARN + HORSE STABLE
+// v65: poo only INSIDE fenced pens, per animal you own: [species, x,y,w,h] (interior tiles; paths/solids skipped)
+const POO_PENS=[['sheep',47,47,10,6],['cow',61,27,8,4],['chicken',50,27,8,4],['pig',59,47,6,4],['horse',72,26,13,5]];
+function pooOK(x,y){const c=(MAP_LAYOUT.rows[y]||'')[x];return (c==='g'||c==='c')&&!PROPS.some(p=>x>=p[0]&&x<p[0]+p[2]&&y>=p[1]&&y<p[1]+p[3])}
+function pooPens(){return POO_PENS.filter(z=>typeof ownSp==='function'&&ownSp(z[0])>0)}
+function inPen(x,y){return POO_PENS.some(z=>x>=z[1]&&y>=z[2]&&x<z[1]+z[3]&&y<z[2]+z[4])}
 function isCropT(x,y){const c=OWBASE[y]&&OWBASE[y][x];return CROPC.includes(c)||c==='Y'}
 // tile art: dry soil until watered; real crop only when READY
 function cropTile(c,x,y){const e=grows()[wetKey(x,y)];if(!e)return 'field';const p=growP(e);return p>=1?{U:'pumpkin',C:'corn',W:'wheat',c:'corn'}[c]:p<.35?'fieldwet':'sprout'}
 function hoseAt(x,y){return HOSES.findIndex(h=>h[0]===x&&h[1]===y)}
 function pooL(){if(!DB.poo)DB.poo={l:[],t:now()};const P=DB.poo;
-  while(P.l.length<POO_MAX&&now()-P.t>=POO_MS){P.t+=POO_MS;const z=POO_ZONES[Math.floor(Math.random()*2)],x=z[0]+Math.floor(Math.random()*z[2]),y=z[1]+Math.floor(Math.random()*z[3]);if(!P.l.some(p=>p[0]===x&&p[1]===y))P.l.push([x,y])}
+  if(!P.v65){P.l=P.l.filter(p=>inPen(p[0],p[1])&&pooOK(p[0],p[1]));P.v65=1}const Z=pooPens();if(!Z.length){P.t=now();return P.l}
+  while(P.l.length<POO_MAX&&now()-P.t>=POO_MS){P.t+=POO_MS;for(let tries=0;tries<12;tries++){const z=Z[Math.floor(Math.random()*Z.length)],x=z[1]+Math.floor(Math.random()*z[3]),y=z[2]+Math.floor(Math.random()*z[4]);if(pooOK(x,y)&&!P.l.some(p=>p[0]===x&&p[1]===y)){P.l.push([x,y]);break}}}
   if(P.l.length>=POO_MAX)P.t=now();return P.l}
 function pooAt(x,y){return pooL().findIndex(p=>p[0]===x&&p[1]===y)}
 function fertN(){return (DB.stock&&DB.stock.fert)||0}
@@ -27,7 +32,7 @@ owInput=function(k){const o=ui.ow;
   if(k==='b'&&ui.hose!=null){ui.hose=null;sfx('click');say('Hose put back.');return}/* v61: B cancels hose */
   if(k==='a'&&o&&!o.mv&&CUR==='ranch'){const [dx,dy]=DV[o.dir],tx=o.x+dx,ty=o.y+dy,th=owThing(tx,ty);
     if(th&&th.hose!=null){if(ui.hose===th.hose){ui.hose=null;say('Hose put back.')}else{ui.hose=th.hose;sfx('click');say('Got the HOSE! Press A on the field to spray. B to put it back.',200)}return}
-    if(th&&th.poo){pooL().splice(pooAt(tx,ty),1);DB.stock=DB.stock||{};DB.stock.fert=fertN()+1;DB.scooped=(DB.scooped||0)+1;saveDB();sfx('click');say('Scooped! 1 bag of FERTILISER. Use it on crops or sell it.',200);return}
+    if(th&&th.poo){scoopPoo(tx,ty);return}
     if(cropHere(o)){const cx=isCropT(o.x,o.y)?o.x:tx,cy=isCropT(o.x,o.y)?o.y:ty;
       if(harvestArea(cx,cy))return;
       if(ui.hose!=null){if(waterArea(cx,cy,2,1))return}
@@ -36,10 +41,11 @@ owInput=function(k){const o=ui.ow;
       const e=grows()[wetKey(cx,cy)];if(e){say('Growing! '+Math.round(growP(e)*100)+'%'+(fertN()?'':' — poo fertiliser makes it faster'));return}
       say('Dry soil! Grab a HOSE or fill a bucket at the WELL.',180);return}}
   return _i(k)};
-owUpdate=function(){_u();const o=ui.ow;if(ui.hose!=null&&o){const h=HOSES[ui.hose];if(CUR!=='ranch'||Math.hypot(o.x-h[0],o.y-h[1])>HOSE_LEN){ui.hose=null;say('The hose is too short — it sprang back!')}}};
+function scoopPoo(x,y){const i=pooAt(x,y);if(i<0)return false;pooL().splice(i,1);DB.stock=DB.stock||{};DB.stock.fert=fertN()+1;DB.scooped=(DB.scooped||0)+1;saveDB();sfx('click');say('Scooped! 1 bag of FERTILISER. Use it on crops or sell it.',200);return true}
+owUpdate=function(){_u();const o=ui.ow;if(o&&!o.mv&&CUR==='ranch')scoopPoo(o.x,o.y);if(ui.hose!=null&&o){const h=HOSES[ui.hose];if(CUR!=='ranch'||Math.hypot(o.x-h[0],o.y-h[1])>HOSE_LEN){ui.hose=null;say('The hose is too short — it sprang back!')}}};
 owExtras=function(t,o){_x(t,o);if(CUR!=='ranch')return;
   for(const k in grows()){const e=grows()[k];if(!e.f)continue;const [x,y]=k.split(',').map(Number);if(growP(e)<1){R(x*TS+2,y*TS+2,2,2,'#6a4020');R(x*TS+12,y*TS+3,2,2,'#6a4020')}}
-  pooL().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+11;E(X,Y+2,6,2,'#0003');E(X,Y,5,3,'#6a4020');E(X,Y-3,3.5,2.5,'#7a4a24');E(X,Y-5,2,1.5,'#8a5a2c');if((t>>4)%3===0){R(X-4,Y-10,1,1,'#5a8a30');R(X+3,Y-12,1,1,'#5a8a30')}});
+  pooL().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+10;E(X,Y+3,6,2,'#0003');E(X,Y,5,3,'#6a4020');E(X,Y-3,3.5,2.5,'#7a4a24');E(X,Y-5,2,1.5,'#8a5a2c');if((t>>4)%3===0){R(X-4,Y-10,1,1,'#5a8a30');R(X+3,Y-12,1,1,'#5a8a30')}});
   HOSES.forEach(([x,y],i)=>{const hf=()=>{const X=x*TS,Y=y*TS,held=ui.hose===i,bob=Math.sin(t/14+i)*.6;g.save();g.translate(X+8,Y+15);g.scale(1.4,1.4);g.translate(-X-8,-Y-15);/* v59 chunky toy hose reel */
     E(X+8,Y+15,8,2.4,'#0a281440');RR(X+1,Y+11,14,4,2,'#2b2440');RR(X+1,Y+10,14,4,2,'#ffd84a');R(X+2,Y+10,12,1,'#fff3a0');
     R(X+2,Y+3,3,9,'#2b2440');R(X+11,Y+3,3,9,'#2b2440');R(X+2.5,Y+3,2,8.5,'#ff5a8b');R(X+11.5,Y+3,2,8.5,'#ff5a8b');R(X+2.5,Y+3,1,8,'#ffb3cb');

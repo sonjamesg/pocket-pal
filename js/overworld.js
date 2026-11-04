@@ -20,7 +20,7 @@ function owGate(){const o=ui.ow;if(OWBASE[o.y][o.x]!=='G')return;const to=CUR===
 
 // ===== ranch buildings + kid chores (weeds, pond water) + Grandpa allowance =====
 const BARN_MSG={coop:'Nesting boxes and perches are ready for chickens!',cowbarn:'Clean stalls and fresh hay — waiting for cows!',stable:'Horse stalls are swept. The paddock is ready!',
-  sheepshed:'Cosy pens for sheep — shearing tools on the wall.',sty:'A muddy wallow and a full trough — pigs will love it!',feedshed:'Sacks of feed for every animal on the ranch.',toolshed:'Grandpa\'s old tools: pitchfork, bucket, brush.'};
+  cowfarm:'MOO MEADOW FARM — Farmer ROSIE sells cows and a BULL! Walk in to say hi.',sheepshed:'Cosy pens for sheep — shearing tools on the wall.',sty:'A muddy wallow and a full trough — pigs will love it!',feedshed:'Sacks of feed for every animal on the ranch.',toolshed:'Grandpa\'s old tools: pitchfork, bucket, brush.'};
 function barnTalk(b){const id=b[4],n=b[5],sp={coop:'chicken',cowbarn:'cow',stable:'horse',sheepshed:'sheep',sty:'pig'}[id],own=sp?petList().filter(p=>spOf(p)===sp).length:0;
   say(n+': '+BARN_MSG[id]+(sp?(own?' '+own+' '+sp+(own>1?'s':'')+' live here.':' Get '+sp+'s at the PET SHOP soon!'):''),200)}
 const today=()=>new Date().toDateString();
