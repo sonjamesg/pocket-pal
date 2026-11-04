@@ -1,5 +1,5 @@
 // ===== achieve.js — v70 ACHIEVEMENTS BOARD: 24 unlocks in 5 tiers, Job-Board style; toasts; saved in DB.ach (local + cloud via saveDB) =====
-// Open: SELECT on the map (Shift / controller View/Back), T key, or tap the 🏆 trophy button top-left of the map.
+// Open: walk up to the ACHIEVEMENTS BOARD (next to the JOB BOARD) and press A. Shortcuts: SELECT / T on the map.
 // Pacing: 1 WOOL CYCLE = 6h fleece regrow (≈4 a day). cycles = max(fleeces sheared, 6h blocks since your first sheep) so nobody soft-locks.
 // Specialty farm openings: CLUCKY HOLLOW 10 cycles, MUDDY TROTTERS +50% = 15, GALLOP RIDGE +50% = 23 (MOO MEADOW is open from the start).
 const CYCLE_MS=6*3600e3,FARM_CYC={chickfarm:10,pigfarm:15,horsefarm:23},FARM_NM={chickfarm:'CLUCKY HOLLOW',pigfarm:'MUDDY TROTTERS',horsefarm:'GALLOP RIDGE'};
@@ -85,12 +85,20 @@ function drawAch(t){drawOverworld(t);R(0,0,W,H,'#0007');const A=achD();
 function drawAchToast(){if(!achToast&&achQ.length){achToast={a:achQ.shift(),t:0};try{sfx('fanfare')}catch(e){}try{sparkle(24,W/2,30)}catch(e){}}if(!achToast)return;const z=achToast;z.t++;
   const k=z.t<15?z.t/15:z.t>165?Math.max(0,(190-z.t)/25):1,y=-34+k*40;RR(20,y,W-40,32,9,'#382010');RR(21,y,W-42,30,8,'#ffe36a','#a06000');RR(26,y+4,22,22,6,'#fff');txt(z.a.ic,37,y+20,'#000',13);
   txt('🏆 ACHIEVEMENT UNLOCKED!',54,y+12,'#a05a00',7.5,'left');txt(z.a.n,54,y+24,'#2b2440',9.5,'left',W-100);if(z.t>190)achToast=null}
-// trophy HUD button on the map (tap it)
-{const _oh=owHud;owHud=function(t){_oh(t);const A=achD(),n=ACH_ALL.filter(a=>A.u[a.id]).length;RR(3,1,34,14,5,'#ffc83a','#2b2440');txt('🏆'+n,20,11.5,'#2b2440',8)}}
-cv.addEventListener('pointerdown',e=>{if(!S||S.scene!=='map'||ui.modal)return;const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(x<40&&y<17){e.preventDefault();e.stopPropagation();openAch()}});
+// v73: ACHIEVEMENTS BOARD prop next to the JOB BOARD (walk up + A). Gold-trimmed clone of the job board with a trophy plaque.
+function mkAchBoard(){const src=IMG.p_jobboard;if(!src||!src.naturalWidth)return false;const c=document.createElement('canvas');c.width=src.naturalWidth;c.height=src.naturalHeight;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  x.drawImage(src,0,0);x.globalCompositeOperation='source-atop';x.fillStyle='rgba(255,200,40,.38)';x.fillRect(0,0,c.width,c.height);x.globalCompositeOperation='source-over';
+  const w=c.width,cx=w/2,cy=Math.round(c.height*.38);x.fillStyle='#2b2440';x.fillRect(cx-8,cy-8,16,15);x.fillStyle='#ffc83a';x.fillRect(cx-7,cy-7,14,13);
+  x.fillStyle='#fff3a0';x.fillRect(cx-4,cy-5,8,5);x.fillStyle='#c88a10';x.fillRect(cx-1,cy,2,3);x.fillRect(cx-3,cy+3,6,2);x.fillStyle='#ffe36a';x.fillRect(cx-6,cy-4,2,3);x.fillRect(cx+4,cy-4,2,3);
+  c.naturalWidth=w;c.naturalHeight=c.height;IMG.p_achboard=c;return true}
+{const t=setInterval(()=>{if(mkAchBoard())clearInterval(t)},300)}
+if(typeof PROP_MSG!=='undefined')PROP_MSG.achboard='The ACHIEVEMENTS BOARD — press A!';
+{const _h=owHint;owHint=function(th){if(th&&th.prop==='achboard')return 'A: open ACHIEVEMENTS';return _h(th)}}
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv&&CUR==='ranch'){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.prop==='achboard'){openAch();return}}return _oi(k)}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const P=PROPS.find(q=>q[4]==='achboard');if(!P)return;const X=P[0]*TS+P[2]*8,Y=(P[1]+P[3])*TS,f=()=>{RR(X-28,Y-1,56,8,3,'#6a4020','#382010');txt('ACHIEVEMENTS',X,Y+5,'#ffe36a',5)};if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+2,f);else f()}}
 {const _fr=frame;frame=function(){if(S.scene==='ach'){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);drawAch(t);drawAchToast();requestAnimationFrame(frame);return}_fr();if(S.scene!=='title')drawAchToast()}}
 // job board pointer to the trophy board
-{const _dj=drawJobs;drawJobs=function(t){_dj(t);txt('SELECT / 🏆 = ACHIEVEMENTS',W/2,H-1.5,'#ffe36a',6)}}
+{const _dj=drawJobs;drawJobs=function(t){_dj(t);txt('🏆 ACHIEVEMENTS board is right next door ▶',W/2,H-1.5,'#ffe36a',6)}}
 if(window.__pp)Object.assign(window.__pp,{openAch,achCheck,ACH_ALL,woolCycles});
 // v71 safety net: one throwing decor layer must never kill the building/prop draw
 {const _x=owExtras;owExtras=function(t,o){try{_x(t,o)}catch(e){console.warn('owExtras',e)}}}
