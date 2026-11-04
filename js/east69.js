@@ -120,8 +120,16 @@ function toggleFollow(){const L=followPets();if(!L.length){say('You need a pet f
 if(typeof KM!=='undefined')KM.f='follow';
 {const _ou=owUpdate;owUpdate=function(){_ou();const o=ui.ow;if(!o)return;const T=ui.trail||(ui.trail=[]),l=T[T.length-1];if(!l||l[0]!==o.px||l[1]!==o.py||l[3]!==CUR){T.push([o.px,o.py,o.dir,CUR]);if(T.length>60)T.shift()}}}
 {const _ox=owExtras;owExtras=function(t,o){_ox(t,o);const p=DB.follow&&DB.pets[DB.follow];if(!p||!ui.trail||ui.trail.length<2)return;const T=ui.trail,q=T[Math.max(0,T.length-14)];if(q[3]!==CUR)return;
-  const X=q[0]+8,Y=q[1]+14,mv=!!o.mv,f=()=>{E(X,Y,6,2,'#0004');g.save();g.translate(X,Y-2);g.scale(.42,.42);try{const sp=spOf(p);if(sp==='dog')dog(0,0,p.breed,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,coat:p.coat||0});else critter(0,0,sp,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,sv:p.breed})}catch(e){}g.restore()};
-  if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f()}}
+  const W2=ui.fw||(ui.fw={bk:240,jp:0,bs:0,pc:2400,poos:[]}),mv=!!o.mv;
+  /* v102: following = walking. occasional hop+bark, mood up, rare poo */
+  if(--W2.bk<=0){W2.bk=420+Math.random()*600|0;W2.jp=18;W2.bs=50;if(!document.hidden&&sfx)sfx('woof')}
+  if(mv&&p.happy!=null&&t%60===0){p.happy=Math.min(100,p.happy+0.6);if(p.xp!=null)p.xp+=0.2}
+  if(mv&&--W2.pc<=0){W2.pc=3600+Math.random()*3600|0;if(W2.poos.filter(z=>z[2]===CUR).length<2)W2.poos.push([q[0]+8,q[1]+14,CUR])}
+  const pl=T[T.length-1];W2.poos=W2.poos.filter(z=>{if(z[2]!==CUR)return true;if(Math.abs(pl[0]+8-z[0])<10&&Math.abs(pl[1]+14-z[1])<10){p.happy=Math.min(100,(p.happy||0)+3);saveDB();sfx&&sfx('coin');say('Picked up '+p.name+"'s poo. Good owner! 💩",120);return false}g.save();g.font='9px sans-serif';g.textAlign='center';g.fillText('💩',z[0],z[1]);g.restore();return true});
+  const jy=W2.jp>0?-Math.sin((18-W2.jp--)/18*Math.PI)*6:0;
+  const X=q[0]+8,Y=q[1]+14,f=()=>{E(X,Y,6,2,'#0004');g.save();g.translate(X,Y-2+jy);g.scale(.42,.42);try{const sp=spOf(p);if(sp==='dog')dog(0,0,p.breed,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,coat:p.coat||0});else critter(0,0,sp,p.stage||'adult',{pose:mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,sv:p.breed})}catch(e){}g.restore()};
+  if(typeof P3D!=='undefined'&&P3D)p3later(X,Y,f);else f();
+  if(W2.bs>0){W2.bs--;g.save();g.font='bold 8px sans-serif';g.textAlign='center';g.fillStyle='#fff';g.strokeStyle='#2b2440';g.lineWidth=2;g.strokeText('WOOF!',X,Y-26);g.fillText('WOOF!',X,Y-26);g.restore()}}}
 // v95: FOLLOW / UNFOLLOW in the dog's visit menu (uses DB.follow like F / LB)
 function setFollow(on){if(!S||!S.id)return;DB.follow=on?S.id:null;saveDB();sfx&&sfx('click');if(on&&typeof achInc==='function')achInc('follow');syncActs();say(on?S.name+' will follow you on the map!':S.name+' will stay home.',150)}
 {const _sa=syncActs;syncActs=function(){_sa();if(spOf(S)==='dog'){ACTIONS=ACTIONS.filter(a=>a!=='FOLLOW'&&a!=='UNFOLLOW');ACTIONS.push(DB.follow===S.id?'UNFOLLOW':'FOLLOW');if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}}}
