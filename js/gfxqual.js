@@ -1,8 +1,8 @@
 // v86: adaptive graphics quality — watches FPS, dials heavy effects down on slow phones, restores when smooth
 // levels: 2=HIGH 1=MED 0=LOW. Session-only (sessionStorage) so a hitch never locks low forever.
 const GFX={lvl:2,avg:16.7,last:0,bad:0,good:0,toast:0,
-  ok(f){const L=this.lvl;if(f==='blur'||f==='glow')return L>=2;if(f==='shadow'||f==='ambient')return L>=1;return true},
-  dpr(){return Math.min(this.lvl>=2?3:this.lvl>=1?2:1,window.devicePixelRatio||1)},
+  ok(f){const L=this.lvl;if(f==='blur')return L>=2;if(f==='glow')return L>=1;if(f==='shadow'||f==='ambient')return L>=1;return true},
+  dpr(){return Math.min(this.lvl>=2?2:this.lvl>=1?1.5:1,window.devicePixelRatio||1)},
   mode:'auto',
   set(l){l=Math.max(0,Math.min(2,l));if(l===this.lvl)return;const down=l<this.lvl;this.lvl=l;this.bad=this.good=0;try{sessionStorage.setItem('pf_gfx',l)}catch(e){}
     if(down&&!this.toasted){this.toasted=1;this.toast=150}try{fit()}catch(e){}},
