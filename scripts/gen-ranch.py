@@ -2,7 +2,7 @@
 """v23 spacious ranch (88x68): buildings spread out with yards/paths, crop fields, windmill, silo,
 orchard, flower beds, rounded ponds. Rewrites ONLY the ranch part of js/map-data.js (outer world kept)."""
 # NOTE v59/v62: js/map-data.js was hand-edited after generation (wider gates, sheep shed/sty y=41, shop path col 39 rows 11-13,
-# mud-pen fence col 22, well moved to [39,19] + path row 21 cols 39-42). Re-running this script will LOSE those edits.
+# mud-pen fence col 22, well moved to [39,19] + path row 21 cols 39-42, silo 3-wide w/ path col 70 rows 22-32). Re-running this script will LOSE those edits.
 import json, math, os, random, re
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P=os.path.join(ROOT,'js','map-data.js'); src=open(P).read()
@@ -55,7 +55,7 @@ frame(58,46,65,51); M[46][62]='p'                 # pig pen
 rect(59,47,64,50,'c')                              # mud/soil wallow
 for x,y in ((52,28),(55,29),(74,28),(80,27),(49,49),(54,51)): M[y][x]='y'   # hay bales in yards
 # props [x,y,w,h,id] solid footprint; art drawn bottom-aligned
-PROPS=[[36,22,3,2,'windmill'],[69,20,2,2,'silo'],[39,19,2,2,'well'],[9,22,1,1,'scarecrow'],[27,22,1,1,'scarecrow'],[10,37,1,1,'scarecrow'],
+PROPS=[[36,22,3,2,'windmill'],[69,20,3,2,'silo'],[39,19,2,2,'well'],[9,22,1,1,'scarecrow'],[27,22,1,1,'scarecrow'],[10,37,1,1,'scarecrow'],
        [66,26,2,1,'trough'],[63,51,2,1,'trough']]
 for x,y,w,h,_ in PROPS: claim(x,y,w,h,1)
 # crop fields (fenced, with a path gate)

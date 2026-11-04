@@ -12482,8 +12482,8 @@
     "BS23": {
       "x": 70,
       "y": 22,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT23": {
       "x": 71,
@@ -13010,8 +13010,8 @@
     "BS24": {
       "x": 70,
       "y": 23,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT24": {
       "x": 71,
@@ -13538,8 +13538,8 @@
     "BS25": {
       "x": 70,
       "y": 24,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT25": {
       "x": 71,
@@ -14066,8 +14066,8 @@
     "BS26": {
       "x": 70,
       "y": 25,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT26": {
       "x": 71,
@@ -14594,8 +14594,8 @@
     "BS27": {
       "x": 70,
       "y": 26,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT27": {
       "x": 71,
@@ -15122,8 +15122,8 @@
     "BS28": {
       "x": 70,
       "y": 27,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT28": {
       "x": 71,
@@ -15650,8 +15650,8 @@
     "BS29": {
       "x": 70,
       "y": 28,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT29": {
       "x": 71,
@@ -16178,8 +16178,8 @@
     "BS30": {
       "x": 70,
       "y": 29,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT30": {
       "x": 71,
@@ -16706,8 +16706,8 @@
     "BS31": {
       "x": 70,
       "y": 30,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT31": {
       "x": 71,
@@ -17234,8 +17234,8 @@
     "BS32": {
       "x": 70,
       "y": 31,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT32": {
       "x": 71,
@@ -17762,8 +17762,8 @@
     "BS33": {
       "x": 70,
       "y": 32,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "BT33": {
       "x": 71,

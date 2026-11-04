@@ -5,7 +5,7 @@ function owInit(back){const a=back&&owAt(back);if(a){setMap('ranch');ui.ow=Objec
 function owTry(d){const o=ui.ow;if(o.mv)return;o.dir=d;const [dx,dy]=DV[d],nx=o.x+dx,ny=o.y+dy;if(!owSolid(nx,ny)){o.mv={tx:nx,ty:ny,t:0};o.step++}}
 function owUpdate(){const o=ui.ow;if(!o)return;if(o.mv){o.mv.t+=1/8;const k=Math.min(1,o.mv.t);o.px=(o.x+(o.mv.tx-o.x)*k)*TS;o.py=(o.y+(o.mv.ty-o.y)*k)*TS;
     if(k>=1){o.x=o.mv.tx;o.y=o.mv.ty;o.mv=null;owGate()}}
-  if(!o.mv&&!ui.modal){for(const d of ['up','down','left','right'])if(held[d]){owTry(d);break}}}
+  if(!o.mv&&!ui.modal){for(const d of ['up','down','left','right'])if(held[d]&&performance.now()-held[d]>220){owTry(d);break}}}/* v64: a quick tap = exactly 1 tile */
 function owInput(k){const o=ui.ow;if(k==='select'){loadArt(true);say('Art reloaded');return}if(DV[k]){if(!o.mv)owTry(k);return}
   if(k==='a'&&!o.mv){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(!th)return;
     if(th.barn){barnTalk(th.barn);return}if(CUR==='ranch'&&th.weed){chore(o.x+dx,o.y+dy,'weed');return}if(th.pet){loadPet(th.pet.id);return}if(th.empty){say('An empty plot. Buy a pet at the PET SHOP in the woods!');return}if(th.store){openStore();return}if(th.home){say('Home sweet home! Pets come from the PET SHOP in the WILD WOODS.');return}
