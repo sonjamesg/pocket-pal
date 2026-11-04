@@ -95,3 +95,9 @@ html.no-pads #screenwrap{grid-column:1!important;grid-row:1!important;width:100%
 #tvdock{position:fixed;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:9000;display:flex;gap:6px;opacity:.85}
 #tvdock .tvpill{min-height:36px;padding:0 12px;border-radius:18px;border:2px solid #8a5a2b;background:#fff6e4;color:#4a3320;font-weight:900;font-size:13px!important}
 #app:fullscreen~#tvdock,body:has(#app:fullscreen) #tvdock{opacity:.4}
+
+/* v98: Samsung Internet / Android forced dark mode was recolouring the pads (near-black D-pad, dull A/B). Lock light scheme + explicit colours. */
+:root{color-scheme:only light}
+#dpad .d,#ab .btn,.pill{forced-color-adjust:none;-webkit-text-fill-color:#fff}
+/* v98: touch phones — TV/Full dock sat on top of START; tuck it small into the top-right corner */
+@media (pointer:coarse){#tvdock{top:calc(4px + env(safe-area-inset-top));bottom:auto;right:4px;opacity:.55;gap:4px}#tvdock .tvpill{min-height:26px;padding:0 8px;font-size:10px!important;border-width:1px}}
