@@ -86,10 +86,15 @@ function drawAchToast(){if(!achToast&&achQ.length){achToast={a:achQ.shift(),t:0}
   const k=z.t<15?z.t/15:z.t>165?Math.max(0,(190-z.t)/25):1,y=-34+k*40;RR(20,y,W-40,32,9,'#382010');RR(21,y,W-42,30,8,'#ffe36a','#a06000');RR(26,y+4,22,22,6,'#fff');txt(z.a.ic,37,y+20,'#000',13);
   txt('🏆 ACHIEVEMENT UNLOCKED!',54,y+12,'#a05a00',7.5,'left');txt(z.a.n,54,y+24,'#2b2440',9.5,'left',W-100);if(z.t>190)achToast=null}
 // v73: ACHIEVEMENTS BOARD prop next to the JOB BOARD (walk up + A). Gold-trimmed clone of the job board with a trophy plaque.
-function mkAchBoard(){const src=IMG.p_jobboard;if(!src||!src.naturalWidth)return false;const c=document.createElement('canvas');c.width=src.naturalWidth;c.height=src.naturalHeight;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
-  x.drawImage(src,0,0);x.globalCompositeOperation='source-atop';x.fillStyle='rgba(255,200,40,.38)';x.fillRect(0,0,c.width,c.height);x.globalCompositeOperation='source-over';
-  const w=c.width,cx=w/2,cy=Math.round(c.height*.38);x.fillStyle='#2b2440';x.fillRect(cx-8,cy-8,16,15);x.fillStyle='#ffc83a';x.fillRect(cx-7,cy-7,14,13);
-  x.fillStyle='#fff3a0';x.fillRect(cx-4,cy-5,8,5);x.fillStyle='#c88a10';x.fillRect(cx-1,cy,2,3);x.fillRect(cx-3,cy+3,6,2);x.fillStyle='#ffe36a';x.fillRect(cx-6,cy-4,2,3);x.fillRect(cx+4,cy-4,2,3);
+function mkAchBoard(){const src=IMG.p_jobboard;if(!src||!src.naturalWidth)return false;const T=14,c=document.createElement('canvas');c.width=src.naturalWidth;c.height=src.naturalHeight+T;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  x.drawImage(src,0,T);x.globalCompositeOperation='source-atop';x.fillStyle='rgba(255,200,40,.38)';x.fillRect(0,0,c.width,c.height);x.globalCompositeOperation='source-over';
+  const w=c.width,cx=w/2,P=(X,Y,W,H,C)=>{x.fillStyle=C;x.fillRect(X,Y,W,H)};
+  // gold trophy mounted on top of the wooden frame (outline, cup, handles, stem, wooden mount block)
+  P(cx-7,1,14,2,'#2b2440');P(cx-8,2,16,8,'#2b2440');P(cx-3,10,6,3,'#2b2440');P(cx-5,12,10,4,'#2b2440');
+  P(cx-6,2,12,7,'#ffc83a');P(cx-5,3,4,4,'#fff3a0');P(cx+3,3,2,5,'#d89a10');P(cx-9,3,3,4,'#2b2440');P(cx+6,3,3,4,'#2b2440');P(cx-8,4,2,2,'#ffc83a');P(cx+6,4,2,2,'#ffc83a');
+  P(cx-2,9,4,3,'#d89a10');P(cx-4,12,8,3,'#8a5a2e');P(cx-4,12,8,1,'#c48c50');
+  // small star plaque on the board face
+  const cy=T+Math.round(src.naturalHeight*.38);P(cx-6,cy-5,12,10,'#2b2440');P(cx-5,cy-4,10,8,'#ffe36a');P(cx-1,cy-3,2,6,'#c88a10');P(cx-3,cy-1,6,2,'#c88a10');
   c.naturalWidth=w;c.naturalHeight=c.height;IMG.p_achboard=c;return true}
 {const t=setInterval(()=>{if(mkAchBoard())clearInterval(t)},300)}
 if(typeof PROP_MSG!=='undefined')PROP_MSG.achboard='The ACHIEVEMENTS BOARD — press A!';
