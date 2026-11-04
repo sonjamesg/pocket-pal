@@ -25,9 +25,13 @@ function autoT(im,set,x,y,X,Y){[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy],q)
 const BLD_PROPS='farmshop jobboard achboard windmill silo well';
 function bldBoxes(){const L=[],add=(x,y,w,h)=>L.push([x-1,y-3,x+w,y+h+1]);
   if(CUR==='ranch'){BARNS.forEach(b=>add(b[0],b[1],b[2],b[3]));if(HOME)add(HOME[0]-1,HOME[1],4,2);PROPS.forEach(p=>{if(BLD_PROPS.includes(p[4]))add(p[0],p[1],p[2],p[3])})}
-  else if(STORE)add(STORE[0],STORE[1],3,2);return L}
+  else if(STORE)add(STORE[0]-1,STORE[1]-1,5,3);return L}
 const TREE_SP={T:'tree2',P:'pine2',A:'apple2'};
 const PROP_MSG={windmill:'The old windmill creaks round — it pumps water for the ranch!',silo:'A tall silo packed with grain for the winter.',well:'Grandpa\'s wishing well. The water is cool and clear.',scarecrow:'Mr. Straw keeps the crows off the crops!',trough:'A water trough for thirsty animals.'};
+// v112: Pet Shop exterior drawn 5x3 tiles (matches the roomy interior) with a big tile-aligned door on the door tile
+let _BSI=null;function bigStoreImg(ok){if(_BSI)return _BSI;if(!ok('petstore'))return null;const s=IMG.petstore,w=80,h=Math.round(s.height*w/s.width),c=document.createElement('canvas');c.width=w;c.height=h;const q=c.getContext('2d');q.imageSmoothingEnabled=false;q.drawImage(s,0,0,w,h);
+  const k=w/s.width,fy=h-Math.round(4*k);q.fillStyle='#63c2a3';q.fillRect(Math.round(24*k),Math.round(66*k),Math.round(16*k),fy-Math.round(66*k));
+  const dx=32,dw=16,dh=30,dy=fy-dh;q.fillStyle='#2b2440';q.fillRect(dx-2,dy-2,dw+4,dh+2);q.fillStyle='#d59125';q.fillRect(dx,dy,dw,dh);q.fillStyle='#f0b848';q.fillRect(dx+2,dy+2,dw-4,dh-6);q.fillStyle='#d59125';q.fillRect(dx+7,dy+2,2,dh-6);q.fillStyle='#bfe8ff';q.fillRect(dx+3,dy+5,3,6);q.fillRect(dx+10,dy+5,3,6);q.fillStyle='#6b462f';q.fillRect(dx+12,dy+16,2,2);q.fillRect(dx-3,fy,dw+6,2);return _BSI=c}
 function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.min(MW*TS-W+40,o.px+8-W/2)),cy=Math.max(-40,Math.min(MH*TS-H+32,o.py+8-H/2+10));
   CAMC=[cx+W/2,cy+H/2];g.fillStyle='#205828';g.fillRect(0,0,W,H);let BB=null;if(P3D){P3Q=[];P3GROUND=true;BB=p3dBegin(Math.round(cx),Math.round(cy));g.fillStyle='#4f9a36';g.fillRect(P3C.ox-40,P3C.oy-40,W/P3.A+80,H/P3.A+80)}else{P3C=null;g.save();g.translate(-Math.round(cx),-Math.round(cy))}
   g.imageSmoothingEnabled=false;const ok=n=>IMG[n]&&IMG[n].naturalWidth;
@@ -57,7 +61,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
   const FY=(o.py!=null?o.py:o.y*TS)/TS;const drawTrees=front=>trees.forEach(([x,y,n])=>{if((y+1>FY)!==front)return;if(P3D)p3flush(y*TS+31);p3shadow(x*TS+16,y*TS+31,22,36);withProj(x*TS+16,y*TS+32,()=>{if(ok(n)){const im=IMG[n];E(x*TS+16,y*TS+30,13,4,'#0a281438');drawLean(im,x*TS,y*TS)}else{E(x*TS+16,y*TS+14,14,12,'#307030')}})});
   const drawFences=front=>fences.forEach(([x,y])=>{if((y>FY)===front)withProj(x*TS+8,y*TS+14,()=>drawFence(x,y))});
   drawFences(false);drawTrees(false);
-  const drawStore=front=>{if(CUR!=='ranch'&&((STORE[1]+1>=FY)===front))withProj(STORE[0]*TS+24,(STORE[1]+2)*TS,()=>{const [sx,sy]=STORE;if(ok('petstore'))drawLean(IMG.petstore,sx*TS,(sy+2)*TS-IMG.petstore.height);else{R(sx*TS+2,sy*TS+2,44,28,'#f0a040')}RR(sx*TS+4,sy*TS-41,40,9,3,'#ff5a8b','#2b2440');txt('PET SHOP',sx*TS+24,sy*TS-34,'#fff',6)})};let drawHome=()=>{};
+  const drawStore=front=>{if(CUR!=='ranch'&&((STORE[1]+1>=FY)===front))withProj(STORE[0]*TS+24,(STORE[1]+2)*TS,()=>{const [sx,sy]=STORE,bx=(sx-1)*TS,by=(sy+2)*TS;const im=bigStoreImg(ok);if(im)drawLean(im,bx,by-im.height);else{R(bx+2,by-46,76,44,'#f0a040')}const ty=by-(im?im.height:60)+30;RR(bx+14,ty,52,12,3,'#ff5a8b','#2b2440');txt('PET SHOP',bx+40,ty+9,'#fff',8)})};let drawHome=()=>{};
   if(CUR==='ranch'){
   drawHome=front=>{if((HOME[1]+1>=FY)!==front)return;if(P3D)p3flush((HOME[1]+2)*TS-1);p3shadow(HOME[0]*TS+24,(HOME[1]+2)*TS-2,52,60);withProj(HOME[0]*TS+24,(HOME[1]+2)*TS,()=>{if(ok('b_farmhouse')){const [hx,hy]=HOME;drawLean(IMG.b_farmhouse,hx*TS-8,(hy+2)*TS-IMG.b_farmhouse.height)}else {const [hx,hy]=HOME,X=hx*TS,Y=hy*TS;E(X+24,Y+31,24,4,'#0003');R(X+3,Y+12,42,20,'#e8c890');for(let i=0;i<5;i++)R(X+3,Y+15+i*4,42,1,'#c8a070');g.fillStyle='#3a6ad8';g.beginPath();g.moveTo(X-1,Y+14);g.lineTo(X+24,Y-6);g.lineTo(X+49,Y+14);g.fill();g.fillStyle='#2a4aa8';g.fillRect(X-1,Y+12,50,3);R(X+20,Y+20,8,12,'#7a4a20');R(X+26,Y+26,1,1,'#ffd84a');R(X+7,Y+18,9,7,'#9ad8ff');R(X+32,Y+18,9,7,'#9ad8ff');R(X+7,Y+21,9,1,'#fff');R(X+32,Y+21,9,1,'#fff');R(X+36,Y-2,5,8,'#a04030')}})};
   const L=homePets().slice(0,6);

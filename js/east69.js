@@ -13,8 +13,9 @@ function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
     if(bad)continue;keep.push(t);const k=K(cx,cy);(G.get(k)||G.set(k,[]).get(k)).push(t)}
   trees.length=0;trees.push(...keep)}
 // v97: dirt road continues off-map past each gate so the way to the RANCH / PET SHOP reads clearly
-function gateRoad(){const gt=MAPS[CUR].gate;if(!gt)return;const xs=gt.map(q=>q[0]),gy=gt[0][1],X=(Math.min(...xs)-1)*TS,w=(xs.length+2)*TS,up=gy===0,len=14*TS;
-  const Y0=up?-len:(gy+1)*TS;R(X-TS,Y0,w+2*TS,len,'#4f9a36');R(X,Y0,w,len,'#c9934a');R(X+3,Y0,w-6,len,'#e0c080');for(let k=0;k<len;k+=11)R(X+6+(k*7)%(w-14),Y0+k,3,2,'#b88a50')}
+function gateRoad(){const gt=MAPS[CUR].gate;if(!gt)return;const xs=gt.map(q=>q[0]),gy=gt[0][1],x0=Math.min(...xs),n=xs.length,up=gy===0,L=14;const ok=IMG.pathauto&&IMG.pathauto.naturalWidth;
+  for(let j=1;j<=L;j++){const ty=up?gy-j:gy+j;for(let i=0;i<n;i++){const X=(x0+i)*TS,Y=ty*TS;if(!ok){R(X,Y,TS,TS,'#e8d8a0');continue}
+    [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy],q)=>{const edge=(sx<0&&i===0)||(sx>0&&i===n-1);g.drawImage(IMG.pathauto,(edge?3:0)*8,q*8,8,8,X+(sx>0?8:0),Y+(sy>0?8:0),8,8)})}}}
 // --- pens: decorative roamers (Clucky Hollow chickens, Muddy Trotters pigs, Gallop Ridge horses) ---
 const PEN_ROAM={chickPen:['chicken',.5,[['chicken_white',0],['chicken_brown',1.1],['chicken_rooster',2.3],['chicken_white',3.2],['chicken_brown',4.4],['chicken_white',5.1],['chicken_brown',.7]]],
   pigPen:['pig',.6,[[null,0],[null,1.6],[null,2.9],[null,4.2],[null,5.3]]],
