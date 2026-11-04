@@ -13,3 +13,5 @@ horse2.mp3  https://bigsoundbank.com/horse-neighing-4-s1541.html
 goat.mp3    https://bigsoundbank.com/bleating-goat-1-s0279.html
 duck.mp3    https://bigsoundbank.com/ducks-s0276.html
 Custom: put James's horse recording at assets/sfx/custom/horse.mp3 (auto-detected).
+
+Custom horse (James recording): assets/sfx/custom/horse.mp3 — preferred ~2/3 of horse neighs when present.
