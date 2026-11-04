@@ -11796,14 +11796,14 @@
     "AK11": {
       "x": 36,
       "y": 10,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "AL11": {
       "x": 37,
       "y": 10,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AM11": {
       "x": 38,
@@ -12936,14 +12936,14 @@
     "AK12": {
       "x": 36,
       "y": 11,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AL12": {
       "x": 37,
       "y": 11,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "AM12": {
       "x": 38,
@@ -41790,14 +41790,14 @@
     "BG38": {
       "x": 58,
       "y": 37,
-      "tile": "T",
-      "kind": "tree 2x2 origin"
+      "tile": "g",
+      "kind": "grass"
     },
     "BH38": {
       "x": 59,
       "y": 37,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BI38": {
       "x": 60,
@@ -42894,14 +42894,14 @@
     "BG39": {
       "x": 58,
       "y": 38,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BH39": {
       "x": 59,
       "y": 38,
-      "tile": "x",
-      "kind": "tree body"
+      "tile": "g",
+      "kind": "grass"
     },
     "BI39": {
       "x": 60,

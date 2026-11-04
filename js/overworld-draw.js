@@ -21,6 +21,11 @@ function isK(set,x,y){if(x<0||y<0||x>=MW||y>=MH)return set.includes(OWBASE[Math.
 // 4-quadrant autotile: atlas col = 0 interior,1 outer corner,2 top/bottom edge,3 left/right edge,4 inner corner; row = TL,TR,BL,BR
 function autoT(im,set,x,y,X,Y){[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy],q)=>{const h=isK(set,x+sx,y),v=isK(set,x,y+sy),d=isK(set,x+sx,y+sy);
   const st=!h&&!v?1:h&&v?(d?0:4):h?2:3;g.drawImage(im,st*8,q*8,8,8,X+(sx>0?8:0),Y+(sy>0?8:0),8,8)})}
+// v79: building no-tree boxes [x0,y0,x1,y1] inclusive tiles; 1 tile pad, 3 north (tall roofs), 2 south
+const BLD_PROPS='farmshop jobboard achboard windmill silo well';
+function bldBoxes(){const L=[],add=(x,y,w,h)=>L.push([x-1,y-3,x+w,y+h+1]);
+  if(CUR==='ranch'){BARNS.forEach(b=>add(b[0],b[1],b[2],b[3]));if(HOME)add(HOME[0]-1,HOME[1],4,2);PROPS.forEach(p=>{if(BLD_PROPS.includes(p[4]))add(p[0],p[1],p[2],p[3])})}
+  else if(STORE)add(STORE[0],STORE[1],3,2);return L}
 const TREE_SP={T:'tree2',P:'pine2',A:'apple2'};
 const PROP_MSG={windmill:'The old windmill creaks round — it pumps water for the ranch!',silo:'A tall silo packed with grain for the winter.',well:'Grandpa\'s wishing well. The water is cool and clear.',scarecrow:'Mr. Straw keeps the crows off the crops!',trough:'A water trough for thirsty animals.'};
 function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.min(MW*TS-W+40,o.px+8-W/2)),cy=Math.max(-40,Math.min(MH*TS-H+32,o.py+8-H/2+10));
@@ -42,6 +47,8 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
     if(P3D&&n&&'pumpkin corn wheat sprout tallgrass hay sign rock'.includes(n)&&ok(n==='hay'?'p_hay':n)){if(n!=='tallgrass'&&n!=='rock'&&n!=='hay'&&ok('field'))g.drawImage(IMG.field,X,Y);const im=IMG[n==='hay'?'p_hay':n];p3later(X+8,Y+15,()=>{E(X+8,Y+15,6,2,'#0a281430');g.drawImage(im,X,Y)})}
     else if(n==='hay'&&ok('p_hay'))g.drawImage(IMG.p_hay,X,Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',sign:'#c89a60',tallgrass:'#309028',flower0:'#f05868',flower1:'#f8e048',flower2:'#fff',rock:'#8890a0'}[n])}
   if(typeof edgeForest==='function')edgeForest(trees,x0,x1,y0,y1);
+  // v79: cull trees whose 2x2 sprite would poke through a building/prop (expanded AABB; roofs extend north)
+  {const bx=bldBoxes();if(bx.length){const hit=(x,y)=>bx.some(([a,b,c,d])=>x+1>=a&&x<=c&&y+1>=b&&y<=d);for(let i=trees.length-1;i>=0;i--)if(hit(trees[i][0],trees[i][1]))trees.splice(i,1)}}
   // gate posts either side of the gate tiles
   {const gt=MAPS[CUR].gate,gx=gt[0][0],gy=gt[0][1];if(ok('gatepost')){g.drawImage(IMG.gatepost,(gx-1)*TS,gy*TS);g.drawImage(IMG.gatepost,(gx+gt.length)*TS,gy*TS)}
     RR(gx*TS-6,gy*TS+(CUR==='ranch'?-11:17),gt.length*TS+12,10,3,'#6a4020','#382010');txt(CUR==='ranch'?'WILD WOODS':'RANCH',gx*TS+gt.length*8,gy*TS+(CUR==='ranch'?-3:25),'#fff',6)}
