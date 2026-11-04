@@ -94,8 +94,8 @@ function drawGame(t){const m=ui.mg;gameTick();
   if(m.id==='fetch'){bg(false);const bx=20+m.ball*200,by=150-Math.sin(m.ball*Math.PI)*90;
     RR(20+(m.zone-.06)*200,190,24,8,4,'#ff5a8b88');RR(20+(m.zone-.025)*200,190,10,8,4,'#ffc83a');
     E(20+m.zone*200,150-Math.sin(m.zone*Math.PI)*90,14,14,'#ffffff55');
-    const px=m.state==='caught'?bx:20+m.zone*200;dogAt(px,186,1.1,m.state==='fly'?'trot':'happy',0,1);
-    if(m.state==='fly'||m.state==='miss')toyIcon('ball',bx,by,.9);otxt('A when ball is over the glow!',W/2,40,'#fff',10)}
+    const dx=20+(m.dx||0)*200;dogAt(dx,186,1.1,m.state==='fly'?'happy':'trot',0,1);
+    if(m.state==='fly')toyIcon('ball',bx,by,.9);else if(m.state==='back')toyIcon('ball',dx+8,176,.7);else toyIcon('ball',m.state==='miss'?20+Math.min(1,m.ball)*200:bx,m.state==='miss'?184:by,.9);otxt('A when ball is over the glow!',W/2,40,'#fff',10)}
   if(m.id==='simon'){R(0,0,W,H,'#3a3360');const C=['#ff5a7a','#5ad07a','#5ab0ff','#ffc83a'],pos=[[W/2,62],[W/2+54,116],[W/2,170],[W/2-54,116]],lab=['▲','▶','▼','◀'];
     pos.forEach(([x,y],i)=>{const on=m.lit===i&&m.litT>0;E(x,y+3,22,22,'#0005');E(x,y,on?24:20,on?24:20,on?'#fff':C[i]);E(x,y,on?20:16,on?20:16,on?C[i]:mix(C[i],'#000000',.25));otxt(lab[i],x,y+6,'#fff',13)});
     g.save();g.translate(W/2,140);g.scale(.8,.8);dog(0,0,S.breed,'puppy',{pose:m.mode==='input'?'sit':'happy',mood:'happy'});g.restore();otxt(m.mode==='show'?'WATCH…':m.mode==='input'?'YOUR TURN!':'',W/2,210,'#fff',11)}
