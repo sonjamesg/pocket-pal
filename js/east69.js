@@ -1,10 +1,17 @@
 // ===== east69.js — v69: hay fields art guard, pens w/ roaming animals, endless edge forest, closed WEST road,
 // JUMP (Space / C / pad X or Y — never over farm fences), tree-examine joke chain, street lamps + night windows =====
 // --- endless forest beyond the world edge (perimeter is invisible-solid 'x'; we paint trees past it) ---
-function edgeForest(trees,x0,x1,y0,y1){const sx=Math.floor((x0-6)/2)*2-1,sy=Math.floor((y0-6)/2)*2-1;
-  for(let gy=sy;gy<=y1+4;gy+=2)for(let gx=sx;gx<=x1+4;gx+=2){if(!(gx<0||gy<0||gx>=MW-1||gy>=MH-1))continue;
-    if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=1&&Math.abs(b-gy)<=1))continue;
-    const h=((gx*73856093)^(gy*19349663))>>>0,j=((h>>4)%7-3)/10;trees.push([gx+j,gy+(((h>>8)%5)-2)/10,h%3?'pine2':'tree2'])}}
+function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
+  // v91: staggered rows (3 wide, offset every other row) so off-map crowns don't pile up
+  for(let gy=sy,r=0;gy<=y1+4;gy+=2,r++){const sx=Math.floor((x0-6)/3)*3-1+(((gy%2+2)>>0)%2?0:0)+(r%2?1.5:0);for(let gx=sx;gx<=x1+4;gx+=3){if(!(gx<0||gy<0||gx>=MW-1||gy>=MH-1))continue;
+    if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=2.6&&Math.abs(b-gy)<=4))continue; // v91: wide clear corridor at gates
+    const h=((Math.round(gx*2)*73856093)^(gy*19349663))>>>0,j=((h>>4)%5-2)/10;trees.push([gx+j,gy+(((h>>8)%5)-2)/10,h%3?'pine2':'tree2'])}}
+  // v91: thin overlapping trees (map tiles + edge) — drop any whose trunk sits too close to one already kept
+  const GT=MAPS[CUR].gate||[],nearGate=t=>GT.some(([a,b])=>t[0]>a-2.2&&t[0]<a+1.2&&Math.abs(t[1]-b)<3);
+  const keep=[],G=new Map(),K=(a,b)=>a+','+b;for(const t of trees){const cx=Math.floor(t[0]/2),cy=Math.floor(t[1]/2);let bad=nearGate(t);
+    for(let dy=-1;dy<=1&&!bad;dy++)for(let dx=-1;dx<=1&&!bad;dx++){const L=G.get(K(cx+dx,cy+dy));if(L)for(const u of L)if(Math.abs(u[0]-t[0])<1.6&&Math.abs(u[1]-t[1])<1.3){bad=true;break}}
+    if(bad)continue;keep.push(t);const k=K(cx,cy);(G.get(k)||G.set(k,[]).get(k)).push(t)}
+  trees.length=0;trees.push(...keep)}
 // --- pens: decorative roamers (Clucky Hollow chickens, Muddy Trotters pigs, Gallop Ridge horses) ---
 const PEN_ROAM={chickPen:['chicken',.5,[['chicken_white',0],['chicken_brown',1.1],['chicken_rooster',2.3],['chicken_white',3.2],['chicken_brown',4.4],['chicken_white',5.1],['chicken_brown',.7]]],
   pigPen:['pig',.6,[[null,0],[null,1.6],[null,2.9],[null,4.2],[null,5.3]]],
@@ -52,7 +59,7 @@ function owJump(){const o=ui.ow;if(!o||o.jt>0)return;o.jt=1;sfx&&sfx('blip');if(
 if(typeof KM!=='undefined'){KM[' ']='jump';KM.c='jump'}
 // Controller A (and keyboard A): jump while walking when nothing to use in front of you
 {const _oi=owInput;owInput=function(k){if(k==='a'&&!ui.modal&&S.scene==='map'&&ui.ow){const o=ui.ow,[dx,dy]=DV[o.dir],th=typeof owThing==='function'?owThing(o.x+dx,o.y+dy):null;
-  const use=th&&(th.prop||th.pet||th.empty||th.home||th.barn||th.store||th.gate||th.tree||th.hose!=null||th.poo||th.bed||th.crop||th.weed||th.sheepP||th.rag||th.hayfield||(typeof owHint==='function'&&owHint(th)));
+  const use=th&&(th.prop||th.pet||th.empty||th.home||th.barn||th.store||th.gate||th.tree||th.hose!=null||th.poo||th.bed||th.crop||th.weed||th.sheepP||th.rag||th.hayfield||th.lady||th.pen||th.exit||th.shelf||th.station||(typeof owHint==='function'&&owHint(th)));
   if(!use){owJump();return}}return _oi(k)}}
 // --- tree examine joke chain (only when looking at trees one after another) ---
 const TREE_LINES=['A big leafy tree.','Another big leafy tree.',"It's a tree!",'STOP LOOKING AT TREES!','STOP IT AHHHH'];let treeStreak=0;
