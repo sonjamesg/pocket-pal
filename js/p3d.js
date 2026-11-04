@@ -7,7 +7,7 @@ let P3D=true;const P3={A:.48,c:.7,F:420,H0:H/2+22};let P3C=null;
 function p3v(y){const d=y-P3.H0;return d/(P3.c+d/P3.F)}
 function proj(wx,wy){const C=P3C;if(!C)return[wx,wy,1];const v=wy-C.camY,s=1/(1-v/P3.F);return[W/2+(wx-C.camX)*s,P3.H0+P3.c*v*s,s]}
 // draw fn() in world coords, anchored + depth-scaled at world foot point (wx,wy). Must be called inside the world translate.
-function withProj(wx,wy,fn){if(!P3D||!P3C)return fn();const [sx,sy,s]=proj(wx,wy);g.save();g.translate(sx+P3C.cx,sy+P3C.cy);g.scale(s,s);g.translate(-wx,-wy);try{fn()}finally{g.restore()}}
+function withProj(wx,wy,fn){if(!P3D||!P3C){try{return fn()}catch(e){console.warn('draw',e);return}}const [sx,sy,s]=proj(wx,wy);g.save();g.translate(sx+P3C.cx,sy+P3C.cy);g.scale(s,s);g.translate(-wx,-wy);try{fn()}catch(e){console.warn('draw',e)}finally{g.restore()}}
 // begin the flat ground pass: returns tile bounds covering everything the tilted view can see
 function p3dBegin(cx,cy){const camX=cx+W/2,camY=cy+P3.H0,vt=p3v(0),ox=camX-(W/2)/P3.A,oy=camY+vt-4;P3C={cx,cy,camX,camY,ox,oy};
   const k=g.canvas.width/W,kv=g.canvas.height/H;g.save();g.setTransform(k*P3.A,0,0,kv*P3.A,-ox*k*P3.A,-oy*kv*P3.A);
