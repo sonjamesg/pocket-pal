@@ -20,6 +20,9 @@ function cecily(x,y,t,snip){g.save();g.translate(x,y);const bob=Math.sin(t/14)*.
   RR(-7,-18,6,17,2.5,'#1a1a22');RR(1,-18,6,17,2.5,'#1a1a22');R(-6,-17,1.5,14,'#ffffff14');
   E(-4.5,-1.5,4.5,2.4,'#ff5a8b');E(4.5,-1.5,4.5,2.4,'#ff5a8b');E(-5.5,-2.5,2,.8,'#ffffff88');E(3.5,-2.5,2,.8,'#ffffff88');
   g.translate(0,bob);
+  // long flowing back hair (behind body, to mid-back)
+  {const sw=Math.sin(t/20)*1.2;g.fillStyle='#d9a232';g.beginPath();g.moveTo(-13,-60);g.quadraticCurveTo(-19,-42,-16+sw,-26);g.quadraticCurveTo(-8,-22,0,-24);g.quadraticCurveTo(8,-22,16+sw,-26);g.quadraticCurveTo(19,-42,13,-60);g.closePath();g.fill();
+   g.strokeStyle='#f2c65088';g.lineWidth=1;[-12,-7,7,12].forEach(hx=>{g.beginPath();g.moveTo(hx*.9,-56);g.quadraticCurveTo(hx*1.25,-42,hx+sw,-27);g.stroke()})}
   // black dog-print tunic
   RR(-12,-46,24,31,9,'#16161e','#000');RR(-11,-45,6,28,4,'#ffffff10');
   const pc=['#bfc4d4','#ffb3cf','#9fe0ff','#ffe39a'];
@@ -29,14 +32,17 @@ function cecily(x,y,t,snip){g.save();g.translate(x,y);const bob=Math.sin(t/14)*.
   RR(-15,-43,5,15,2.5,'#16161e');E(-12.5,-27,2.6,2.6,'#f6cfb0');
   // neck + head
   R(-2.5,-50,5,5,'#ecbd9c');
-  E(0,-58,14,10,'#e7b23e');E(0,-66,12,7,'#f2c650'); // back hair
+  E(0,-60,14,11,'#e7b23e'); // back hair crown
   E(0,-57,11,11,'#f8d4b6');E(-3,-61,4,3,'#ffffff30');
-  // bangs + bob
-  g.fillStyle='#f2c650';g.beginPath();g.moveTo(-12,-56);g.quadraticCurveTo(-13,-71,0,-70);g.quadraticCurveTo(13,-71,12,-56);g.quadraticCurveTo(8,-64,1,-63);g.quadraticCurveTo(-6,-65,-12,-56);g.fill();
-  E(-11,-52,3.5,6,'#e7b23e');E(11,-52,3.5,6,'#e7b23e');E(-3,-67,4,1.5,'#fff2b0');
-  E(0,-72,5.5,5,'#f2c650');E(-1.5,-74,2,1.3,'#fff2b0');RR(5,-66,6,3,1.5,'#ff5a8b');
+  // side-swept bangs + long side locks framing face
+  g.fillStyle='#f2c650';g.beginPath();g.moveTo(-12.5,-54);g.quadraticCurveTo(-14,-72,0,-71);g.quadraticCurveTo(14,-72,12.5,-54);g.quadraticCurveTo(10,-63,4,-64);g.quadraticCurveTo(-2,-62,-6,-65);g.quadraticCurveTo(-9,-61,-12.5,-54);g.fill();
+  [-1,1].forEach(sd=>{g.fillStyle='#f2c650';g.beginPath();g.moveTo(sd*9,-62);g.quadraticCurveTo(sd*15,-52,sd*13,-36);g.quadraticCurveTo(sd*11,-32,sd*9,-36);g.quadraticCurveTo(sd*10.5,-48,sd*8,-58);g.fill();
+    g.strokeStyle='#fff2b0aa';g.lineWidth=.8;g.beginPath();g.moveTo(sd*11,-58);g.quadraticCurveTo(sd*13,-48,sd*11.5,-38);g.stroke()});
+  g.strokeStyle='#fff2b0';g.lineWidth=1.2;g.beginPath();g.arc(-2,-66,6,Math.PI*1.1,Math.PI*1.6);g.stroke();
+  // pink bow
+  E(6.5,-67,2.6,1.8,'#ff5a8b');E(10.5,-67,2.6,1.8,'#ff5a8b');E(8.5,-67,1.2,1.2,'#e0457b');
   // eyes
-  [-4.5,4.5].forEach(ex=>{E(ex,-56,2.6,3,'#fff');E(ex,-55.6,2,2.4,'#3a8ee8');E(ex,-55.3,1.1,1.4,'#13306a');E(ex-.8,-56.6,.7,.7,'#fff');g.strokeStyle='#5a3a10';g.lineWidth=.8;g.beginPath();g.arc(ex,-55.5,3,Math.PI*1.15,Math.PI*1.85);g.stroke()});
+  [-4.5,4.5].forEach(ex=>{E(ex,-56,2.6,3,'#fff');E(ex,-55.6,2.1,2.5,'#3a8ee8');E(ex,-54.8,1.6,1.4,'#6fb6ff');E(ex,-55.5,1.1,1.4,'#13306a');E(ex-.8,-56.8,.8,.8,'#fff');E(ex+.7,-54.6,.4,.4,'#fff');g.strokeStyle='#2a1a08';g.lineWidth=1;g.beginPath();g.moveTo(ex+(ex<0?-2.6:2.6),-56.5);g.lineTo(ex+(ex<0?-3.6:3.6),-57.6);g.stroke();g.strokeStyle='#5a3a10';g.lineWidth=.8;g.beginPath();g.arc(ex,-55.5,3,Math.PI*1.15,Math.PI*1.85);g.stroke()});
   E(-7.5,-51.5,2.4,1.4,'#ff8aa866');E(7.5,-51.5,2.4,1.4,'#ff8aa866');
   g.strokeStyle='#c0506a';g.lineWidth=1;g.beginPath();g.arc(0,-52.5,2.3,.35,Math.PI-.35);g.stroke();
   // front arm with scissors
@@ -63,7 +69,7 @@ function drawGroom(t){const m=ui.mg;m.t++;salonBg();
   bubble(line,12,42,150);
   if(m.ph==='brush'){RR(30,196,180,10,5,'#2b2440');RR(32,198,176*Math.min(1,m.brush/12),6,3,'#ff5a8b');txt('◀ ▶ brush',W/2,192,'#5b4b8a',9)}
   if(m.ph==='cut'){const p=1-(S.coat-5)/Math.max(1,m.start-5);RR(30,196,180,10,5,'#2b2440');RR(32,198,176*Math.max(0,Math.min(1,p)),6,3,'#5ad07a');txt('A snip ✂   coat '+Math.round(S.coat)+'%',W/2,192,'#5b4b8a',9)}
-  if(m.ph==='intro')txt('A start   B leave',W/2,204,'#5b4b8a',9);if(m.ph==='done'||m.ph==='short')txt('A go home',W/2,204,'#5b4b8a',9)}
+  if(m.ph==='intro')txt('A start',W/2,204,'#5b4b8a',9);txt('B exit',W-16,H-6,'#ffffff66',6)}
 function drawTeeth(t){const m=ui.mg;m.t++;R(0,0,W,H,'#dff4ff');for(let x=0;x<W;x+=24)for(let y=0;y<H;y+=24)RR(x+1,y+1,22,22,3,'#cfeaff');
   otxt('BRUSH TEETH',W/2,20,'#fff',13);dogAt(48,120,1,'smile',0,1);
   RR(96,44,134,104,14,'#fff','#2b2440');E(163,82,56,20,'#ff8aa8');E(163,118,56,18,'#ff8aa8');
