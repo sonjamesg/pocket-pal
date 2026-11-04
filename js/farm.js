@@ -24,8 +24,9 @@ owThing=function(x,y){if(CUR==='ranch'){const h=hoseAt(x,y);if(h>=0)return{hose:
 owHint=function(th){if(th&&th.hose!=null)return ui.hose===th.hose?'A: put the HOSE back':'A: grab the '+HOSES[th.hose][2]+' HOSE';if(th&&th.poo)return 'A: scoop the poo (fertiliser!)';if(th&&(th.crop||th.bed)){const e=grows()[wetKey(th.tx,th.ty)];if(!e||growP(e)<1){if(ui.hose!=null)return 'A: SPRAY with the hose';if(!e)return DB.bucket>0?'A: splash bucket (big area) ×'+DB.bucket:'Dry soil — grab a HOSE or WELL bucket';if(fertN()&&!e.f)return 'A: add POO FERTILISER';}}return _h(th)};
 function cropHere(o){const [dx,dy]=DV[o.dir];return isCropT(o.x,o.y)||isCropT(o.x+dx,o.y+dy)}
 owInput=function(k){const o=ui.ow;
+  if(k==='b'&&ui.hose!=null){ui.hose=null;sfx('click');say('Hose put back.');return}/* v61: B cancels hose */
   if(k==='a'&&o&&!o.mv&&CUR==='ranch'){const [dx,dy]=DV[o.dir],tx=o.x+dx,ty=o.y+dy,th=owThing(tx,ty);
-    if(th&&th.hose!=null){if(ui.hose===th.hose){ui.hose=null;say('Hose put back.')}else{ui.hose=th.hose;sfx('click');say('Got the HOSE! Walk on the field and press A to spray.',200)}return}
+    if(th&&th.hose!=null){if(ui.hose===th.hose){ui.hose=null;say('Hose put back.')}else{ui.hose=th.hose;sfx('click');say('Got the HOSE! Press A on the field to spray. B to put it back.',200)}return}
     if(th&&th.poo){pooL().splice(pooAt(tx,ty),1);DB.stock=DB.stock||{};DB.stock.fert=fertN()+1;DB.scooped=(DB.scooped||0)+1;saveDB();sfx('click');say('Scooped! 1 bag of FERTILISER. Use it on crops or sell it.',200);return}
     if(cropHere(o)){const cx=isCropT(o.x,o.y)?o.x:tx,cy=isCropT(o.x,o.y)?o.y:ty;
       if(harvestArea(cx,cy))return;
@@ -49,6 +50,6 @@ owExtras=function(t,o){_x(t,o);if(CUR!=='ranch')return;
     if(ui.hose!==i){R(X+12,Y+9,3,2,'#2a9a40')}}};if(typeof P3D!=='undefined'&&P3D)p3later(x*TS+8,y*TS+15,hf);else hf()});
   if(ui.hose!=null){const [hx,hy]=HOSES[ui.hose];g.strokeStyle='#2a9a40';g.lineWidth=2;g.beginPath();g.moveTo(hx*TS+14,hy*TS+9);const mx=(hx*TS+o.px)/2+8,my=Math.max(hy*TS,o.py)+14;g.quadraticCurveTo(mx,my,o.px+12,o.py+6);g.stroke();
     const [dx,dy]=DV[o.dir];for(let i=0;i<6;i++){const s=((t*2+i*9)%24)/24;R(o.px+8+dx*(4+s*20)+(i%3-1)*s*6,o.py+6+dy*(4+s*20)+((i>>1)%3-1)*s*6,2,2,'#9ad8ff')}}};
-owHud=function(t){_hud(t);let y=52;if(ui.hose!=null){RR(W-62,y,58,12,4,'#40c060','#2b2440');txt('HOSE ON',W-33,y+9,'#fff',7);y+=14}
+owHud=function(t){_hud(t);let y=52;if(ui.hose!=null){RR(W-62,y,58,12,4,'#40c060','#2b2440');txt('HOSE ON',W-33,y+9,'#fff',7);RR(W-62,y+13,58,11,4,'#fff','#2b2440');txt('B: put back',W-33,y+21,'#2b2440',6.5);y+=12;y+=14}
   if(fertN()>0){RR(W-62,y,58,12,4,'#c89a60','#2b2440');txt('FERT ×'+fertN(),W-33,y+9,'#2b2440',7)}};}
 GOODS.fert={n:'POO FERTILISER',p:5};GOOD_COL.fert='#7a4a24';
