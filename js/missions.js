@@ -13,7 +13,7 @@ const wm=()=>{if(!DB.missions)DB.missions={};const m=DB.missions.wool||(DB.missi
 const sheepList=()=>petList().filter(p=>p.species==='sheep');
 const fieldSheep=()=>sheepList().filter(p=>!p.carry).slice(0,FIELD_SPOTS.length);
 const inField=(x,y)=>x>=FIELD[0]&&y>=FIELD[1]&&x<FIELD[0]+FIELD[2]&&y<FIELD[1]+FIELD[3];
-function woolNow(p){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=Math.max(0,now()-(p.last||now()))/HOUR;return Math.min(100,(p.wool||0)+(fed?WOOL.fast:WOOL.slow)*h)}
+function woolNow(p){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=Math.max(0,now()-(p.last||now()))/HOUR;return Math.min(100,(p.wool||0)+woolRate(fed)*h)}
 function sheepAt(x,y){if(CUR!=='ranch')return null;const L=fieldSheep();for(let i=0;i<L.length;i++){const [sx,sy]=FIELD_SPOTS[i];if(sx===x&&sy===y)return L[i]}return null}
 // ---- well bucket + wet tiles ----
 function wetKey(x,y){return x+','+y}
@@ -30,7 +30,7 @@ function harvest(x,y){const k=wetKey(x,y),e=grows()[k],good=CROP_GOOD[e.c]||'cor
 function wellUse(){if(DB.bucket>=BUCKET){say('Bucket is full! 5 waters. Go water beds or crops.');return}DB.bucket=BUCKET;saveDB();sfx('water');say('Bucket filled! 5 waters. Water beds or crops.',170)}
 // ---- hints for the bottom bar ----
 function owHint(th){if(!th)return null;if(th.prop==='jobboard')return 'A: read the JOB BOARD';if(th.prop==='farmshop')return 'A: open YOUR FARM SHOP';if(th.prop==='well')return DB.bucket>=BUCKET?'Bucket full (5 waters)':'A: fill bucket at the WELL';
-  if(th.sheepP)return 'A: visit '+th.sheepP.name+' ('+Math.round(woolNow(th.sheepP))+'% wool)';
+  if(th.sheepP)return 'A: visit '+th.sheepP.name+' ('+Math.round(woolNow(th.sheepP))+'% wool'+(woolNow(th.sheepP)<100?' — '+woolETA(th.sheepP,woolNow(th.sheepP)):'')+')';
   if(th.bed||th.crop){const e=grows()[wetKey(th.tx,th.ty)];if(e)return growP(e)>=1?'A: HARVEST!':'Growing… '+Math.round(growP(e)*100)+'%';return DB.bucket>0?'A: water it ('+DB.bucket+' left)':'Fill bucket at the WELL to grow this'}if(th.water)return 'Pond water is muddy — use the WELL';return null}
 // ---- overworld hooks ----
 const _owSolidM=owSolid,_owThingM=owThing,_owInputM=owInput;
@@ -67,47 +67,62 @@ const GOOD_COL={corn:'#ffd84a',hay:'#e8c860',pumpkin:'#ff8a2a',flower:'#ff6fa8',
 function owExtras(t,o){if(CUR==='ranch')for(const k in grows()){const e=grows()[k],[x,y]=k.split(',').map(Number),X=x*TS,Y=y*TS,p=growP(e);g.fillStyle='#2050a050';g.fillRect(X+1,Y+10,TS-2,5);
     if(p<1){const h=3+Math.floor(p*8);R(X+7,Y+14-h,2,h,'#2a8a2a');R(X+4,Y+14-h,3,2,'#4ac04a');R(X+9,Y+13-h,3,2,'#4ac04a')}
     else{const b=Math.round(Math.sin(t/8)*1.5);E(X+8,Y+6+b,5,5,'#2b2440');E(X+8,Y+6+b,4,4,GOOD_COL[CROP_GOOD[e.c]]||'#ffd84a');if((t>>3)%4===0)star(X+13,Y+1,2.5,'#fff')}}
-  if(CUR==='ranch')fieldSheep().forEach((p,i)=>{const [sx,sy]=FIELD_SPOTS[i],bob=Math.sin(t/30+i)>0,X=sx*TS+8,Y=sy*TS+14;g.save();g.translate(X,Y);g.scale(.62,.62);
+  if(CUR==='ranch')fieldSheep().forEach((p,i)=>{const [sx,sy]=FIELD_SPOTS[i],bob=Math.sin(t/30+i)>0,X=sx*TS+8,Y=sy*TS+14;p3later(X,Y,()=>{g.save();g.translate(X,Y);g.scale(.62,.62);
     critter(0,0,'sheep','adult',{pose:(t>>6)%3===i%3?'eat':'idle',mood:'happy',dir:bob?1:-1,wool:woolNow(p),sv:p.breed});g.restore();
-    const lw=p.name.length*4+6;RR(X-lw/2,Y+1,lw,7,3,'#fff8');txt(p.name.slice(0,8),X,Y+6,'#5b4b8a',5);if(woolNow(p)>=100&&(t>>4)%2)txt('!',X+10,Y-18,'#e8402a',9)});
+    const lw=p.name.length*4+6;RR(X-lw/2,Y+1,lw,7,3,'#fff8');txt(p.name.slice(0,8),X,Y+6,'#5b4b8a',5);if(woolNow(p)>=100&&(t>>4)%2)txt('!',X+10,Y-18,'#e8402a',9)})});
   const m=wm();if(m.step===2&&ui.trail&&ui.trail.length>8){const p=DB.pets[m.sheepId],q=ui.trail[Math.max(0,ui.trail.length-12)];if(p&&q[3]===CUR){g.save();g.translate(q[0]+8,q[1]+13);g.scale(.5,.5);critter(0,0,'sheep','adult',{pose:o.mv?'walk':'idle',mood:'happy',dir:q[2]==='left'?-1:1,wool:p.wool||0,sv:p.breed});g.restore()}}}
 // screen-space HUD: bucket + current job tracker (the full list lives only on the JOB BOARD)
 function owHud(t){if(DB.bucket>0){RR(W-96,1,36,14,4,'#9ad8ff','#2b2440');R(W-92,4,7,7,'#3a86e8');R(W-93,3,9,1,'#2b2440');txt('×'+DB.bucket,W-74,12,'#2b2440',9)}
-  const nx=nextThing();RR(3,18,W-6,17,6,'#2b2440e8','#ffe36a');txt('▶ '+nx.t,W/2,30,'#ffe36a',9);drawGoalArrow(t,nx)}
+  const nx=nextThing();ui.banner=nx;if(ui.bannerOff!==nx.t){RR(30,17,W-60,13,6,'#8a5a2e','#4a2c14');RR(32,18.5,W-64,10,4,'#fff3d6');txt('▶ '+nx.t,W/2-5,26.5,'#5a3418',7);RR(W-44,18,11,11,5.5,'#e8604a','#4a2c14');txt('✕',W-38.5,26.5,'#fff',7)};drawGoalArrow(t,nx)}
 // ---- JOB BOARD scene ----
 const JOBS={more:{n:'MORE WOOL',d:'Shear 2 more full fleeces.',rew:30,unl:()=>wm().step>=6,ready:j=>(DB.woolBales||0)>=j.base+2,base:()=>DB.woolBales||0,hint:'Grow & SHEAR wool'},
   dog:{n:'DOG BUDDY',d:'Get a dog at the PET SHOP and teach it SIT.',rew:30,unl:()=>wm().step>=6,ready:()=>petList().some(p=>p.species==='dog'&&p.tricks&&p.tricks.sit>=TUNE.trickNeed),base:()=>0,hint:'Get a dog & teach SIT'},
   crops:{n:'GROW CROPS',d:'Water beds or crops with the WELL bucket. Wait, then HARVEST 3.',rew:20,unl:()=>wm().step>=1,ready:j=>(DB.harvested||0)>=j.base+3,base:()=>DB.harvested||0,hint:'Water & HARVEST 3 crops'},
   flock:{n:'BIG FLOCK',d:'Have 3 sheep in your SHEEP FIELD.',rew:40,unl:()=>jst('more').s===2,ready:()=>sheepList().length>=3,base:()=>0,hint:'Get 3 sheep'}};
 function jst(id){const M=DB.missions||(DB.missions={});return M[id]||(M[id]={s:0})}
-function jobs(){const m=wm(),L=[{id:'wool',n:'START A WOOL FARM',tag:m.step===0?'NEW':m.step>=6?'DONE':m.step===5?'REWARD!':'ACTIVE',d:m.step===0?'Get a FREE sheep, grow its wool, shear and sell it! Reward ● '+MISSION_REWARD:WOOL_STEPS[m.step]}];
-  for(const id in JOBS){const J=JOBS[id],st=jst(id);if(!J.unl()&&!st.s)continue;L.push({id,n:J.n,tag:st.s===0?'NEW':st.s===2?'DONE':J.ready(st)?'REWARD!':'ACTIVE',d:J.d+(st.s<2?' Reward ● '+J.rew:'')})}
+function jobs(){const m=wm(),L=[{id:'wool',n:'START A WOOL FARM',tag:m.step===0?'NEW':m.paused&&m.step<6?'PAUSED':m.step>=6?'DONE':m.step===5?'REWARD!':'ACTIVE',d:m.paused&&m.step<6?'Job cancelled. Your sheep & wool are safe. A: start it again!':m.step===0?'Get a FREE sheep, grow its wool, shear and sell it! Reward ● '+MISSION_REWARD:WOOL_STEPS[m.step]}];
+  for(const id in JOBS){const J=JOBS[id],st=jst(id);if(!J.unl()&&!st.s)continue;L.push({id,n:J.n,tag:st.s===0?(st.c?'PAUSED':'NEW'):st.s===2?'DONE':J.ready(st)?'REWARD!':'ACTIVE',d:J.d+(st.s<2?' Reward ● '+J.rew:'')})}
   return L.sort((a,b)=>(a.tag==='DONE')-(b.tag==='DONE'))}
 function nextThing(){const m=wm(),S1=['Read the JOB BOARD','Get a FREE sheep at the PET SHOP','Walk sheep to the SHEEP FIELD','Feed sheep, grow wool, SHEAR','SELL wool at YOUR FARM SHOP','Get your reward at the JOB BOARD'];
-  if(m.step<6&&m.step>0)return{t:S1[m.step],k:'wool'+m.step};
+  if(m.step<6&&m.step>0&&!m.paused)return{t:S1[m.step],k:'wool'+m.step};
   for(const id in JOBS){const st=jst(id);if(st.s===1&&JOBS[id].ready(st))return{t:'Get your reward at the JOB BOARD',k:'board'}}
-  if(m.step===0)return{t:S1[0],k:'board'};
+  if(m.step===0)return{t:S1[0],k:'board'};if(m.paused&&m.step<6&&!Object.keys(JOBS).some(id=>jst(id).s===1))return{t:'No job right now. Visit the JOB BOARD!',k:'free'};
   for(const id in JOBS){const st=jst(id);if(st.s===1)return{t:JOBS[id].hint,k:'job_'+id}}
-  if(jobs().some(j=>j.tag==='NEW'))return{t:'New job on the JOB BOARD!',k:'board'};return{t:'Grow, shear & sell for coins!',k:'free'}}
-function openJobs(){S={scene:'jobs'};ui.jsel=0;ui.msgT=0}
+  if(jobs().some(j=>j.tag==='NEW'&&!(DB.jobSeen||{})[j.id]))return{t:'New job on the JOB BOARD!',k:'free'};return{t:'Grow, shear & sell for coins!',k:'free'}}
+function openJobs(){S={scene:'jobs'};ui.jsel=0;ui.jconf=0;ui.msgT=0}
 function celebrate(a,b){ui.cele={a,b,t:0};sfx('fanfare');sparkle(40,W/2,100)}
-function jobsInput(k){const J=jobs(),n=J.length;if(k==='up')ui.jsel=(ui.jsel+n-1)%n;if(k==='down')ui.jsel=(ui.jsel+1)%n;if(k==='b'||k==='start'){S={scene:'map'};return}
+function jobsInput(k){const J=jobs(),n=J.length;
+  if(ui.jconf){const j=J[ui.jsel];if(k==='a'&&j){if(j.id==='wool'){wm().paused=true}else{const st=jst(j.id);st.s=0;st.c=1}saveDB();ui.jconf=0;S={scene:'map'};say('Job cancelled. Pick a new job at the JOB BOARD any time!',240);return}ui.jconf=0;return}
+  if(k==='left'||k==='right'||k==='select'){const j=J[ui.jsel];if(j&&j.tag==='ACTIVE'){ui.jconf=1;return}}if(k==='up')ui.jsel=(ui.jsel+n-1)%n;if(k==='down')ui.jsel=(ui.jsel+1)%n;if(k==='b'||k==='start'){S={scene:'map'};return}
   if(k==='a'){const j=J[ui.jsel],m=wm();
-    if(j.id!=='wool'){const st=jst(j.id),D=JOBS[j.id];if(st.s===0){st.s=1;st.base=D.base();saveDB();S={scene:'map'};say('Job taken! '+D.d,240);return}
+    if(j.id==='wool'&&m.paused&&m.step<6){m.paused=false;saveDB();S={scene:'map'};say('Job back on! '+WOOL_STEPS[m.step],240);return}
+    if(j.id!=='wool'){const st=jst(j.id),D=JOBS[j.id];if(st.s===0){st.s=1;st.c=0;st.base=D.base();saveDB();S={scene:'map'};say('Job taken! '+D.d,240);return}
       if(st.s===1&&D.ready(st)){st.s=2;DB.wallet+=D.rew;saveDB();S={scene:'map'};sfx('coin');celebrate('JOB DONE!',D.n+'  +'+D.rew+' coins');return}
       S={scene:'map'};say(st.s===2?'Done! Great work.':D.d,200);return}
     if(m.step===0){m.step=1;saveDB();S={scene:'map'};say('Job taken! Go to the PET SHOP for your FREE sheep.',240);return}
     if(m.step===5){m.step=6;DB.wallet=(DB.wallet||0)+MISSION_REWARD;saveDB();S={scene:'map'};sfx('coin');celebrate('WOOL FARM STARTED!','+'+MISSION_REWARD+' coins  •  New jobs on the board!');return}
     S={scene:'map'};say(m.step>=6?'You finished this job! Keep shearing for coins.':WOOL_STEPS[m.step],240)}}
-function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0006');RR(8,8,W-16,H-14,6,'#c48c50','#382010');R(12,22,W-24,H-32,'#e0b070');
-  RR(W/2-56,2,112,20,5,'#6a4020','#382010');txt('JOB BOARD',W/2,17,'#ffe36a',12);const J=jobs();if(ui.jsel>=J.length)ui.jsel=0;
-  J.slice(0,5).forEach((j,i)=>{const y=28+i*26,on=i===ui.jsel;RR(16,y,W-32,23,4,on?'#fffbe8':'#f4ecd4',on?'#e8402a':'#8a7050');
-    txt(j.n,24,y+16,'#2b2440',10,'left');const tc=j.tag==='NEW'||j.tag==='REWARD!'?'#e8402a':j.tag==='DONE'?'#2a9a50':'#5b4b8a';RR(W-80,y+4,58,15,5,tc);txt(j.tag,W-51,y+15,'#fff',9)});
-  const j=J[ui.jsel],y0=28+Math.min(5,J.length)*26+2;RR(16,y0,W-32,H-y0-22,5,'#fff','#382010');wrapMsg(j.d,W-48,9).slice(0,3).forEach((l,k)=>txt(l,24,y0+13+k*11,'#2b2440',9,'left'));
-  txt(j.tag==='NEW'?'A: TAKE JOB':j.tag==='REWARD!'?'A: GET REWARD':'A: OK',W/2,H-10,'#382010',10)}
+function drawJobs(t){drawOverworld(t);R(0,0,W,H,'#0007');
+  /* v58: chunky wood frame + parchment */RR(5,9,W-10,H-12,10,'#382010');RR(7,10,W-14,H-15,9,'#a8703c');for(let k=0;k<6;k++){R(9,16+k*34,W-18,1,'#8a5a2e');R(9,17+k*34,W-18,1,'#c48c50')}
+  RR(13,24,W-26,H-33,7,'#5a3418');RR(14,25,W-28,H-35,6,'#fff6de');R(16,27,W-32,2,'#fffdf4');
+  for(const[x,y]of[[11,13],[W-14,13],[11,H-8],[W-14,H-8]]){E(x+1,y+1,2.4,2.4,'#382010');E(x+1,y,2.2,2.2,'#e8c870')}
+  RR(W/2-58,1,116,22,8,'#382010');RR(W/2-57,1,114,20,7,'#ff8fb1');RR(W/2-55,3,110,8,5,'#ffb3cb');otxt('JOB BOARD',W/2,16,'#fff',12);
+  const J=jobs();if(ui.jsel>=J.length)ui.jsel=0;const TC={NEW:['#ff5a8b','#b8264f'],'REWARD!':['#ffb020','#a06000'],DONE:['#48c070','#22784a'],PAUSED:['#9b8ad0','#5b4b8a'],ACTIVE:['#4aa8e8','#1f6aa0']};
+  J.slice(0,5).forEach((j,i)=>{const y=30+i*24,on=i===ui.jsel,dn=j.tag==='DONE';
+    if(on)RR(17,y-1,W-34,23,7,'#ff5a8b');RR(18,y,W-36,21,6,on?'#fff':dn?'#f1ead8':'#fbf3df',on?'#ff5a8b':'#d8c49c');R(20,y+19,W-40,1,on?'#ffd0de':'#e6d6b4');
+    const c=TC[j.tag]||TC.ACTIVE;RR(22,y+4,4,13,2,c[0]);
+    txt((on?'▶ ':'')+j.n,30,y+14,dn&&!on?'#8a7a68':'#2b2440',9.5,'left',W-120);
+    const cw=Math.max(40,j.tag.length*6+12),cx=W-24-cw;RR(cx,y+5,cw,13,6,c[1]);RR(cx,y+4,cw,12,6,c[0]);txt(j.tag,cx+cw/2,y+13,'#fff',8)});
+  const j=J[ui.jsel],y0=30+Math.min(5,J.length)*24+3,dh=H-y0-27;RR(18,y0,W-36,dh,6,'#efe6ff','#5b4b8a');
+  const ln=j.d.split(' Reward ● '),rw=ln[1];wrapMsg(ln[0],W-56,9).slice(0,rw?2:3).forEach((l,k)=>txt(l,25,y0+12+k*11,'#2b2440',9,'left'));
+  if(rw){const ry=y0+dh-14;RR(W-86,ry,64,13,6,'#ffe36a','#a06000');E(W-77,ry+6.5,4,4,'#f0b020');E(W-77,ry+6,2.6,2.6,'#ffe36a');txt('+'+rw,W-50,ry+10,'#6a3a00',9)}
+  if(ui.jconf){R(0,0,W,H,'#0005');RR(26,H/2-34,W-52,62,10,'#382010');RR(28,H/2-33,W-56,58,9,'#fff6de','#e8402a');txt('CANCEL THIS JOB?',W/2,H/2-13,'#e8402a',11);txt('Animals & coins stay safe.',W/2,H/2+2,'#2b2440',9);txt('A: YES, CANCEL   B: NO',W/2,H/2+17,'#5b4b8a',9);return}
+  const pill=(x,w,c,tx,tc)=>{RR(x,H-23,w,16,8,'#382010');RR(x,H-24,w,15,8,c);txt(tx,x+w/2,H-13,tc||'#fff',8.5)};
+  if(j.tag==='ACTIVE'){pill(22,70,'#ff5a8b','A: OK');pill(W-104,82,'#e8402a','◀▶ CANCEL JOB');return}
+  const at=j.tag==='NEW'?'A: TAKE JOB':j.tag==='PAUSED'?'A: START AGAIN':j.tag==='REWARD!'?'A: GET REWARD':'A: OK';pill(W/2-50,100,j.tag==='DONE'?'#9b8ad0':'#ff5a8b',at)}
 // goal arrow: bouncing arrow over the target, or an edge arrow pointing to it
 function goalTile(nx){const k=nx.k,m=wm();if(CUR==='ranch'){if(k==='wool1')return MAPS.ranch.gate[0];if(k==='wool2')return[52,47];if(k==='wool3'){const i=fieldSheep().findIndex(p=>p.id===m.sheepId);return i>=0?FIELD_SPOTS[i]:[52,47]}
-    if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[47,6];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
+    if(k==='wool4')return[39,11];if(k==='board')return[45.5,8];if(k==='job_crops')return DB.bucket>0?[41,18]:[39.5,19];if(k==='job_more'||k==='job_flock')return[52,47];if(k==='job_dog')return MAPS.ranch.gate[0];return null}
   if(CUR==='outer'){if(k==='wool1'||k==='job_dog'||k==='job_flock')return[STORE[0]+1,STORE[1]+1];return MAPS.outer.gate[0]}return null}
 function drawGoalArrow(t,nx){const T=goalTile(nx);if(!T)return;const ox=CAMC[0]-W/2,oy=CAMC[1]-H/2,sx=T[0]*TS+8-ox,sy=T[1]*TS-oy,b=Math.abs(Math.sin(t/10))*4;
   if(sx>8&&sx<W-8&&sy>40&&sy<H-10){g.fillStyle='#ffe36a';g.strokeStyle='#2b2440';g.lineWidth=1.5;g.beginPath();g.moveTo(sx-6,sy-14-b);g.lineTo(sx+6,sy-14-b);g.lineTo(sx,sy-5-b);g.closePath();g.fill();g.stroke();return}
@@ -187,3 +202,7 @@ const _sayM=say;say=function(m,t){_sayM(m,t);sfx('blip')};
 const _careActM=careAct;careAct=function(id){if(id==='cuddle'&&S.species==='sheep')sfx('baa');return _careActM(id)};
 // sheep food costs a little (or uses farm stock)
 const _feedM=feed;feed=function(f){if(S.species==='sheep'&&f.cost&&S.hunger<97){const st=DB.stock||(DB.stock={});if(f.stock&&st[f.stock]>0)st[f.stock]--;else if(DB.wallet>=f.cost)DB.wallet-=f.cost;else{say('Need ● '+f.cost+'. Try FRESH GRASS — it is free!');return}saveDB()}return _feedM(f)};
+
+// v53: tap the goal banner (✕) to dismiss it; 'New job' stays hidden until a NEW job appears that you haven't seen
+function dismissBanner(){const nx=ui.banner;if(!nx)return;if(nx.t==='New job on the JOB BOARD!'){DB.jobSeen=DB.jobSeen||{};jobs().forEach(j=>{if(j.tag==='NEW')DB.jobSeen[j.id]=1});saveDB()}else ui.bannerOff=nx.t}
+cv.addEventListener('pointerdown',e=>{if(!S||(S.scene!=='map'))return;const r=cv.getBoundingClientRect(),y=(e.clientY-r.top)*H/r.height;if(y>=17&&y<=37){e.preventDefault();dismissBanner()}});

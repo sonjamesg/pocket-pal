@@ -22,7 +22,7 @@ function avatarKey(k){if(ui.arow==null){ui.arow=0;ui.ah=1;ui.ae=0}
 function drawAvatar(t){bg(false);g.imageSmoothingEnabled=false;if(ui.arow==null){ui.arow=0;ui.ah=1;ui.ae=0}
   otxt('YOUR RANCHER',W/2,20,'#ffe36a',13);const body=ui.sel?'girl':'boy',hair=AV_HK[ui.ah],eyes=AV_EK[ui.ae];
   RR(W/2-50,28,100,96,10,'#f8ecd0','#7a4a24');const bo=Math.round(Math.sin(t/6)*1.5),p=avImg('p',body,hair,eyes);if(p)g.drawImage(p,W/2-42,32+bo,84,84);
-  const s=avImg('s',body,hair,eyes),fr=(t>>4)%2;if(s)g.drawImage(s,fr*16,0,16,16,W/2+52,100,16,16);
+  const s=avImg('s',body,hair,eyes),fr=(t>>4)%2;if(s){const FH=s.height/4;g.drawImage(s,fr*16,0,16,FH,W/2+52,116-FH,16,FH)};
   const rows=[['',ui.sel?'COWGIRL':'COWBOY'],['HAIR',hair.toUpperCase()],['EYES',eyes.toUpperCase()]];
   rows.forEach(([l,v],i)=>{const y=134+i*20,on=ui.arow===i;RR(30,y-9,W-60,17,6,on?'#ffe0a0':'#fffc',on?'#c0602a':'#2b244055');
     if(l)txt(l,46,y+3,'#7a4a24',8,'left');txt((on?'◀ ':'')+v+(on?' ▶':''),W/2+(l?14:0),y+3,'#2b2440',10);

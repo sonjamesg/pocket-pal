@@ -57,3 +57,16 @@ const ACTS={dog:['FEED','PLAY','WALK','TOYS','TRICKS','CARE','SLEEP'],cat:['FEED
 // v28 sheep wool: % per real HOUR. Fed+happy: 0->100 in ~3 min. Hungry or sad: 1/3 speed (~9 min). Sheep get hungry faster than dogs.
 const WOOL={fast:100*20,slow:100*20/3,hunger:7,happy:3.5,need:40,coins:0}; // v32: hunger/happy decay close to dogs (6/3 per hr)
 let ACTIONS=ACTS.dog;function careList(){return S.species==='cat'?CARE.slice(0,2):CARE}
+// ===== v43 animal TYPES (variants) for cats / chickens / cows =====
+const ANIMAL_TYPES={
+ cat:[{id:'cat_tabby',n:'TABBY CAT',p:60,desc:'Stripy! Keeps mice away'},{id:'cat_black',n:'BLACK CAT',p:70,desc:'Gold eyes, mouse catcher'},{id:'cat_ginger',n:'GINGER CAT',p:80,desc:'Cuddly — care bonus coins'}],
+ chicken:[{id:'chicken_brown',n:'BROWN HEN',p:30,desc:'Lays brown EGGS to sell'},{id:'chicken_white',n:'WHITE HEN',p:35,desc:'Lays white EGGS to sell'},{id:'chicken_rooster',n:'ROOSTER',p:50,desc:'Guards the flock! Wakes you'}],
+ cow:[{id:'cow_white',n:'WHITE COW',p:150,desc:'Gives MILK to sell'},{id:'cow_brown',n:'BROWN COW',p:180,desc:'MILK makes CHEESE!'},{id:'cow_black',n:'BLACK COW',p:200,desc:'Lots of MILK & CHEESE'}]};
+const TYPE_MAX={cat:4,chicken:6,cow:4};
+BREEDS.cow={sp:'cow',n:'COW',c:'#f4f0e8',d:'#3a3030',l:'#ffffff',bl:24,bh:14,leg:10,hr:10,sn:5,fur:0,desc:'Moo! Lives in the COW BARN'};
+Object.keys(ANIMAL_TYPES).forEach(sp=>ANIMAL_TYPES[sp].forEach(t=>{BREEDS[t.id]=Object.assign({},BREEDS[sp],{n:t.n,desc:t.desc})}));
+SP.cow={baby:'CALF',house:'COW BARN',food:'COW FEED'};ACTS.cow=['FEED','PLAY','CUDDLE','SLEEP'];
+SFOODS.cow=[{id:'greens',n:'FRESH GRASS',v:18},{id:'hay',n:'HAY',v:30},{id:'corn',n:'CORN',v:22,joy:3},{id:'apple',n:'APPLE',v:12,joy:8}];
+// v43 DAILY WOOL: after the tutorial's first shear, (v59) a full coat takes ~6 real hours (9h if hungry/sad)
+function woolRate(fed){const tut=DB.missions&&DB.missions.wool&&(DB.missions.wool.step||0)<4;return tut?(fed?WOOL.fast:WOOL.slow):(fed?100/6:100/9)}
+function woolETA(p,w){const fed=(p.hunger||0)>=WOOL.need&&(p.happy||0)>=WOOL.need,h=(100-w)/woolRate(fed);return h<1?'Ready in '+Math.max(1,Math.ceil(h*60))+' min':'Ready in '+Math.ceil(h)+'h'}

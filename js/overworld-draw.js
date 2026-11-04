@@ -24,48 +24,60 @@ function autoT(im,set,x,y,X,Y){[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy],q)
 const TREE_SP={T:'tree2',P:'pine2',A:'apple2'};
 const PROP_MSG={windmill:'The old windmill creaks round — it pumps water for the ranch!',silo:'A tall silo packed with grain for the winter.',well:'Grandpa\'s wishing well. The water is cool and clear.',scarecrow:'Mr. Straw keeps the crows off the crops!',trough:'A water trough for thirsty animals.'};
 function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(0,Math.min(MW*TS-W,o.px+8-W/2)),cy=Math.max(-16,Math.min(MH*TS-H,o.py+8-H/2+10));
-  CAMC=[cx+W/2,cy+H/2];g.fillStyle='#205828';g.fillRect(0,0,W,H);g.save();g.translate(-Math.round(cx),-Math.round(cy));
+  CAMC=[cx+W/2,cy+H/2];g.fillStyle='#205828';g.fillRect(0,0,W,H);let BB=null;if(P3D){P3Q=[];P3GROUND=true;BB=p3dBegin(Math.round(cx),Math.round(cy));g.fillStyle='#4f9a36';g.fillRect(P3C.ox-40,P3C.oy-40,W/P3.A+80,H/P3.A+80)}else{P3C=null;g.save();g.translate(-Math.round(cx),-Math.round(cy))}
   g.imageSmoothingEnabled=false;const ok=n=>IMG[n]&&IMG[n].naturalWidth;
-  const x0=Math.max(0,Math.floor(cx/TS)-2),x1=Math.min(MW-1,Math.ceil((cx+W)/TS)+1),y0=Math.max(0,Math.floor(cy/TS)-2),y1=Math.min(MH-1,Math.ceil((cy+H)/TS)+1);
+  const x0=Math.max(0,BB?BB.x0:Math.floor(cx/TS)-2),x1=Math.min(MW-1,BB?BB.x1:Math.ceil((cx+W)/TS)+1),y0=Math.max(0,BB?BB.y0:Math.floor(cy/TS)-2),y1=Math.min(MH-1,BB?BB.y1:Math.ceil((cy+H)/TS)+1);
   const wa=ok('waterauto1')&&(t>>5)%2?'waterauto1':'waterauto0',trees=[],fences=[];
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=OWBASE[y][x],X=x*TS,Y=y*TS,hh=((x*73856093)^(y*19349663))>>>0,gv=hh%10<6?0:hh%10<8?1:hh%10<9?2:3;
     if(ok('grass'+gv))g.drawImage(IMG['grass'+gv],X,Y);else if(ok('grass'))g.drawImage(IMG.grass,X,Y);else R(X,Y,TS,TS,'#78c858');
+    if(c==='w'&&CUR==='ranch'&&MAP_LAYOUT.pond&&ok('pond')){const [qx,qy,qw,qh]=MAP_LAYOUT.pond;if(x>=qx&&x<qx+qw&&y>=qy&&y<qy+qh)continue}
     if(c==='w'||c==='B'){if([[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,1],[-1,1],[1,-1]].some(([a,b])=>isK('b',x+a,y+b)))R(X,Y,TS,TS,'#f0e0a8');if(ok(wa))autoT(IMG[wa],'wB',x,y,X,Y);else R(X,Y,TS,TS,'#4888e8');if(c==='B'){if(ok('bridge'))g.drawImage(IMG.bridge,X,Y);else R(X,Y,TS,TS,'#a06830')}continue}
     if(c==='b'){if(ok('sandauto'))autoT(IMG.sandauto,'bwB',x,y,X,Y);else R(X,Y,TS,TS,'#f0e0a8');continue}
-    if(c==='p'||c==='G'){if(ok('pathauto'))autoT(IMG.pathauto,'pGB',x,y,X,Y);else R(X,Y,TS,TS,'#e8d8a0');continue}
+    if(c==='p'||c==='G'){if(ok('pathauto'))autoT(IMG.pathauto,'pGB',x,y,X,Y);else R(X,Y,TS,TS,'#e8d8a0');
+      if(P3D){const up=y>0?OWBASE[y-1][x]:'p';if(!'pGBbw'.includes(up)){const j=hh%4;R(X,Y,TS,4+j%2,'#3f9a2e');R(X+((hh>>3)%9),Y+4+j%2,5,2,'#3f9a2e');R(X,Y+4+j%2,TS,1,'#2a6a20');R(X,Y,TS,1,'#6ad050')}
+        const dn=y<MH-1?OWBASE[y+1][x]:'p';if(!'pGBbw'.includes(dn))R(X,Y+14,TS,2,'#c9934a')}continue}
+    if(P3D&&c==='g'&&hh%11===0&&!BARNS.some(b=>x>=b[0]-1&&x<=b[0]+b[2]&&y>=b[1]-4&&y<b[1]+b[3])&&!(x>=HOME[0]-1&&x<=HOME[0]+3&&y>=HOME[1]-4&&y<HOME[1]+2))p3later(X+8,Y+12,()=>grassTuft(X+8,Y+12,hh));
     if(TREE_SP[c]){trees.push([x,y,TREE_SP[c]]);continue}if(c==='f'){fences.push([x,y]);continue}
-    const n={U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
-    if(n==='hay'&&ok('p_hay'))g.drawImage(IMG.p_hay,X,Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',sign:'#c89a60',tallgrass:'#309028',flower0:'#f05868',flower1:'#f8e048',flower2:'#fff',rock:'#8890a0'}[n])}
+    const n=(CUR==='ranch'&&'CWUc'.includes(c)&&typeof cropTile==='function')?cropTile(c,x,y):{U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
+    if(P3D&&n&&'pumpkin corn wheat sprout tallgrass hay sign rock'.includes(n)&&ok(n==='hay'?'p_hay':n)){if(n!=='tallgrass'&&n!=='rock'&&n!=='hay'&&ok('field'))g.drawImage(IMG.field,X,Y);const im=IMG[n==='hay'?'p_hay':n];p3later(X+8,Y+15,()=>{E(X+8,Y+15,6,2,'#0a281430');g.drawImage(im,X,Y)})}
+    else if(n==='hay'&&ok('p_hay'))g.drawImage(IMG.p_hay,X,Y);else if(n&&ok(n))g.drawImage(IMG[n],X,Y);else if(n)R(X,Y,TS,TS,{field:'#986838',fence:'#b07038',corn:'#d0b040',wheat:'#e8c860',sign:'#c89a60',tallgrass:'#309028',flower0:'#f05868',flower1:'#f8e048',flower2:'#fff',rock:'#8890a0'}[n])}
   // gate posts either side of the gate tiles
   {const gt=MAPS[CUR].gate,gx=gt[0][0],gy=gt[0][1];if(ok('gatepost')){g.drawImage(IMG.gatepost,(gx-1)*TS,gy*TS);g.drawImage(IMG.gatepost,(gx+gt.length)*TS,gy*TS)}
     RR(gx*TS-6,gy*TS+(CUR==='ranch'?-11:17),gt.length*TS+12,10,3,'#6a4020','#382010');txt(CUR==='ranch'?'WILD WOODS':'RANCH',gx*TS+gt.length*8,gy*TS+(CUR==='ranch'?-3:25),'#fff',6)}
-  const drawTrees=front=>trees.forEach(([x,y,n])=>{if((y+1>o.y)!==front)return;if(ok(n)){const im=IMG[n];E(x*TS+16,y*TS+30,13,4,'#0a281438');drawLean(im,x*TS,y*TS)}else{E(x*TS+16,y*TS+14,14,12,'#307030')}});
-  const drawFences=front=>fences.forEach(([x,y])=>{if((y>o.y)===front)drawFence(x,y)});
+  if(P3D){if(CUR==='ranch')HSLOT.forEach(([hx,hy],i)=>{if(!homePets()[i]){const px=hx*TS,py=hy*TS;g.fillStyle='#a0783c55';g.fillRect(px+4,py+6,40,22)}});owExtras(t,o);P3GROUND=false;p3dWarp();g.save();g.translate(-Math.round(cx),-Math.round(cy))}
+  const drawTrees=front=>trees.forEach(([x,y,n])=>{if((y+1>o.y)!==front)return;if(P3D)p3flush(y*TS+31);p3shadow(x*TS+16,y*TS+31,22,36);withProj(x*TS+16,y*TS+32,()=>{if(ok(n)){const im=IMG[n];E(x*TS+16,y*TS+30,13,4,'#0a281438');drawLean(im,x*TS,y*TS)}else{E(x*TS+16,y*TS+14,14,12,'#307030')}})});
+  const drawFences=front=>fences.forEach(([x,y])=>{if((y>o.y)===front)withProj(x*TS+8,y*TS+14,()=>drawFence(x,y))});
   drawFences(false);drawTrees(false);
-  const drawStore=front=>{if(CUR!=='ranch'&&((STORE[1]+1>=o.y)===front)){const [sx,sy]=STORE;if(ok('petstore'))drawLean(IMG.petstore,sx*TS,(sy+2)*TS-IMG.petstore.height);else{R(sx*TS+2,sy*TS+2,44,28,'#f0a040')}RR(sx*TS+4,sy*TS-41,40,9,3,'#ff5a8b','#2b2440');txt('PET SHOP',sx*TS+24,sy*TS-34,'#fff',6)}};let drawHome=()=>{};
+  const drawStore=front=>{if(CUR!=='ranch'&&((STORE[1]+1>=o.y)===front))withProj(STORE[0]*TS+24,(STORE[1]+2)*TS,()=>{const [sx,sy]=STORE;if(ok('petstore'))drawLean(IMG.petstore,sx*TS,(sy+2)*TS-IMG.petstore.height);else{R(sx*TS+2,sy*TS+2,44,28,'#f0a040')}RR(sx*TS+4,sy*TS-41,40,9,3,'#ff5a8b','#2b2440');txt('PET SHOP',sx*TS+24,sy*TS-34,'#fff',6)})};let drawHome=()=>{};
   if(CUR==='ranch'){
-  drawHome=front=>{if((HOME[1]+1>=o.y)!==front)return;if(ok('b_farmhouse')){const [hx,hy]=HOME;drawLean(IMG.b_farmhouse,hx*TS-8,(hy+2)*TS-IMG.b_farmhouse.height)}else {const [hx,hy]=HOME,X=hx*TS,Y=hy*TS;E(X+24,Y+31,24,4,'#0003');R(X+3,Y+12,42,20,'#e8c890');for(let i=0;i<5;i++)R(X+3,Y+15+i*4,42,1,'#c8a070');g.fillStyle='#3a6ad8';g.beginPath();g.moveTo(X-1,Y+14);g.lineTo(X+24,Y-6);g.lineTo(X+49,Y+14);g.fill();g.fillStyle='#2a4aa8';g.fillRect(X-1,Y+12,50,3);R(X+20,Y+20,8,12,'#7a4a20');R(X+26,Y+26,1,1,'#ffd84a');R(X+7,Y+18,9,7,'#9ad8ff');R(X+32,Y+18,9,7,'#9ad8ff');R(X+7,Y+21,9,1,'#fff');R(X+32,Y+21,9,1,'#fff');R(X+36,Y-2,5,8,'#a04030')}};
+  drawHome=front=>{if((HOME[1]+1>=o.y)!==front)return;if(P3D)p3flush((HOME[1]+2)*TS-1);p3shadow(HOME[0]*TS+24,(HOME[1]+2)*TS-2,52,60);withProj(HOME[0]*TS+24,(HOME[1]+2)*TS,()=>{if(ok('b_farmhouse')){const [hx,hy]=HOME;drawLean(IMG.b_farmhouse,hx*TS-8,(hy+2)*TS-IMG.b_farmhouse.height)}else {const [hx,hy]=HOME,X=hx*TS,Y=hy*TS;E(X+24,Y+31,24,4,'#0003');R(X+3,Y+12,42,20,'#e8c890');for(let i=0;i<5;i++)R(X+3,Y+15+i*4,42,1,'#c8a070');g.fillStyle='#3a6ad8';g.beginPath();g.moveTo(X-1,Y+14);g.lineTo(X+24,Y-6);g.lineTo(X+49,Y+14);g.fill();g.fillStyle='#2a4aa8';g.fillRect(X-1,Y+12,50,3);R(X+20,Y+20,8,12,'#7a4a20');R(X+26,Y+26,1,1,'#ffd84a');R(X+7,Y+18,9,7,'#9ad8ff');R(X+32,Y+18,9,7,'#9ad8ff');R(X+7,Y+21,9,1,'#fff');R(X+32,Y+21,9,1,'#fff');R(X+36,Y-2,5,8,'#a04030')}})};
   const L=homePets().slice(0,6);
-  HSLOT.forEach(([hx,hy],i)=>{const p=L[i],X=hx*TS+24,Y=hy*TS+32;if(p){const sp=spOf(p);if(sp==='dog'&&ok('b_doghouse')){drawLean(IMG.b_doghouse,hx*TS,(hy-1)*TS);RR(X-14,Y+1,28,8,3,'#fff8');txt(p.name.slice(0,6),X,Y+7,'#5b4b8a',5)}else house(sp,X,Y,.66,false,p.name);R(X-4,Y-1,8,2,'#5a3a20')}
-    else{const px=hx*TS,py=hy*TS;g.fillStyle='#a0783c55';g.fillRect(px+4,py+6,40,22);g.fillStyle='#7a5030';[[px+3,py+5],[px+43,py+5],[px+3,py+26],[px+43,py+26]].forEach(([a,b])=>g.fillRect(a,b,2,4));R(px+22,py+18,4,10,'#7a5030');R(px+17,py+14,14,6,'#e8d0a0')}});
-  LOCKS.forEach(([hx,hy,n])=>lockedHouse(n,hx*TS+24,hy*TS+30,.66));
+  HSLOT.forEach(([hx,hy],i)=>{const p=L[i],X=hx*TS+24,Y=hy*TS+32;if(p)withProj(X,Y,()=>{const sp=spOf(p);if(sp==='dog'&&ok('b_doghouse')){drawLean(IMG.b_doghouse,hx*TS,(hy-1)*TS);RR(X-14,Y+1,28,8,3,'#fff8');txt(p.name.slice(0,6),X,Y+7,'#5b4b8a',5)}else house(sp,X,Y,.66,false,p.name);R(X-4,Y-1,8,2,'#5a3a20')});
+    else if(!P3D){const px=hx*TS,py=hy*TS;g.fillStyle='#a0783c55';g.fillRect(px+4,py+6,40,22);g.fillStyle='#7a5030';[[px+3,py+5],[px+43,py+5],[px+3,py+26],[px+43,py+26]].forEach(([a,b])=>g.fillRect(a,b,2,4));R(px+22,py+18,4,10,'#7a5030');R(px+17,py+14,14,6,'#e8d0a0')}});
+  LOCKS.forEach(([hx,hy,n])=>withProj(hx*TS+24,hy*TS+30,()=>lockedHouse(n,hx*TS+24,hy*TS+30,.66)));
   }
-  const big=CUR==='ranch'?BARNS.map(b=>({b,bot:b[1]+b[3]-1})).concat(PROPS.map(q=>({q,bot:q[1]+q[3]-1}))):[];
-  const drawBig=front=>big.forEach(({b,q,bot})=>{if((bot>=o.y)!==front)return;
+  const big=CUR==='ranch'?BARNS.map(b=>({b,bot:b[1]+b[3]-1})).concat(PROPS.map(q=>({q,bot:q[1]+q[3]-1}))).sort((a,b)=>a.bot-b.bot):[];
+  const drawBig=front=>big.forEach(({b,q,bot})=>{if((bot>=o.y)!==front)return;const fx=b?b[0]*TS+b[2]*8:q[0]*TS+q[2]*8,fy=b?(b[1]+b[3])*TS:(q[1]+q[3])*TS;if(P3D)p3flush(fy-1);if(b)p3shadow(fx,fy-2,b[2]*TS,60);withProj(fx,fy,()=>{
     if(b){const [bx,by,bw,bh,id,n]=b,k='b_'+id,X=bx*TS,Y=(by+bh)*TS-(ok('b_'+id)?IMG['b_'+id].height:(bh+1)*TS);E(X+bw*8+3,(by+bh)*TS-2,bw*8+2,5,'#0a281444');if(ok(k))drawLean(IMG[k],X,Y);else R(X+2,Y+18,bw*TS-4,bh*TS-4,'#b04030');
       const lw=n.length*4+8;RR(X+bw*8-lw/2,(by+bh)*TS-1,lw,8,3,'#6a4020','#382010');txt(n,X+bw*8,(by+bh)*TS+5,'#fff',5)}
     else{const [px,py,pw,ph,id]=q,k='p_'+id;if(!ok(k))return;const im=IMG[k];let X=px*TS+pw*8-im.width/2,Y=(py+ph)*TS-im.height;
       if(id==='windmill'){drawLean(im,X,Y);const [lx,ly]=leanOff(X+im.width/2,Y+im.height,im.height/2),a=t/40,cx=X+24+lx,cy=Y+24+ly;g.save();g.translate(cx,cy);g.rotate(a);for(let i=0;i<4;i++){g.rotate(Math.PI/2);R(-1,-22,2,22,'#4a2c14');R(1,-22,6,15,'#f8f4e8');R(1,-22,6,1,'#6a4a2a');R(6,-22,1,15,'#6a4a2a');R(1,-14,6,1,'#b0a080')}g.restore();E(cx,cy,3,3,'#6a4020')}
-      else drawLean(im,X,Y)}});
-  drawStore(false);drawHome(false);drawBig(false);owExtras(t,o);
-  const AVS=avImg('s'),FS=DB.avatar==='girl'&&ok('farmergirl')?'farmergirl':'farmer';if(AVS||ok(FS)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;g.drawImage(AVS||IMG[FS],fr*16,row*16,16,16,Math.round(o.px),Math.round(o.py)-4-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0),16,16)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);drawBig(true);drawStore(true);drawHome(true);drawFences(true);drawTrees(true);g.restore();
+      else drawLean(im,X,Y)}})});
+  drawStore(false);drawHome(false);drawBig(false);if(!P3D)owExtras(t,o);
+  p3flush(o.py+16);withProj(o.px+8,o.py+16,()=>{E(o.px+8,o.py+12,6,2,'#0004');const AVS=avImg('s'),FS=DB.avatar==='girl'&&ok('farmergirl')?'farmergirl':'farmer';if(AVS||ok(FS)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;const Y0=Math.round(o.py)-4-(FH-16)-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0);g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Y0,16,FH);if(P3D)hatTop(o.px+8,Y0+3)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);});p3flush();drawBig(true);drawStore(true);drawHome(true);drawFences(true);drawTrees(true);g.restore();
+  tiltShift();
   R(0,0,W,16,'#2b2440cc');txt(CUR==='ranch'?'PET FARM':MAPS.outer.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy);
   if(ui.msgT>0){}
   else if(th&&(th.pet||th.empty)){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.pet?'A: visit '+th.pet.name:'Empty plot — buy a pet at the PET STORE',W/2,H-19,'#2b2440',8)}
   else if(th&&th.gate){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(CUR==='ranch'?'Walk on: leave for the WILD WOODS':'Walk on: back to the RANCH',W/2,H-19,'#2b2440',8)}
   else if(th&&th.home){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: go inside your ranch house',W/2,H-19,'#2b2440',8)}
-  else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'A: go inside the ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
+  else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'Walk in: ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
   else if(th&&CUR==='ranch'&&(th.weed||owHint(th))){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':owHint(th),W/2,H-19,'#2b2440',8)}
   else if(th&&th.store){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: enter PET SHOP',W/2,H-19,'#2b2440',8)}
-  else txt('✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}
+  else txt(ui.hose!=null?'✚ walk  A spray  B put hose back':'✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}
+
+// v48: Link's Awakening tilt-shift — soft blur at the top & bottom of the view + warm/cool depth haze
+function tiltShift(){const cv=g.canvas,k=cv.width/W;if(!g.filter&&g.filter!=='')return;g.save();g.setTransform(1,0,0,1,0,0);
+  [[0,30,1.6],[0,18,2.4],[H-26,26,1.4],[H-14,14,2.2]].forEach(([y,h,b])=>{g.filter='blur('+(b*k/2)+'px)';g.drawImage(cv,0,y*k,cv.width,h*k,0,y*k,cv.width,h*k)});
+  g.filter='none';let gr=g.createLinearGradient(0,0,0,cv.height);gr.addColorStop(0,'rgba(255,250,220,.16)');gr.addColorStop(.25,'rgba(255,250,220,0)');gr.addColorStop(.8,'rgba(20,30,60,0)');gr.addColorStop(1,'rgba(20,30,60,.14)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height);g.restore()}

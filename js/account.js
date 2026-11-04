@@ -60,7 +60,7 @@ const _input0A=input0;input0=function(k){au&&au();
   if(S.scene==='acct'&&!ui.modal)return acctInput(k);if(S.scene==='pin')return pinInput(k);
   if(S.scene==='title'&&(k==='a'||k==='start')){const it=titleItems(),c=it[ui.tsel%it.length];if(c==='PLAY'){openAcct();if(lastName())ui.asel=1;return}if(c==='LOG OUT'){accLogout();say('Logged out. See you soon!');return}}
   return _input0A(k)};
-const _frameA=frame;frame=function(){try{frame0()}catch(e){console.error(e);requestAnimationFrame(frame)}};function frame0(){const sc=S.scene;if(sc!=='acct'&&sc!=='pin'){_frameA();if(sc==='title'&&ACC.name&&(LOGO.ok||LOGO.err)){RR(W/2-70,100,140,16,8,'#fffd','#2b2440');txt('Player: '+ACC.name,W/2,112,'#5b4b8a',10)}return}
+const _frameA=frame;frame=function(){try{frame0()}catch(e){console.error(e);requestAnimationFrame(frame)}};function frame0(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);const sc=S.scene;if(sc!=='acct'&&sc!=='pin'){_frameA();if(sc==='title'&&!ui.gate&&ACC.name&&(LOGO.ok||LOGO.err)){RR(W/2-70,100,140,16,8,'#fffd','#2b2440');txt('Player: '+ACC.name,W/2,112,'#5b4b8a',10)}return}
   ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);if(sc==='acct')drawAcct(t);else drawPin(t);if(ui.msgT>0){ui.msgT--;drawMsg(H-40)}if(ui.modal)drawModal(t);requestAnimationFrame(frame)}
 // ===== v36 flow: CONTINUE / SWITCH ACCOUNT; username → code; username = in-game name =====
 try{const t=localStorage.getItem('pf_tok'),n=localStorage.getItem('pf_name');if(!ACC.token&&t){ACC.token=t;ACC.name=n}}catch(e){}
@@ -96,19 +96,20 @@ drawAcct=function(t){bg(false);otxt('PET FARM',W/2,40,'#ffe36a',24);if(ACC.busy)
 titleItems=function(){return ACC.token?['CONTINUE','SWITCH ACCOUNT']:['LOGIN']};
 (function(){
   const ov=document.createElement('div');ov.id='acctov';ov.hidden=true;
-  ov.innerHTML='<form id="acctform" autocomplete="off"><div id="acctttl">YOUR NAME</div><div id="accthint"></div><input id="acctin"><div id="accterr"></div><div class="acctbtns"><button type="button" id="acctback">BACK</button><button type="submit" id="acctok">NEXT</button></div></form>';
+  ov.innerHTML='<form id="acctform" autocomplete="off"><div id="acctttl">YOUR NAME</div><div id="accthint"></div><div id="acctinwrap"><input id="acctin"><div id="pinboxes" aria-hidden="true"><span></span><span></span><span></span><span></span></div></div><div id="accterr"></div><div class="acctbtns"><button type="button" id="acctback">BACK</button><button type="submit" id="acctok">NEXT</button></div></form>';
   document.getElementById('screenwrap').appendChild(ov);
   const f=ov.querySelector('form'),inp=ov.querySelector('#acctin'),ttl=ov.querySelector('#acctttl'),hint=ov.querySelector('#accthint'),er=ov.querySelector('#accterr'),ok=ov.querySelector('#acctok');
-  let mode=null;
-  function show(m){mode=m;ov.hidden=false;S={scene:'acct'};ui.modal=null;ui.nameAcct=null;inp.value='';er.textContent=ui.aerr||'';
+  let mode=null;const pbx=[...ov.querySelectorAll('#pinboxes span')];
+  function drawPin(){const v=inp.value,foc=document.activeElement===inp;pbx.forEach((b,i)=>{b.textContent=i<v.length?'•':'';b.className=(i<v.length?'f':'')+(foc&&i===Math.min(v.length,3)?' on':'')})}
+  function show(m){mode=m;ov.hidden=false;ov.classList.toggle('pinmode',m==='pin');S={scene:'acct'};ui.modal=null;ui.nameAcct=null;inp.value='';er.textContent=ui.aerr||'';
     if(m==='name'){ttl.textContent='YOUR NAME';hint.textContent='Your player name in the game';inp.type='text';inp.inputMode='text';inp.maxLength=8;inp.autocapitalize='characters';inp.placeholder='NAME';inp.setAttribute('autocorrect','off');inp.spellcheck=false;inp.removeAttribute('pattern');inp.autocomplete='username';ok.textContent='NEXT'}
     else{const P=ui.pin;ttl.textContent=P.mode==='create'?(P.first?'TYPE IT AGAIN':'MAKE A 4-NUMBER CODE'):'TYPE YOUR CODE';hint.textContent=P.mode==='create'?'Remember it! You need it to play.':'Hi '+ui.acctName+'! Type your code';
-      inp.type='password';inp.inputMode='numeric';inp.pattern='[0-9]*';inp.maxLength=4;inp.placeholder='••••';inp.autocomplete='off';ok.textContent='GO'}
-    setTimeout(()=>{inp.focus()},30)}
+      inp.type='password';inp.inputMode='numeric';inp.pattern='[0-9]*';inp.maxLength=4;inp.placeholder='';inp.autocomplete='off';ok.textContent='GO'}
+    drawPin();setTimeout(()=>{inp.focus();drawPin()},30)}
   function hide(){ov.hidden=true;mode=null;inp.blur()}
   window.acctOverlayHide=hide;
-  inp.addEventListener('input',()=>{if(mode==='pin'){inp.value=inp.value.replace(/\D/g,'').slice(0,4);if(inp.value.length===4)setTimeout(submit,120)}else inp.value=inp.value.replace(/[^a-zA-Z0-9 ]/g,'').toUpperCase().slice(0,8)});
-  inp.addEventListener('keydown',e=>e.stopPropagation(),true);
+  inp.addEventListener('input',()=>{if(mode==='pin'){inp.value=inp.value.replace(/\D/g,'').slice(0,4);drawPin();if(inp.value.length===4)setTimeout(submit,120)}else inp.value=inp.value.replace(/[^a-zA-Z0-9 ]/g,'').toUpperCase().slice(0,8)});
+  inp.addEventListener('keydown',e=>e.stopPropagation(),true);inp.addEventListener('focus',drawPin);inp.addEventListener('blur',drawPin);inp.addEventListener('select',()=>{const n=inp.value.length;try{inp.setSelectionRange(n,n)}catch(e){}});
   function busy(b){ok.disabled=b;inp.disabled=b;if(b){er.style.color='#8a80a8';er.textContent='Checking…'}else er.style.color=''}
   function submit(){if(ACC.busy||inp.disabled)return;er.textContent='';
     if(mode==='name'){const n=inp.value.trim().toUpperCase();if(!/[A-Z]/.test(n)){er.textContent='Use at least 1 letter';return}

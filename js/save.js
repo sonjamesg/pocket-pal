@@ -17,7 +17,7 @@ function loadDB(){let d=null;try{d=JSON.parse(localStorage.getItem(SAVE))}catch(
   try{localStorage.setItem(SAVE,JSON.stringify(d))}catch(e){}return d}
 function migrate(p){p=Object.assign({},p);if(p.species&&p.species!=='dog')p.wasSpecies=p.species;p.species='dog';p.breed=p.breed||'lab';
   if(p.stage)p.stage=STAGE_MAP[p.stage]||p.stage;p.stageStart=now();p.xp=0;p.coat=20;p.plaque=10;p.last=now();return fix(p)}
-function fix(s){s.species=SP[s.species]?s.species:'dog';if(s.species!=='dog')s.breed=s.species;s.tricks=s.tricks||{};TRICKS.forEach(t=>{if(s.tricks[t.id]==null)s.tricks[t.id]=0});s.best=s.best||{};
+function fix(s){s.species=SP[s.species]?s.species:'dog';if(s.species!=='dog'&&!(s.breed&&String(s.breed).startsWith(s.species+'_')))s.breed=s.species;s.tricks=s.tricks||{};TRICKS.forEach(t=>{if(s.tricks[t.id]==null)s.tricks[t.id]=0});s.best=s.best||{};
   s.toys=s.toys||['ball'];if(s.coins==null)s.coins=20;if(s.coat==null)s.coat=10;if(s.plaque==null)s.plaque=5;if(s.xp==null)s.xp=0;if(s.species==='sheep'&&s.wool==null)s.wool=0;
   if(s.scene&&!['egg','title','species','breed'].includes(s.scene))s.scene='main';return s}
 function syncActs(){ACTIONS=ACTS[spOf(S)];if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}

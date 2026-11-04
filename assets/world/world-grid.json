@@ -173,15 +173,15 @@
   "locked": [],
   "petStore": {
     "origin": [
-      44,
-      30
+      42,
+      4
     ],
     "door": [
-      45,
-      31
+      43,
+      5
     ],
-    "grid": "AS31",
-    "doorGrid": "AT32"
+    "grid": "AQ5",
+    "doorGrid": "AR6"
   },
   "cells": {
     "A1": {
@@ -2360,19 +2360,22 @@
       "x": 42,
       "y": 4,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AR5": {
       "x": 43,
       "y": 4,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AS5": {
       "x": 44,
       "y": 4,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AT5": {
       "x": 45,
@@ -2840,19 +2843,22 @@
       "x": 42,
       "y": 5,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AR6": {
       "x": 43,
       "y": 5,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AS6": {
       "x": 44,
       "y": 5,
       "tile": "g",
-      "kind": "grass"
+      "kind": "pet_store",
+      "feature": "PET STORE"
     },
     "AT6": {
       "x": 45,
@@ -3313,20 +3319,20 @@
     "AP7": {
       "x": 41,
       "y": 6,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AQ7": {
       "x": 42,
       "y": 6,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AR7": {
       "x": 43,
       "y": 6,
-      "tile": "g",
-      "kind": "grass"
+      "tile": "p",
+      "kind": "path"
     },
     "AS7": {
       "x": 44,
@@ -14852,22 +14858,19 @@
       "x": 44,
       "y": 30,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AT31": {
       "x": 45,
       "y": 30,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AU31": {
       "x": 46,
       "y": 30,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AV31": {
       "x": 47,
@@ -15335,22 +15338,19 @@
       "x": 44,
       "y": 31,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AT32": {
       "x": 45,
       "y": 31,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AU32": {
       "x": 46,
       "y": 31,
       "tile": "g",
-      "kind": "pet_store",
-      "feature": "PET STORE"
+      "kind": "grass"
     },
     "AV32": {
       "x": 47,
@@ -15823,8 +15823,8 @@
     "AT33": {
       "x": 45,
       "y": 32,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AU33": {
       "x": 46,
@@ -16303,8 +16303,8 @@
     "AT34": {
       "x": 45,
       "y": 33,
-      "tile": "p",
-      "kind": "path"
+      "tile": "g",
+      "kind": "grass"
     },
     "AU34": {
       "x": 46,

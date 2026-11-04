@@ -8,7 +8,7 @@ function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x]
 function owThing(x,y){const c=OWBASE[y]&&OWBASE[y][x];
   if(CUR==='ranch'){const L=homePets().slice(0,6);for(let i=0;i<6;i++){const [hx,hy]=HSLOT[i];if(y===hy+1&&x===hx+1)return L[i]?{pet:L[i]}:{empty:true};if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{wall:1}}
   {const [sx,sy]=HOME;if(x===sx+1&&y===sy+1)return{home:1};if(x>=sx&&x<sx+3&&y>=sy&&y<sy+2)return{wall:1}}
-  for(const b of BARNS){const [bx,by,bw,bh]=b;if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return{barn:b,door:x===bx+(bw>>1)&&y===by+bh-1}}
+  for(const b of BARNS){const [bx,by,bw,bh]=b;if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return{barn:b,door:(x===bx+(bw>>1)||(bw%2===0&&x===bx+(bw>>1)-1))&&y===by+bh-1}}
   for(const [bx,by,bw,bh,id] of PROPS)if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return{prop:id};
   if(c==='h')return{weed:1};
   for(const [hx,hy,n] of LOCKS)if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return{lock:n}}
