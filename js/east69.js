@@ -135,3 +135,8 @@ function setFollow(on){if(!S||!S.id)return;DB.follow=on?S.id:null;saveDB();sfx&&
 {const _sa=syncActs;syncActs=function(){_sa();if(spOf(S)==='dog'){ACTIONS=ACTIONS.filter(a=>a!=='FOLLOW'&&a!=='UNFOLLOW');ACTIONS.push(DB.follow===S.id?'UNFOLLOW':'FOLLOW');if(ui&&ui.menu>=ACTIONS.length)ui.menu=0}}}
 {const _oa=openAct;openAct=function(i){const a=ACTIONS[i];if(a==='FOLLOW'){setFollow(true);return}if(a==='UNFOLLOW'){setFollow(false);return}return _oa(i)}}
 {const _tf=toggleFollow;toggleFollow=function(){_tf();try{syncActs()}catch(e){}}}
+// v103: PET SHOP sells only dogs, cats, bunnies. Farm animals come from their farms (cow stays for ROSIE's Moo Meadow shop only).
+{const keep=['dogs','cat','rabbit','cow'],K=SHOP_CATS.filter(c=>keep.includes(c.id)).sort((a,b)=>keep.indexOf(a.id)-keep.indexOf(b.id));SHOP_CATS.length=0;K.forEach(c=>SHOP_CATS.push(c));
+ const dog=SHOP_CATS.find(c=>c.id==='dogs');if(dog){delete dog.ok;delete dog.need}
+ const hideCow=fn=>function(){if(ui.cowShop)return fn.apply(this,arguments);const i=SHOP_CATS.findIndex(c=>c.id==='cow'),c=i>=0?SHOP_CATS.splice(i,1)[0]:null;try{return fn.apply(this,arguments)}finally{if(c)SHOP_CATS.splice(i,0,c)}};
+ storeInput=hideCow(storeInput);drawPetCatalog=hideCow(drawPetCatalog);}
