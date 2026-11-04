@@ -9,7 +9,7 @@ document.addEventListener('dblclick',e=>e.preventDefault());
 // ===== responsive canvas (layout v3) =====
 const LAND=matchMedia('(orientation: landscape)');
 function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-12)/W,(box.height-12)/H));
-  const cw=Math.floor(W*sc),ch=Math.floor(H*sc),dpr=Math.min(3,window.devicePixelRatio||1);cv.style.width=cw+'px';cv.style.height=ch+'px';
+  const cw=Math.floor(W*sc),ch=Math.floor(H*sc),dpr=(typeof GFX!=="undefined"?GFX.dpr():Math.min(3,window.devicePixelRatio||1));cv.style.width=cw+'px';cv.style.height=ch+'px';
   cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);g.setTransform(cv.width/W,0,0,cv.height/H,0,0);document.body.dataset.layout=LAND.matches?'landscape':'portrait'}
 addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('change',()=>setTimeout(fit,60)):LAND.addListener(fit);
 if(window.visualViewport)visualViewport.addEventListener('resize',fit);
