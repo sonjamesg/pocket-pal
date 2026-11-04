@@ -167,3 +167,19 @@ const FARMER_PORT={ROSIE:['#60b254',0],HATTIE:['#e8a020',40],PERCY:['#e88aa0',30
   RR(bx,by,52,52,6,'#fff','#2b2440');R(bx+3,by+3,46,40,'#bfe3ff');R(bx+3,by+30,46,13,'#8fd06a');
   if(im&&im.naturalWidth){g.save();g.imageSmoothingEnabled=false;if(hue)g.filter='hue-rotate('+hue+'deg)';g.drawImage(im,0,0,16,14,bx+5,by+3,42,37);g.restore()}else{E(bx+26,by+20,12,12,'#ffd6aa');R(bx+14,by+30,24,12,col)}
   RR(bx,by+42,52,12,4,col,'#2b2440');txt(w.n,bx+26,by+51,'#fff',7)}}
+// v108: Grandpa rocking in his chair by the fire, reading a book (left fireside chair), second armchair stays for you
+{const _dio=drawIntObj;drawIntObj=function(c,X,Y,x,y,t){if(!(c==='a'&&MAPS.int&&MAPS.int.id==='house'&&x===3&&y===3))return _dio(c,X,Y,x,y,t);
+  const a=Math.sin(t/28)*0.09;E(X+8,Y+15,8,2,'#0004');g.save();g.translate(X+8,Y+14);g.rotate(a);g.translate(-8,-14);
+  // rocking chair
+  g.strokeStyle='#5a3418';g.lineWidth=1.5;g.beginPath();g.arc(8,6,10,0.35*Math.PI,0.65*Math.PI);g.stroke();
+  RR(2,-2,12,10,3,'#8a5a2e');RR(3,-1,10,8,2,'#a86a3a');RR(1,7,14,4,2,'#b07a44');R(2,10,2,4,'#5a3418');R(12,10,2,4,'#5a3418');
+  // grandpa
+  RR(4,6,8,6,2,'#3a5a9a');R(5,11,2,3,'#3a5a9a');R(9,11,2,3,'#3a5a9a');R(4,13,3,1.5,'#3a2010');R(9,13,3,1.5,'#3a2010');
+  RR(4,1,8,7,2,'#c84838');R(7.5,1,1,6,'#f0e0c0');
+  E(8,-1,3.2,3.2,'#f0c8a0');RR(5.2,0,5.6,3,1.5,'#f4f4f4');E(6.8,-1.6,.5,.5,'#2b2020');E(9.2,-1.6,.5,.5,'#2b2020');
+  R(4,-4,8,1.5,'#7a4a20');RR(5.5,-6.5,5,3,1,'#9a6430');
+  // book
+  const fl=((t/90)|0)%6===0;R(4,4,8,4,'#f8f0dc');R(7.6,4,.8,4,'#8a3a24');R(4,7.5,8,.8,'#2a6a3a');if(fl)R(8,3,3,4,'#fff');
+  g.restore();
+  if(((t>>6)%9)===0){g.save();g.font='7px sans-serif';g.fillStyle='#fff';g.fillText('z',X+13,Y-6-((t>>3)%4));g.restore()}}}
+{const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&CUR==='int'&&MAPS.int&&MAPS.int.id==='house'&&o&&!o.mv){const [dx,dy]=DV[o.dir];if(o.x+dx===3&&o.y+dy===3){const L=['Grandpa: "Ah, come sit by the fire, '+(DB.playerName||'partner')+'. This book\'s about a brave farm dog!"','Grandpa: "Rock-a-bye... don\'t mind me, just resting my eyes."','Grandpa: "Pull up the other chair — nothing beats a warm fire after farm work."'];say(L[(Date.now()/1000|0)%L.length],220);return}}return _oi(k)}}
