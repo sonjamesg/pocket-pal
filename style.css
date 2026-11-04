@@ -76,3 +76,7 @@ button:active,.pressed{filter:brightness(1.25);transform:translateY(3px)}
 .kbttl{background:#5b4b8a;color:#fff;font-weight:bold;font-size:20px;border-radius:10px;padding:6px}.kbhint{color:#8a80a8;font-size:15px;margin:8px 0}
 .kbin{width:100%;box-sizing:border-box;font-size:30px;font-weight:bold;text-align:center;letter-spacing:4px;padding:10px;border:3px solid #5b4b8a;border-radius:12px;background:#efe6ff;color:#2b2440;text-transform:uppercase;outline:none}.kbin:focus{border-color:#ff5a8b}
 .kberr{color:#e8402a;font-size:15px;min-height:20px;margin:6px 0}.kbok{background:#ff5a8b!important;color:#fff!important;border-color:#fff!important}
+/* v67: desktop / physical controller — hide on-screen pads, game fills window */
+html.no-pads #deck{display:none!important}
+html.no-pads #app{grid-template-rows:100dvh!important;grid-template-columns:100%!important}
+html.no-pads #screenwrap{grid-column:1!important;grid-row:1!important;width:100%!important;height:100dvh!important;padding:8px!important}
