@@ -1,5 +1,5 @@
 // ===== achieve.js — v70 ACHIEVEMENTS BOARD: 24 unlocks in 5 tiers, Job-Board style; toasts; saved in DB.ach (local + cloud via saveDB) =====
-// Open: walk up to the ACHIEVEMENTS BOARD (next to the JOB BOARD) and press A. Shortcuts: SELECT / T on the map.
+// Open: walk up to the ACHIEVEMENTS BOARD (next to the JOB BOARD) and press A only — no Shift/T/SELECT shortcut.
 // Pacing: 1 WOOL CYCLE = 6h fleece regrow (≈4 a day). cycles = max(fleeces sheared, 6h blocks since your first sheep) so nobody soft-locks.
 // Specialty farm openings: CLUCKY HOLLOW 10 cycles, MUDDY TROTTERS +50% = 15, GALLOP RIDGE +50% = 23 (MOO MEADOW is open from the start).
 const CYCLE_MS=6*3600e3,FARM_CYC={chickfarm:10,pigfarm:15,horsefarm:23},FARM_NM={chickfarm:'CLUCKY HOLLOW',pigfarm:'MUDDY TROTTERS',horsefarm:'GALLOP RIDGE'};
@@ -60,9 +60,6 @@ setInterval(()=>{if(S&&S.scene!=='title')achCheck()},1000);
   if(CUR==='ranch'&&DB.follow&&DB.pets[DB.follow]&&_sp(DB.pets[DB.follow])==='dog'&&!achC('herd')&&o.x>=46&&o.x<=58&&o.y>=46&&o.y<=54&&(typeof fieldSheep!=='function'||fieldSheep().length))achInc('herd')}}
 // ---- board ----
 function openAch(){S={scene:'ach'};ui.atier=ui.atier||0;ui.asel=0;ui.msgT=0;sfx&&sfx('click');achCheck()}
-{const _oi=owInput;owInput=function(k){if(k==='select'){openAch();return}return _oi(k)}}
-{const _in=input;input=function(k){if(k==='ach'){if(!ui.modal&&S.scene==='map')openAch();return}return _in(k)}}
-if(typeof KM!=='undefined'){KM.t='ach'}
 {const _i0=input0;input0=function(k){if(S.scene!=='ach')return _i0(k);const T=ACH_TIERS[ui.atier];
   if(k==='left'){ui.atier=(ui.atier+4)%5;ui.asel=0}if(k==='right'){ui.atier=(ui.atier+1)%5;ui.asel=0}if(k==='up')ui.asel=(ui.asel+T.L.length-1)%T.L.length;if(k==='down')ui.asel=(ui.asel+1)%T.L.length;
   if(k==='b'||k==='start'||k==='select'){S={scene:'map'}}if(k==='a'){sfx&&sfx('blip')}}}
