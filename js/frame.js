@@ -112,7 +112,7 @@ function chromeGame(m){R(0,0,W,24,'#2b2440cc');txt(GAMES.find(x=>x.id===m.id).n,
 // v30: Grandpa-style speech bubble (no portrait). Wraps with the SAME font it draws with, so nothing overflows on phones.
 function wrapMsg(str,maxW,size){g.font='800 '+size+'px system-ui,sans-serif';const out=[];let line='';for(const w of String(str).split(' ')){const t=line?line+' '+w:w;if(g.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t}if(line)out.push(line);return out}
 function drawMsg(y){if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(ui.msg.length,(ui.msgC||0)+1.2);
-  let size=10,L=wrapMsg(ui.msg,W-36,size);if(L.length>3){size=9;L=wrapMsg(ui.msg,W-36,size)}L=L.slice(0,4);const lh=size+3,h=L.length*lh+14,top=y<H/2?y-6:H-6-h;
+  let size=10,L=wrapMsg(ui.msg,W-36,size);if(L.length>3){size=9;L=wrapMsg(ui.msg,W-36,size)}L=L.slice(0,4);const lh=size+3,h=L.length*lh+14,top=y<H/2?y-6:H-14-h;/* v116: keep bottom hint line (B leave etc) visible */
   RR(6,top,W-12,h,7,'#fff','#2b2440');g.strokeStyle='#58a8f8';g.lineWidth=1;g.strokeRect(10.5,top+3.5,W-21,h-7);
   let left=Math.floor(ui.msgC);L.forEach((l,i)=>{const part=l.slice(0,Math.max(0,left));left-=l.length+1;txt(part,16,top+8+size+i*lh,'#2b2440',size,'left')});
   if(ui.msgC>=ui.msg.length&&S.scene==='map'&&(ui.anim>>4)%2){g.fillStyle='#e8402a';g.beginPath();g.moveTo(W-22,top+h-9);g.lineTo(W-14,top+h-9);g.lineTo(W-18,top+h-5);g.fill()}}

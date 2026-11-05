@@ -126,12 +126,23 @@ function toyIcon(id,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
 
 // v53: plastic-toy puppy renderer — walk cycle, happy/sad/sleep faces, messy-coat + plaque overlays
 function toyDog(cx,cy,bid,stage,o){const T=ui.anim,pose=o.pose||'idle',mood=o.mood||'ok',M=DOG_META[bid]||{mx:34,my:28,hx:28,hy:21,hr:10,bx:18,by:28,bl:16,w:48,h:40};
-  const sleep=pose==='sleep'||pose==='lay'||pose==='nap',walk=['walk','trot','play','dance','twirl'].includes(pose),hap=!sleep&&(pose==='happy'||pose==='hop'||pose==='smile'||(mood==='happy'&&T%240<60));
+  const trick=['sit','twirl','dance','lay','roll'].includes(pose)?pose:null,sleep=pose==='sleep'||pose==='nap',walk=['walk','trot','play'].includes(pose),hap=!sleep&&(pose==='happy'||pose==='hop'||pose==='smile'||(mood==='happy'&&T%240<60));
   const fr=sleep?'_z':walk&&(T>>3)%2?'_w':mood==='sad'?'_s':hap?'_h':'',im=(IMG['dog_'+bid+fr]&&IMG['dog_'+bid+fr].naturalWidth)?IMG['dog_'+bid+fr]:IMG['dog_'+bid];
   const sz={puppy:.6,youngster:.74,teen:.87,adult:1,senior:1}[stage]||1,sc=62*sz/Math.max(M.w,M.h);let dy=0;
   if(pose==='hop'||pose==='happy')dy=-Math.abs(Math.sin(T/6))*10;else if(walk)dy=-Math.abs(Math.sin(T/4))*1.5;
-  g.save();g.translate(cx,cy);E(0,1,18*sz,4*sz,'#0003');g.translate(0,dy);g.scale((o.dir||1)*sc,sc);if(pose==='roll')g.rotate(Math.sin(T/8)*.5);if(sleep)g.translate(0,3);
-  g.imageSmoothingEnabled=false;const ox=-M.w/2,oy=-M.h+3;g.drawImage(im,ox,oy);
+  g.save();g.translate(cx,cy);E(0,1,18*sz,4*sz,'#0003');g.translate(0,dy);g.scale((o.dir||1)*sc,sc);if(sleep)g.translate(0,3);
+  // v116 trick animations (taught tricks performed via perform()/teach GOOD!)
+  const ph=T/60;
+  if(trick==='sit'){g.translate(0,2);g.rotate(-.22);g.scale(1,.9)}
+  else if(trick==='lay'){g.translate(0,6);g.scale(1.08,.72)}
+  else if(trick==='roll'){const a=(T%48)/48*Math.PI*2;g.translate(0,-M.h/3);g.rotate(a);g.translate(0,M.h/3)}
+  else if(trick==='twirl'){const c=Math.cos(T/5);g.translate(0,-Math.abs(Math.sin(T/5))*4);g.scale(Math.abs(c)<.15?.15*Math.sign(c||1):c,1)}
+  else if(trick==='dance'){g.translate(Math.sin(T/5)*3,-6);g.rotate(-.5+Math.sin(T/5)*.12)}
+  g.imageSmoothingEnabled=false;const ox=-M.w/2,oy=-M.h+3;
+  // v116 tail wag: separate tail layer rotates about its root; still while asleep. Stubs wiggle, long tails swing.
+  const ti=IMG['dog_'+bid+'_tail'];if(ti&&ti.naturalWidth&&M.tx!=null){const stub=M.tail==='stub',sp=walk||trick?3:hap?2.4:4.5,amp=sleep?0:(stub?.35:hap||trick?.55:.38)*(walk?1:1),a=Math.sin(T/sp)*amp;
+    g.save();g.translate(ox+M.tx,oy+M.ty);g.rotate(a);g.drawImage(ti,-M.tx,-M.ty);g.restore()}
+  g.drawImage(im,ox,oy);
   const coat=o.coat||0,plq=o.plaque||0,matAt=(typeof TUNE!=='undefined'&&TUNE.matAt)||80,pBad=(typeof TUNE!=='undefined'&&TUNE.plaqueBad)||70;
   if(coat>=matAt*.6){const n=coat>=matAt?7:4;g.strokeStyle='#5a4030';g.lineWidth=.9;for(let i=0;i<n;i++){const x=ox+M.bx-M.bl/2+3+i*(M.bl-4)/n,y=oy+M.by-4+(i%2)*3;g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+2,y-3,x+3,y+1);g.stroke()}
     if(coat>=matAt){E(ox+M.bx-3,oy+M.by,2.5,1.6,'#8a6a4a');E(ox+M.bx+4,oy+M.by+2,2,1.3,'#8a6a4a')}}
