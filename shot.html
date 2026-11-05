@@ -90,7 +90,7 @@ function setup(){
   } else if(shot==='title-gate'||shot==='title-gate-phone'){
     S={scene:'title'}; ui.gate=true; ui.modal=null; ui.msgT=0;
     // Hold pulse at peak scale (sin≈1) every frame so M-corner miters would show if present
-    if(!window.__titlePulseFix){window.__titlePulseFix=1;const _f=frame;frame=function(){ui.anim=21;return _f.apply(this,arguments)}}
+    /* pulse freeze off for cloud QA */
   }
   note('setup ok shot='+shot+' scene='+S.scene+' CUR='+CUR+' gate='+!!ui.gate+' night='+(typeof nightNow==='function'?nightNow():'?')+' who='+(ui.msgWho&&ui.msgWho.n));
 }

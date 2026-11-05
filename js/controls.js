@@ -8,7 +8,9 @@ document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault());
 // ===== responsive canvas (layout v3) =====
 const LAND=matchMedia('(orientation: landscape)');
-function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();const sc=Math.max(.5,Math.min((box.width-12)/W,(box.height-12)/H));
+function fit(){const box=document.getElementById('screenwrap').getBoundingClientRect();let sc=Math.max(.5,Math.min((box.width-12)/W,(box.height-12)/H));
+  /* v128: LOW caps CSS upscale so p3dWarp fill-rate stays near native 240×216 (readable via CSS scale, not extra backing pixels) */
+  if(typeof GFX!=='undefined'&&GFX.lvl<=0)sc=Math.min(sc,1);
   const cw=Math.floor(W*sc),ch=Math.floor(H*sc),dpr=(typeof GFX!=="undefined"?GFX.dpr():Math.min(3,window.devicePixelRatio||1));cv.style.width=cw+'px';cv.style.height=ch+'px';
   cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);g.setTransform(cv.width/W,0,0,cv.height/H,0,0);document.body.dataset.layout=LAND.matches?'landscape':'portrait'}
 addEventListener('resize',fit);LAND.addEventListener?LAND.addEventListener('change',()=>setTimeout(fit,60)):LAND.addListener(fit);

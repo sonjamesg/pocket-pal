@@ -1,0 +1,85 @@
+{
+  "method": "Playwright headless, Samsung UA, 390×844, DSF 2.75, CDP CPU×4. PROXY ONLY — not niece physical phone.",
+  "before": {
+    "fps": 14.7,
+    "frameMs": {
+      "avg": 68.02,
+      "p50": 62.5,
+      "p90": 88.6,
+      "p99": 107.5,
+      "max": 111.5
+    },
+    "warp": {
+      "avg": 25.48,
+      "max": 39.2,
+      "n": 256
+    },
+    "canvas": [
+      346,
+      312
+    ],
+    "note": "baseline pre-fix LOW ranch under 4x CPU"
+  },
+  "after": {
+    "ranch": {
+      "fps": 89.4,
+      "frameMs": {
+        "avg": 11.15,
+        "p50": 10.3,
+        "p90": 14.9,
+        "p99": 25.4,
+        "max": 26.1
+      },
+      "canvas": [
+        240,
+        216
+      ],
+      "marks": {
+        "owUpdate": {
+          "avg": 0.05,
+          "max": 2.3,
+          "n": 1024
+        },
+        "edgeForest": {
+          "avg": 0.01,
+          "max": 0.8,
+          "n": 1024
+        },
+        "ambienceWorld": {
+          "avg": 0,
+          "max": 0.1,
+          "n": 1024
+        },
+        "penRoamers": {
+          "avg": 0.38,
+          "max": 18.7,
+          "n": 1024
+        },
+        "lamps": {
+          "avg": 0.31,
+          "max": 6.1,
+          "n": 1024
+        },
+        "tiltShift": {
+          "avg": 0.09,
+          "max": 1.1,
+          "n": 1024
+        }
+      }
+    },
+    "shop": {
+      "fps": 366.6,
+      "frameMs": {
+        "avg": 2.7,
+        "p50": 2.6,
+        "p90": 3.6,
+        "p99": 8.6,
+        "max": 19.8
+      },
+      "canvas": [
+        240,
+        216
+      ]
+    }
+  }
+}

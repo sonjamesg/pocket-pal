@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<title>Perf</title>
+<link rel="stylesheet" href="style.css?v=perf">
+<style>
+html,body{margin:0;background:#111;overflow:hidden}
+#screenwrap{position:fixed;left:0;top:0;width:360px;height:324px;padding:0!important;background:#000}
+#screen{width:360px!important;height:324px!important;image-rendering:pixelated;display:block}
+#deck,.zone{display:none!important}
+#hud{position:fixed;left:4px;bottom:4px;right:4px;color:#8f8;font:11px/1.35 monospace;z-index:9;background:#000c;padding:6px;white-space:pre-wrap;max-height:45vh;overflow:auto}
+</style>
+</head>
+<body data-layout="portrait">
+<main id="app" class="layout-v3">
+ <section id="screenwrap"><canvas id="screen" width="240" height="216"></canvas></section>
+ <section id="deck"></section>
+</main>
+<pre id="hud">boot</pre>
+<script>
+try{
+  localStorage.setItem('pocketpal_v9', JSON.stringify({v:9,pets:{
+    p1:{id:'p1',name:'BUDDY',breed:'lab',stage:'adult',sp:'dog',hunger:80,happy:80,coat:80},
+    p2:{id:'p2',name:'MILLY',breed:'lab',stage:'adult',sp:'dog',hunger:80,happy:80,coat:80},
+    p3:{id:'p3',name:'WOOLY',breed:'lab',stage:'adult',sp:'sheep',hunger:80,happy:80},
+    p4:{id:'p4',name:'CLOVER',breed:'lab',stage:'adult',sp:'sheep',hunger:80,happy:80},
+    p5:{id:'p5',name:'DOT',breed:'lab',stage:'adult',sp:'chicken',hunger:80,happy:80},
+    p6:{id:'p6',name:'BESS',breed:'lab',stage:'adult',sp:'cow',hunger:80,happy:80}
+  },lastId:'p1',wallet:5000,coinsMerged:1,missions:{},avatar:'cowboy',playerName:'PERF',introDone:1,follow:'p1'}));
+  localStorage.setItem('pf_tok','perf'); localStorage.setItem('pf_name','PERF');
+  sessionStorage.setItem('pf_tok','perf'); sessionStorage.setItem('pf_name','PERF');
+  localStorage.setItem('pf_gfx_mode','low'); sessionStorage.setItem('pf_gfx','0');
+  localStorage.removeItem('PETFARM_DEV');
+}catch(e){}
+window.__PERF=new URLSearchParams(location.search);
+</script>
+<script src="js/padmode.js?v=perf"></script>
+<script src="js/data.js?v=perf"></script>
+<script src="js/save.js?v=perf"></script>
+<script src="js/care.js?v=perf"></script>
+<script src="js/menus.js?v=perf"></script>
+<script src="js/games.js?v=perf"></script>
+<script src="js/input.js?v=perf"></script>
+<script src="js/draw.js?v=perf"></script>
+<script src="js/map-data.js?v=perf"></script>
+<script src="js/overworld.js?v=perf"></script>
+<script src="js/assets.js?v=perf"></script>
+<script src="js/avatar.js?v=perf"></script>
+<script src="js/depth.js?v=perf"></script>
+<script src="js/p3d.js?v=perf"></script>
+<script src="js/overworld-draw.js?v=perf"></script>
+<script src="js/shop.js?v=perf"></script>
+<script src="js/interiors.js?v=perf"></script>
+<script src="js/controls.js?v=perf"></script>
+<script src="js/gamepad.js?v=perf"></script>
+<script src="js/dogmeta.js?v=perf"></script>
+<script src="js/animals.js?v=perf"></script>
+<script src="js/buildings.js?v=perf"></script>
+<script src="js/critters.js?v=perf"></script>
+<script src="js/scenes.js?v=perf"></script>
+<script src="js/frame.js?v=perf"></script>
+<script src="js/missions.js?v=perf"></script>
+<script src="js/farm.js?v=perf"></script>
+<script src="js/petshop.js?v=perf"></script>
+<script src="js/jobs2.js?v=perf"></script>
+<script src="js/account.js?v=perf"></script>
+<script src="js/cowfarm.js?v=perf"></script>
+<script src="js/farms2.js?v=perf"></script>
+<script src="js/nameinput.js?v=perf"></script>
+<script src="js/ambience.js?v=perf"></script>
+<script src="js/nature.js?v=perf"></script>
+<script src="js/east69.js?v=perf"></script>
+<script src="js/achieve.js?v=perf"></script>
+<script src="js/achieve-hooks.js?v=perf"></script>
+<script src="js/achieve-board.js?v=perf"></script>
+<script src="js/animalsfx.js?v=perf"></script>
+<script src="js/buyconfirm.js?v=perf"></script>
+<script src="js/gfxqual.js?v=perf"></script>
+<script src="js/main.js?v=perf"></script>
+<script>
+(function(){
+  const hud=document.getElementById('hud');
+  const sceneWant=__PERF.get('scene')||'ranch';
+  const secs=+(__PERF.get('secs')||8);
+  const move=__PERF.get('move')!=='0';
+  const samples=[];
+  let marks={};
+
+  function markWrap(name, fn){
+    return function(){
+      const t0=performance.now();
+      const r=fn.apply(this,arguments);
+      const dt=performance.now()-t0;
+      const m=marks[name]||(marks[name]={n:0,sum:0,max:0});
+      m.n++; m.sum+=dt; m.max=Math.max(m.max,dt);
+      return r;
+    };
+  }
+
+  function install(){
+    if(typeof drawMap==='function') drawMap=markWrap('drawMap', drawMap);
+    if(typeof edgeForest==='function') edgeForest=markWrap('edgeForest', edgeForest);
+    if(typeof p3dWarp==='function') p3dWarp=markWrap('p3dWarp', p3dWarp);
+    if(typeof p3dBegin==='function') p3dBegin=markWrap('p3dBegin', p3dBegin);
+    if(typeof owUpdate==='function') owUpdate=markWrap('owUpdate', owUpdate);
+    if(typeof ambienceWorld==='function') ambienceWorld=markWrap('ambienceWorld', ambienceWorld);
+    if(typeof tiltShift==='function') tiltShift=markWrap('tiltShift', tiltShift);
+    if(typeof lamps==='function') lamps=markWrap('lamps', lamps);
+    if(typeof nightGlow==='function') nightGlow=markWrap('nightGlow', nightGlow);
+    if(typeof penRoamers==='function') penRoamers=markWrap('penRoamers', penRoamers);
+    const F=frame;
+    let last=performance.now(), frames=0;
+    frame=function(){
+      const t0=performance.now();
+      F();
+      const dt=performance.now()-t0;
+      const gap=t0-last; last=t0; frames++;
+      samples.push({dt,gap,t:t0});
+      if(samples.length>240) samples.shift();
+      requestAnimationFrame(frame);
+    };
+  }
+
+  function setup(){
+    ACC.token='perf'; ACC.name='PERF';
+    DB.avatar='cowboy'; DB.playerName='PERF'; DB.introDone=1; DB.wallet=5000; saveDB();
+    ui.gate=0; ui.modal=null; ui.msgT=0;
+    try{document.getElementById('acctov').hidden=true}catch(e){}
+    GFX.mode='low'; GFX.lvl=0; try{fit()}catch(e){}
+    openMap();
+    if(sceneWant==='shop'){
+      try{intEnter('shop', STORE[0]+1, STORE[1]+1)}catch(e){
+        try{setMap('outer'); Object.assign(ui.ow,{x:STORE[0]+1,y:STORE[1]+2,px:(STORE[0]+1)*TS,py:(STORE[1]+2)*TS})}catch(e2){}
+      }
+    } else {
+      // ranch center-ish near barns/home for heavy draw
+      Object.assign(ui.ow,{x:48,y:40,px:48*TS,py:40*TS,dir:'right',mv:null});
+    }
+    install();
+    // start movement simulation after art ready
+    let tries=0;
+    (function wait(){
+      if(!(ART_REV&&IMG.b_farmhouse&&IMG.b_farmhouse.naturalWidth)&&tries++<80) return setTimeout(wait,100);
+      hud.textContent='profiling scene='+sceneWant+' gfx='+GFX.lvl+' dprFn='+GFX.dpr()+' canvas='+cv.width+'x'+cv.height+' css='+cv.style.width+'x'+cv.style.height;
+      let dir=1, steps=0;
+      const iv=setInterval(()=>{
+        if(!move) return;
+        const o=ui.ow; if(!o) return;
+        // nudge camera by walking keys via owInput-ish: set target
+        o.x=Math.max(2,Math.min(MW-3,o.x+dir));
+        o.px=o.x*TS; o.py=o.y*TS; o.dir=dir>0?'right':'left';
+        if(++steps%40===0) dir*=-1;
+      }, 50);
+      setTimeout(()=>{
+        clearInterval(iv);
+        const recent=samples.slice(-180);
+        const dts=recent.map(s=>s.dt).sort((a,b)=>a-b);
+        const gaps=recent.map(s=>s.gap).sort((a,b)=>a-b);
+        const pct=(a,p)=>a[Math.min(a.length-1, Math.floor(a.length*p))];
+        const avg=a=>a.reduce((x,y)=>x+y,0)/Math.max(1,a.length);
+        const report={
+          scene:sceneWant, gfxLvl:GFX.lvl, mode:GFX.mode, mob:!!GFX.mob,
+          canvas:[cv.width,cv.height], css:[cv.style.width,cv.style.height],
+          dprUsed: cv.width/240, // approx vs logical W
+          frames: recent.length,
+          frameMs:{avg:+avg(dts).toFixed(2), p50:+pct(dts,.5).toFixed(2), p90:+pct(dts,.9).toFixed(2), p99:+pct(dts,.99).toFixed(2), max:+dts[dts.length-1].toFixed(2)},
+          rafGapMs:{avg:+avg(gaps).toFixed(2), p50:+pct(gaps,.5).toFixed(2), p90:+pct(gaps,.9).toFixed(2)},
+          fpsEst:+(1000/avg(gaps)).toFixed(1),
+          marks:Object.fromEntries(Object.entries(marks).map(([k,m])=>[k,{avg:+(m.sum/m.n).toFixed(2), max:+m.max.toFixed(2), n:m.n}]))
+        };
+        hud.textContent=JSON.stringify(report,null,2);
+        document.title='PERF_OK';
+        window.__PERF_REPORT=report;
+        fetch('/__shot/perf-'+sceneWant+'.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)}).catch(()=>{});
+      }, secs*1000);
+    })();
+  }
+  addEventListener('load',()=>setTimeout(setup,400));
+})();
+</script>
+</body></html>

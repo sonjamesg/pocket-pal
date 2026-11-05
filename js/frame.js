@@ -10,7 +10,14 @@ function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;
       const blink=(ph,ex)=>{const f=(t+ph)%200;if(f<7){ex.forEach(([x,y,c])=>{const[a,b]=P(x,y);g.fillStyle=c;g.fillRect(Math.round(a-2),Math.round(b-1.5),4,3);g.fillStyle='#2b2440';g.fillRect(Math.round(a-2),Math.round(b),4,1)})}};
       blink(0,[[322,246,'#f2ede4'],[352,246,'#f2ede4']]);
       if(dip<=0.3)blink(97,[[713,276,'#f0d2c0']]);
-      for(let i=0;i<4;i++){const cx=((t*0.18*(1+i*0.3)+i*90)%(W+100))-50,cy=10+i*9+Math.sin(t/80+i)*1.5;[[0,0,14,.42],[11,-4,11,.5],[-10,1,10,.38],[20,1,9,.36],[4,-7,8,.45]].forEach(([dx,dy,r,a])=>{const rg=g.createRadialGradient(cx+dx,cy+dy-r*.3,0,cx+dx,cy+dy,r);rg.addColorStop(0,'rgba(255,255,255,'+a+')');rg.addColorStop(.6,'rgba(250,250,255,'+(a*.6)+')');rg.addColorStop(1,'rgba(235,240,255,0)');g.fillStyle=rg;g.beginPath();g.ellipse(cx+dx,cy+dy,r*1.4,r*.75,0,0,7);g.fill()})}
+      /* v128: no soft foreground cloud puffs (they crossed the barn). Sky-only pixel clouds drift L→R behind/above the scene, clipped to the upper sky band and skipping the barn column. Logo-baked clouds stay put (JPG has no sky layer). */
+      {const skyBot=Math.min(38, oy+Math.max(18, dh*0.16));
+        g.save();g.beginPath();g.rect(0,0,W,skyBot);g.clip();
+        for(let i=0;i<3;i++){const cx=((t*0.11*(1+i*0.22)+i*100)%(W+90))-45,cy=5+i*8+(Math.sin(t/90+i)*.6);
+          if(cx>68&&cx<178)continue; /* keep clear of barn silhouette */
+          g.fillStyle='#ffffffee';[[0,0,20,5],[5,-3,12,5],[-4,2,11,4],[10,1,8,3]].forEach(([dx,dy,w,h])=>g.fillRect(Math.round(cx+dx),Math.round(cy+dy),w,h));
+          g.fillStyle='#e8f4ffcc';g.fillRect(Math.round(cx+2),Math.round(cy+1),14,2)}
+        g.restore()}
       if(AC&&!DB.mute&&!(window.OPT_MUTE)&&Math.random()<1/150){const b=1800+Math.random()*1400,n=1+(Math.random()*3|0);for(let k=0;k<n;k++)tone(b,.07,'sine',.012,b*1.35,k*.11)}
       if(!ui.gate){g.fillStyle='rgba(43,36,64,0.55)';g.fillRect(0,118,W,H-118)}}
     else if(!LOGO.err){g.fillStyle='#2b2440';g.fillRect(0,0,W,H);requestAnimationFrame(frame);return}else{bg(false);otxt('PET FARM',W/2,34,'#ffe36a',26)}

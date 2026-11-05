@@ -41,7 +41,8 @@ function facadePlaque(cx,y,name,maxW){const long=name.length>12,fs=long?4:5,lw=M
 let _BSI=null;function bigStoreImg(ok){if(_BSI)return _BSI;if(!ok('petstore'))return null;const s=IMG.petstore,w=80,h=Math.round(s.height*w/s.width),c=document.createElement('canvas');c.width=w;c.height=h;const q=c.getContext('2d');q.imageSmoothingEnabled=false;q.drawImage(s,0,0,w,h);
   const k=w/s.width,fy=h-Math.round(4*k);q.fillStyle='#63c2a3';q.fillRect(Math.round(24*k),Math.round(66*k),Math.round(16*k),fy-Math.round(66*k));
   const dx=32,dw=16,dh=30,dy=fy-dh;q.fillStyle='#2b2440';q.fillRect(dx-2,dy-2,dw+4,dh+2);q.fillStyle='#d59125';q.fillRect(dx,dy,dw,dh);q.fillStyle='#f0b848';q.fillRect(dx+2,dy+2,dw-4,dh-6);q.fillStyle='#d59125';q.fillRect(dx+7,dy+2,2,dh-6);q.fillStyle='#bfe8ff';q.fillRect(dx+3,dy+5,3,6);q.fillRect(dx+10,dy+5,3,6);q.fillStyle='#6b462f';q.fillRect(dx+12,dy+16,2,2);q.fillRect(dx-3,fy,dw+6,2);return _BSI=c}
-function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.min(MW*TS-W+40,o.px+8-W/2)),cy=Math.max(-40,Math.min(MH*TS-H+32,o.py+8-H/2+10));
+function drawOverworld(t){/* v128: LOW skips overworld P3D warp (measured ~25ms/frame under 4x CPU) — flat map draw, same gameplay/cull */const _p3=P3D;if(typeof GFX!=='undefined'&&GFX.lvl<=0)P3D=false;
+try{owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.min(MW*TS-W+40,o.px+8-W/2)),cy=Math.max(-40,Math.min(MH*TS-H+32,o.py+8-H/2+10));
   CAMC=[cx+W/2,cy+H/2];g.fillStyle='#205828';g.fillRect(0,0,W,H);let BB=null;if(P3D){P3Q=[];P3GROUND=true;BB=p3dBegin(Math.round(cx),Math.round(cy));g.fillStyle='#4f9a36';g.fillRect(P3C.ox-40,P3C.oy-40,W/P3.A+80,H/P3.A+80)}else{P3C=null;g.save();g.translate(-Math.round(cx),-Math.round(cy))}
   g.imageSmoothingEnabled=false;const ok=n=>IMG[n]&&IMG[n].naturalWidth;
   const x0=Math.max(0,BB?BB.x0:Math.floor(cx/TS)-2),x1=Math.min(MW-1,BB?BB.x1:Math.ceil((cx+W)/TS)+1),y0=Math.max(0,BB?BB.y0:Math.floor(cy/TS)-2),y1=Math.min(MH-1,BB?BB.y1:Math.ceil((cy+H)/TS)+1);
@@ -54,7 +55,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
     if(c==='p'||c==='G'){if(ok('pathauto'))autoT(IMG.pathauto,'pGB',x,y,X,Y);else R(X,Y,TS,TS,'#e8d8a0');
       if(P3D){const up=y>0?OWBASE[y-1][x]:'p';if(!'pGBbw'.includes(up)){const j=hh%4;R(X,Y,TS,4+j%2,'#3f9a2e');R(X+((hh>>3)%9),Y+4+j%2,5,2,'#3f9a2e');R(X,Y+4+j%2,TS,1,'#2a6a20');R(X,Y,TS,1,'#6ad050')}
         const dn=y<MH-1?OWBASE[y+1][x]:'p';if(!'pGBbw'.includes(dn))R(X,Y+14,TS,2,'#c9934a')}continue}
-    if(P3D&&c==='g'&&hh%11===0&&!BARNS.some(b=>x>=b[0]-1&&x<=b[0]+b[2]&&y>=b[1]-4&&y<b[1]+b[3])&&!(x>=HOME[0]-1&&x<=HOME[0]+3&&y>=HOME[1]-4&&y<HOME[1]+2))p3later(X+8,Y+12,()=>grassTuft(X+8,Y+12,hh));
+    if(P3D&&!(typeof GFX!=='undefined'&&GFX.lvl<=0)&&c==='g'&&hh%11===0&&!BARNS.some(b=>x>=b[0]-1&&x<=b[0]+b[2]&&y>=b[1]-4&&y<b[1]+b[3])&&!(x>=HOME[0]-1&&x<=HOME[0]+3&&y>=HOME[1]-4&&y<HOME[1]+2))p3later(X+8,Y+12,()=>grassTuft(X+8,Y+12,hh));
     if(TREE_SP[c]){trees.push([x,y,TREE_SP[c]]);continue}if(c==='f'){fences.push([x,y]);continue}
     const n=(CUR==='ranch'&&x<88&&'CWUcY'.includes(c)&&typeof cropTile==='function')?cropTile(c,x,y):{U:'pumpkin',Y:'flowerbed',y:'hay',C:'corn',W:'wheat',c:'field',f:'fence',s:'sign',h:'tallgrass',F:'flower0',J:'flower1',K:'flower2',r:'rock'}[c];
     if(P3D&&n&&'pumpkin corn wheat sprout tallgrass hay sign rock'.includes(n)&&ok(n==='hay'?'p_hay':n)){if(n!=='tallgrass'&&n!=='rock'&&n!=='hay'&&ok('field'))g.drawImage(IMG.field,X,Y);const im=IMG[n==='hay'?'p_hay':n];p3later(X+8,Y+15,()=>{E(X+8,Y+15,6,2,'#0a281430');g.drawImage(im,X,Y)})}
@@ -106,7 +107,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
   else if(th&&th.barn){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt((th.door?'Walk in: ':'A: look at the ')+th.barn[5],W/2,H-19,'#2b2440',8)}
   else if(th&&CUR==='ranch'&&(th.weed||owHint(th))){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.weed?'A: pull weeds (+coins)':owHint(th),W/2,H-19,'#2b2440',8)}
   else if(th&&th.store){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt('A: enter PET SHOP',W/2,H-19,'#2b2440',8)}
-  else txt(ui.hose!=null?'✚ walk  A spray  B put hose back':'✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}
+  else txt(ui.hose!=null?'✚ walk  A spray  B put hose back':'✚ walk  A use  B back',W/2,H-4,'#fff',7);owHud(t)}finally{P3D=_p3}}
 
 // v48: Link's Awakening tilt-shift — soft blur at the top & bottom of the view + warm/cool depth haze
 function tiltShift(){const cv=g.canvas,k=cv.width/W;if(!g.filter&&g.filter!=='')return;g.save();g.setTransform(1,0,0,1,0,0);
