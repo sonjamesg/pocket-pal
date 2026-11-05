@@ -66,15 +66,15 @@ function note(m){const s=document.getElementById('status'); s.textContent=m; con
 <script src="js/buyconfirm.js?v=shot"></script>
 <script src="js/main.js?v=shot"></script>
 <script>
-function readyArt(){return !!(ART_REV && IMG.b_farmhouse && IMG.b_farmhouse.complete && IMG.b_farmhouse.naturalWidth && (!window.__SHOT.includes('farmer') || (IMG.phattie && IMG.phattie.naturalWidth)))}
+function readyArt(){if(String(window.__SHOT).startsWith('title'))return !!(typeof LOGO!=='undefined'&&(LOGO.ok||LOGO.err));return !!(ART_REV && IMG.b_farmhouse && IMG.b_farmhouse.complete && IMG.b_farmhouse.naturalWidth && (!window.__SHOT.includes('farmer') || (IMG.phattie && IMG.phattie.naturalWidth)))}
 function upload(name){return new Promise((res,rej)=>{cv.toBlob(async blob=>{try{const r=await fetch('/__shot/'+name,{method:'POST',body:blob});res(await r.text())}catch(e){rej(e)}},'image/png')})}
 function setup(){
   ACC.token='shot-token';ACC.name='SHOT';
   DB.avatar='cowboy';DB.playerName='SHOT';DB.introDone=1;DB.wallet=2618;saveDB();
   ui.gate=0;ui.modal=null;ui.msgT=0;
   try{const ov=document.getElementById('acctov'); if(ov)ov.hidden=true}catch(e){}
-  openMap();
   const shot=window.__SHOT;
+  if(!(String(shot).startsWith('title'))) openMap();
   if(shot==='house-day'||shot==='house-night'){
     intEnter('house',HOME[0]+1,HOME[1]+2);
     Object.assign(ui.ow,{x:6,y:5,px:6*TS,py:5*TS,dir:'up',mv:null});
@@ -87,8 +87,12 @@ function setup(){
     ui.msgC=9999;
   } else if(shot==='barn-sheep'){
     Object.assign(ui.ow,{x:52,y:45,px:52*TS,py:45*TS,dir:'up',mv:null});
+  } else if(shot==='title-gate'||shot==='title-gate-phone'){
+    S={scene:'title'}; ui.gate=true; ui.modal=null; ui.msgT=0;
+    // Hold pulse at peak scale (sin≈1) every frame so M-corner miters would show if present
+    if(!window.__titlePulseFix){window.__titlePulseFix=1;const _f=frame;frame=function(){ui.anim=21;return _f.apply(this,arguments)}}
   }
-  note('setup ok shot='+shot+' scene='+S.scene+' CUR='+CUR+' night='+(typeof nightNow==='function'?nightNow():'?')+' who='+(ui.msgWho&&ui.msgWho.n));
+  note('setup ok shot='+shot+' scene='+S.scene+' CUR='+CUR+' gate='+!!ui.gate+' night='+(typeof nightNow==='function'?nightNow():'?')+' who='+(ui.msgWho&&ui.msgWho.n));
 }
 async function run(){
   let tries=0;

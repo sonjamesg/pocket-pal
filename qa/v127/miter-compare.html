@@ -1,0 +1,12 @@
+<canvas id=c width=400 height=120></canvas>
+<script>
+const c=document.getElementById('c'),g=c.getContext('2d');
+g.fillStyle='#7ec850';g.fillRect(0,0,400,120);
+function draw(x,join){
+  g.save();g.translate(x,70);g.font='800 28px system-ui,sans-serif';g.textAlign='center';
+  g.lineJoin=join;g.miterLimit=10;g.lineWidth=6;g.strokeStyle='#2b2440';g.strokeText('GAME',0,0);
+  g.fillStyle='#fff';g.fillText('GAME',0,0);g.restore();
+  g.fillStyle='#000';g.font='12px sans-serif';g.fillText(join,x-20,110);
+}
+draw(100,'miter');draw(300,'round');
+</script>
