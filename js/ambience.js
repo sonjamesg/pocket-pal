@@ -34,6 +34,7 @@ tiltShift=function(){const cv=g.canvas,k=cv.width/W;g.save();g.setTransform(1,0,
   if(CUR!=='int'&&CUR!=='shop'){const s=skyTint(dayPhase());if(s){g.fillStyle='rgba('+s[0]+','+s[1]+','+s[2]+','+s[3]+')';g.fillRect(0,0,cv.width,cv.height)}}
   g.restore()};
 {const _x=owExtras;owExtras=function(t,o){owExtras2(t,o);const r=_x(t,o);ambienceWorld(t);return r}}
-// chunky wood/pastel HUD: redraw the top bar over the old one
-{const _h=owHud;owHud=function(t){if(CUR!=='int'&&CUR!=='shop'){RR(2,1,W-4,15,5,'#8a5a2e','#4a2c14');R(5,3,W-10,2,'#b07a44');RR(4,4,W/2,10,4,'#fff3d6');txt(CUR==='ranch'?'PET FARM':MAPS.outer.name,8,12,'#5a3418',8,'left');
-  RR(W-58,3,54,11,5,'#ffe9a0','#b07a20');E(W-50,8.5,4,4,'#ffc820');E(W-50,8.5,2,2,'#fff6b0');txt(String(DB.wallet),W-8,12,'#6a4010',8,'right')}return _h(t)}}
+// v123: no full-width PET FARM title strip during map play — compact wallet chip only (title stays on title/login)
+{const _h=owHud;owHud=function(t){if(CUR!=='int'&&CUR!=='shop'){
+  RR(W-58,2,54,12,5,'#ffe9a0','#b07a20');E(W-50,8,4,4,'#ffc820');E(W-50,8,2,2,'#fff6b0');txt(String(DB.wallet),W-8,11,'#6a4010',8,'right')}
+  return _h(t)}}

@@ -79,7 +79,7 @@ function drawOverworld(t){owUpdate();const o=ui.ow;const cx=Math.max(-40,Math.mi
   drawStore(false);drawHome(false);drawBig(false);if(!P3D)owExtras(t,o);
   p3flush(o.py+16);withProj(o.px+8,o.py+16,()=>{E(o.px+8,o.py+12,6,2,'#0004');const AVS=avImg('s'),FS=DB.avatar==='girl'&&ok('farmergirl')?'farmergirl':'farmer';if(AVS||ok(FS)){const row={down:0,up:1,left:2,right:3}[o.dir],fr=o.mv&&o.step%2?1:0;const SI=AVS||IMG[FS],FH=(SI.height||SI.naturalHeight)/4;const Y0=Math.round(o.py)-4-(o.jh||0)-(FH-16)-(o.mv&&o.mv.t>.3&&o.mv.t<.7?1:0);g.drawImage(SI,fr*16,row*FH,16,FH,Math.round(o.px),Y0,16,FH);if(P3D)hatTop(o.px+8,Y0+3)}else farmer(o.px,o.py-3,o.dir,o.step,!!o.mv);});p3flush();drawBig(true);drawStore(true);drawHome(true);drawFences(true);drawTrees(true);g.restore();
   tiltShift();
-  R(0,0,W,16,'#2b2440cc');txt(CUR==='ranch'?'PET FARM':MAPS.outer.name,6,12,'#fff',9,'left');txt('● '+DB.wallet,W-6,12,'#ffd84a',8,'right');
+  // v123: no gameplay PET FARM title strip (wallet chip drawn in owHud)
   const [dx,dy]=DV[o.dir],th=!o.mv&&owThing(o.x+dx,o.y+dy);
   if(ui.msgT>0){}
   else if(th&&(th.pet||th.empty)){RR(10,H-30,W-20,16,8,'#fffe','#2b2440');txt(th.pet?'A: visit '+th.pet.name:'Empty plot — buy a pet at the PET STORE',W/2,H-19,'#2b2440',8)}
