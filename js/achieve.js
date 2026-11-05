@@ -3,7 +3,10 @@
 // Pacing: 1 WOOL CYCLE = 6h fleece regrow (≈4 a day). cycles = max(fleeces sheared, 6h blocks since your first sheep) so nobody soft-locks.
 // Specialty farm openings: CLUCKY HOLLOW 10 cycles, MUDDY TROTTERS +50% = 15, GALLOP RIDGE +50% = 23 (MOO MEADOW is open from the start).
 const CYCLE_MS=6*3600e3,FARM_CYC={chickfarm:10,pigfarm:15,horsefarm:23},FARM_NM={chickfarm:'CLUCKY HOLLOW',pigfarm:'MUDDY TROTTERS',horsefarm:'GALLOP RIDGE'};
-function achD(){const A=DB.ach||(DB.ach={u:{},c:{}});A.u=A.u||{};A.c=A.c||{};return A}
+function achD(){const A=DB.ach||(DB.ach={u:{},c:{}});A.u=A.u||{};A.c=A.c||{};
+  /* v119 one-time: SONJAMES had later-tier unlocks before tier gating — clear unlocked/claimed/stars (counters + wool clock kept) */
+  if(!DB.achR119&&String(DB.playerName||'').toUpperCase()==='SONJAMES'){A.u={};A.cl={};A.stars=0;A.mig=1;DB.achR119=1;try{setTimeout(saveDB,0)}catch(e){}}
+  return A}
 function achC(k){return achD().c[k]||0}
 function achInc(k,n=1){const A=achD();A.c[k]=(A.c[k]||0)+n;achCheck()}
 const _sl=()=>typeof sheepList==='function'?sheepList():[],_pl=()=>typeof petList==='function'?petList():[],_sp=p=>{try{return spOf(p)}catch(e){return p.species}};
