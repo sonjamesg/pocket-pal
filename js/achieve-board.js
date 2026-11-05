@@ -69,7 +69,7 @@ function mkAchBoard(){const src=IMG.p_jobboard;if(!src||!src.naturalWidth)return
 if(typeof PROP_MSG!=='undefined')PROP_MSG.achboard='The ACHIEVEMENTS BOARD — press A!';
 {const _h=owHint;owHint=function(th){if(th&&th.prop==='achboard')return 'A: open ACHIEVEMENTS';return _h(th)}}
 {const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&o&&!o.mv&&CUR==='ranch'){const [dx,dy]=DV[o.dir],th=owThing(o.x+dx,o.y+dy);if(th&&th.prop==='achboard'){openAch();return}}return _oi(k)}}
-{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const P=PROPS.find(q=>q[4]==='achboard');if(!P)return;const X=P[0]*TS+P[2]*8,Y=(P[1]+P[3])*TS,f=()=>{RR(X-28,Y-1,56,8,3,'#6a4020','#382010');txt('ACHIEVEMENTS',X,Y+5,'#ffe36a',5)};if(typeof P3D!=='undefined'&&P3D)p3later(X,Y+2,f);else f()}}
+{const _ox=owExtras;owExtras=function(t,o){_ox(t,o);if(CUR!=='ranch')return;const P=PROPS.find(q=>q[4]==='achboard');if(!P)return;const im=IMG.p_achboard||IMG.p_jobboard,X=P[0]*TS+P[2]*8,Y=(P[1]+P[3])*TS-(im&&im.naturalWidth?im.height:24),f=()=>{RR(X-26,Y+10,52,9,3,'#fff3d6','#3a2010');txt('ACHIEVEMENTS',X,Y+17,'#5a3418',4)};if(typeof P3D!=='undefined'&&P3D)p3later(X,(P[1]+P[3])*TS,f);else f()}}
 {const _fr=frame;frame=function(){if(S.scene==='ach'){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);ui.anim++;const t=ui.anim;g.clearRect(0,0,W,H);drawAch(t);drawAchToast();requestAnimationFrame(frame);return}_fr();if(S.scene!=='title')drawAchToast()}}
 // job board pointer to the trophy board
 {const _dj=drawJobs;drawJobs=function(t){_dj(t);txt('🏆 ACHIEVEMENTS board is right next door ▶',W/2,H-1.5,'#ffe36a',6)}}

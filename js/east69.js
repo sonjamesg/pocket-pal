@@ -6,8 +6,10 @@ function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
   for(let gy=sy,r=0;gy<=y1+4;gy+=2,r++){const sx=Math.floor((x0-6)/3)*3-1+(((gy%2+2)>>0)%2?0:0)+(r%2?1.5:0);for(let gx=sx;gx<=x1+4;gx+=3){if(!(gx<0||gy<0||gx>=MW-1||gy>=MH-1))continue;
     if(CUR==='ranch'&&gx<0&&gy===33)continue;const gt=MAPS[CUR].gate;if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=2.6&&Math.abs(b-gy)<=4))continue; if(gt&&gt.some(([a,b])=>Math.abs(a-gx)<=3.5&&(b===0?gy<=1:gy>=b-1)))continue; // v97: open road corridor off-map past gate // v91: wide clear corridor at gates
     const h=((Math.round(gx*2)*73856093)^(gy*19349663))>>>0,j=((h>>4)%5-2)/10;trees.push([gx+j,gy+(((h>>8)%5)-2)/10,h%3?'pine2':'tree2'])}}
-  // v91: thin overlapping trees (map tiles + edge) — drop any whose trunk sits too close to one already kept
+  // v91/v124: thin overlapping trees — sort by stable hash first so keep-set does not depend on camera scan order
   const GT=MAPS[CUR].gate||[],nearGate=t=>GT.some(([a,b])=>t[0]>a-2.2&&t[0]<a+1.2&&Math.abs(t[1]-b)<3);
+  const pri=t=>((Math.round(t[0]*10)*73856093)^(Math.round(t[1]*10)*19349663))>>>0;
+  trees.sort((a,b)=>pri(a)-pri(b)||a[0]-b[0]||a[1]-b[1]);
   const keep=[],G=new Map(),K=(a,b)=>a+','+b;for(const t of trees){const cx=Math.floor(t[0]/2),cy=Math.floor(t[1]/2);let bad=nearGate(t);
     for(let dy=-1;dy<=1&&!bad;dy++)for(let dx=-1;dx<=1&&!bad;dx++){const L=G.get(K(cx+dx,cy+dy));if(L)for(const u of L)if(Math.abs(u[0]-t[0])<1.6&&Math.abs(u[1]-t[1])<1.3){bad=true;break}}
     if(bad)continue;keep.push(t);const k=K(cx,cy);(G.get(k)||G.set(k,[]).get(k)).push(t)}
