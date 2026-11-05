@@ -1,6 +1,6 @@
 // ===== overworld.js — collision + things on the overworld (ranch + outer world) =====
 const SOLID='ftPTAxwsCWrUYy';
-const homePets=()=>petList().filter(p=>p.species!=='sheep'&&p.species!=='cow'); // v111: cows live in the COW BARN pen, no backyard plot
+const homePets=()=>petList().filter(p=>['dog','cat','rabbit'].includes(p.species||'dog')); // v117: livestock (sheep/cow/chicken/pig/horse) live in their barns, no backyard plot
 function owSolid(x,y){if(x<0||y<0||x>=MW||y>=MH)return true;const c=OWBASE[y][x];if(SOLID.includes(c))return true;
   if(CUR!=='ranch'){const [sx,sy]=STORE;if(x>=sx-1&&x<sx+4&&y>=sy-1&&y<sy+2)return true}else for(const [hx,hy] of HSLOT.concat(LOCKS,[HOME]))if(x>=hx&&x<hx+3&&y>=hy&&y<hy+2)return true;
   if(CUR==='ranch')for(const [bx,by,bw,bh] of PROPS)if(x>=bx&&x<bx+bw&&y>=by&&y<by+bh)return true;

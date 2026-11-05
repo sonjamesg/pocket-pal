@@ -59,3 +59,6 @@ owExtras=function(t,o){_x(t,o);if(CUR!=='ranch')return;
 owHud=function(t){_hud(t);let y=52;if(ui.hose!=null){RR(W-62,y,58,12,4,'#40c060','#2b2440');txt('HOSE ON',W-33,y+9,'#fff',7);RR(W-62,y+13,58,11,4,'#fff','#2b2440');txt('B: put back',W-33,y+21,'#2b2440',6.5);y+=12;y+=14}
   };}
 GOODS.fert={n:'POO FERTILISER',p:5};GOOD_COL.fert='#7a4a24';
+// v117: drop stale crop entries left on tiles that are no longer fields (map edits left yellow "ready crop" discs on grass by the FEED SHED)
+function pruneGrows(){try{if(CUR!=='ranch')return;const G=grows();for(const k in G){const [x,y]=k.split(',').map(Number),c=(MAP_LAYOUT.rows[y]||'')[x];if(!(CROPC.includes(c)||c==='Y')){delete G[k];G.__pr=1}}if(G.__pr){delete G.__pr;saveDB()}}catch(e){}}
+{const _ox=owExtras;owExtras=function(t,o){pruneGrows();return _ox(t,o)}}

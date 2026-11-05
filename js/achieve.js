@@ -1,4 +1,4 @@
-// ===== achieve.js — v70 ACHIEVEMENTS BOARD: 24 unlocks in 5 tiers, Job-Board style; toasts; saved in DB.ach (local + cloud via saveDB) =====
+// ===== achieve.js — v70 ACHIEVEMENTS BOARD: 24 unlocks in 5 tiers (v117: 50 in 8), Job-Board style; toasts; saved in DB.ach (local + cloud via saveDB) =====
 // Open: walk up to the ACHIEVEMENTS BOARD (next to the JOB BOARD) and press A only — no Shift/T/SELECT shortcut.
 // Pacing: 1 WOOL CYCLE = 6h fleece regrow (≈4 a day). cycles = max(fleeces sheared, 6h blocks since your first sheep) so nobody soft-locks.
 // Specialty farm openings: CLUCKY HOLLOW 10 cycles, MUDDY TROTTERS +50% = 15, GALLOP RIDGE +50% = 23 (MOO MEADOW is open from the start).
@@ -10,7 +10,9 @@ const _sl=()=>typeof sheepList==='function'?sheepList():[],_pl=()=>typeof petLis
 function woolCycles(){const A=achD();if(!A.first&&_sl().length)A.first=Date.now();const t=A.first?Math.floor((Date.now()-A.first)/CYCLE_MS):0;return Math.max(DB.woolBales||0,t)}
 function farmOpen(id){return !FARM_CYC[id]||woolCycles()>=FARM_CYC[id]}
 const dogs=()=>_pl().filter(p=>_sp(p)==='dog'),trickMax=id=>Math.max(0,...dogs().map(p=>(p.tricks&&p.tricks[id])||0));
-// [id, icon, name, how, value(), goal]
+const _own=sp=>_pl().filter(p=>_sp(p)===sp).length,_kinds=()=>new Set(_pl().map(_sp)).size,
+  trickCount=()=>Math.max(0,...dogs().map(p=>TRICKS.filter(t=>((p.tricks||{})[t.id]||0)>=TUNE.trickNeed).length));
+// [id, icon, name, how, value(), goal]  (v117: 8 tiers / 50 unlocks — early ones easy, later ones take weeks)
 const ACH_TIERS=[
  {n:'SPROUT',c:['#7ad46a','#3a8a2a'],L:[
   ['hello','👋','HOWDY!','Read the JOB BOARD',()=>wm().step>=1?1:0,1],
@@ -40,7 +42,36 @@ const ACH_TIERS=[
   ['chickfarm','🐔','CLUCKY HOLLOW OPENS','Reach '+FARM_CYC.chickfarm+' WOOL CYCLES',()=>woolCycles(),FARM_CYC.chickfarm],
   ['pigfarm','🐷','MUDDY TROTTERS OPENS','Reach '+FARM_CYC.pigfarm+' WOOL CYCLES',()=>woolCycles(),FARM_CYC.pigfarm],
   ['horsefarm','🐴','GALLOP RIDGE OPENS','Reach '+FARM_CYC.horsefarm+' WOOL CYCLES',()=>woolCycles(),FARM_CYC.horsefarm],
-  ['rich','💰','MONEY BAGS','Have 500 coins',()=>DB.wallet||0,500]]}];
+  ['rich','💰','MONEY BAGS','Have 500 coins',()=>DB.wallet||0,500]]},
+ {n:'BARN BOSS',c:['#e8b23a','#9a6a10'],L:[
+  ['pets3','🏡','FULL HOUSE','Own 3 animals',()=>_pl().length,3],
+  ['hen','🐔','HEN KEEPER','Own a chicken (CLUCKY HOLLOW)',()=>_own('chicken'),1],
+  ['pig','🐷','PIG PAL','Own a pig (MUDDY TROTTERS)',()=>_own('pig'),1],
+  ['horse','🐴','SADDLE UP','Own a horse (GALLOP RIDGE)',()=>_own('horse'),1],
+  ['cows3','🐄','HERD OF COWS','Own 3 cows',()=>_own('cow'),3],
+  ['salon1','💇','PAMPERED','Visit the grooming salon 5 times',()=>achC('salon'),5],
+  ['tricks3','🎪','SHOW DOG','Fully teach a dog 3 tricks',()=>trickCount(),3],
+  ['jobs10','📋','HARD WORKER','Do 10 barn chores',()=>DB.jobsDone||0,10]]},
+ {n:'TOP RANCHER',c:['#3ac0a8','#14806a'],L:[
+  ['tricks5','🌟','SUPERSTAR','Fully teach a dog ALL 5 tricks',()=>trickCount(),5],
+  ['perform','🎭','ENCORE!','Perform tricks 25 times',()=>achC('perform'),25],
+  ['walk500','🐾','LONG WALKIES','Walk 500 steps with a dog following',()=>achC('followSteps'),500],
+  ['streak3','📅','3 DAY STREAK','Do chores 3 days in a row',()=>achC('streakMax'),3],
+  ['shear10','🧶','WOOL MAKER','Shear 10 fleeces',()=>DB.woolBales||0,10],
+  ['harv25','🌽','GREEN THUMB','Harvest 25 crops',()=>DB.harvested||0,25],
+  ['zoo','🦁','ONE OF EACH','Own 6 kinds of animal',()=>_kinds(),6],
+  ['rich1k','💰','PIGGY BANK','Have 1000 coins',()=>DB.wallet||0,1000]]},
+ {n:'HALL OF FAME',c:['#ff6a4a','#b02a10'],L:[
+  ['allfarms','🗺️','ALL FARMS OPEN','Reach '+FARM_CYC.horsefarm+' WOOL CYCLES',()=>woolCycles(),FARM_CYC.horsefarm],
+  ['cyc40','🌈','TEN FARM DAYS','Reach 40 WOOL CYCLES',()=>woolCycles(),40],
+  ['cyc120','🏅','A MONTH ON THE FARM','Reach 120 WOOL CYCLES',()=>woolCycles(),120],
+  ['streak7','🔥','WEEK STREAK','Do chores 7 days in a row',()=>achC('streakMax'),7],
+  ['jobs100','🛠️','RANCH HAND','Do 100 barn chores',()=>DB.jobsDone||0,100],
+  ['walk3k','🥾','MARATHON','Walk 3000 steps with a dog following',()=>achC('followSteps'),3000],
+  ['salon25','✨','SALON VIP','Visit the grooming salon 25 times',()=>achC('salon'),25],
+  ['shear50','🐑','WOOL BARON','Shear 50 fleeces',()=>DB.woolBales||0,50],
+  ['pets10','🏰','BIG RANCH','Own 10 animals',()=>_pl().length,10],
+  ['rich5k','👑','RANCH TYCOON','Have 5000 coins',()=>DB.wallet||0,5000]]}];
 const ACH_ALL=[].concat(...ACH_TIERS.map((T,ti)=>T.L.map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],v:a[4],goal:a[5],ti}))));
 function achVal(a){let v=0;try{v=a.v()}catch(e){}return Math.min(a.goal,v||0)}
 let achQ=[],achToast=null,achBusy=0;
@@ -59,20 +90,20 @@ setInterval(()=>{if(S&&S.scene!=='title')achCheck()},1000);
   if(ls>=0&&o.step>ls&&typeof nightNow==='function'&&nightNow()&&S.scene==='map')achInc('night',o.step-ls);ls=o.step;
   if(CUR==='ranch'&&DB.follow&&DB.pets[DB.follow]&&_sp(DB.pets[DB.follow])==='dog'&&!achC('herd')&&o.x>=46&&o.x<=58&&o.y>=46&&o.y<=54&&(typeof fieldSheep!=='function'||fieldSheep().length))achInc('herd')}}
 // ---- board (v83: frozen backdrop, CLAIM ★ flow, COMPLETED tab, star bank) ----
-const ACH_W=[1,1,2,2,3];// stars per claim by tier
+const ACH_W=[1,1,2,2,3,3,4,5],NT=()=>ACH_TIERS.length;// stars per claim by tier
 function achMig(){const A=achD();A.cl=A.cl||{};if(A.stars==null)A.stars=0;if(!A.mig){for(const a of ACH_ALL)if(A.u[a.id]&&A.u[a.id]<1793818800000&&!A.cl[a.id]){A.cl[a.id]=A.u[a.id];A.stars+=ACH_W[a.ti]}A.mig=1;try{saveDB()}catch(e){}}return A}
 let achSnap=null,achFx=[],achShow=0,achPop=0;
-function achRows(){const A=achMig();if(ui.atier===5)return ACH_ALL.filter(a=>A.cl[a.id]).sort((x,y)=>A.cl[y.id]-A.cl[x.id]);return ACH_ALL.filter(a=>a.ti===ui.atier&&!A.cl[a.id]).sort((x,y)=>(!!A.u[y.id])-(!!A.u[x.id]))}
+function achRows(){const A=achMig();if(ui.atier===NT())return ACH_ALL.filter(a=>A.cl[a.id]).sort((x,y)=>A.cl[y.id]-A.cl[x.id]);return ACH_ALL.filter(a=>a.ti===ui.atier&&!A.cl[a.id]).sort((x,y)=>(!!A.u[y.id])-(!!A.u[x.id]))}
 function openAch(){try{achSnap=document.createElement('canvas');achSnap.width=cv.width;achSnap.height=cv.height;achSnap.getContext('2d').drawImage(cv,0,0)}catch(e){achSnap=null}
   S={scene:'ach'};ui.atier=ui.atier||0;ui.asel=0;ui.msgT=0;achFx=[];const A=achMig();achShow=A.stars;sfx&&sfx('click');achCheck()}
 function achClaim(a){const A=achMig();if(!A.u[a.id]||A.cl[a.id])return;const n=ACH_W[a.ti];A.cl[a.id]=Date.now();A.stars+=n;saveDB();achPop=20;
   const i=ui.asel,y=62+i*27;for(let k=0;k<10+n*6;k++)achFx.push({x:W-40,y:y+12,vx:(Math.random()-.5)*5,vy:-Math.random()*4-1,t:0,d:k*1.5,s:k<n*4});
   try{sfx('fanfare')}catch(e){}try{sparkle(20,W-40,y+12)}catch(e){}const L=achRows();ui.asel=Math.max(0,Math.min(ui.asel,L.length-1))}
 {const _i0=input0;input0=function(k){if(S.scene!=='ach')return _i0(k);const L=achRows(),n=Math.max(1,L.length);
-  if(k==='left'){ui.atier=(ui.atier+5)%6;ui.asel=0;sfx&&sfx('blip')}if(k==='right'){ui.atier=(ui.atier+1)%6;ui.asel=0;sfx&&sfx('blip')}
+  if(k==='left'){ui.atier=(ui.atier+NT())%(NT()+1);ui.asel=0;sfx&&sfx('blip')}if(k==='right'){ui.atier=(ui.atier+1)%(NT()+1);ui.asel=0;sfx&&sfx('blip')}
   if(k==='up')ui.asel=(ui.asel+n-1)%n;if(k==='down')ui.asel=(ui.asel+1)%n;
   if(k==='b'||k==='start'||k==='select'){S={scene:'map'};achSnap=null}
-  if(k==='a'){const a=L[ui.asel];if(a&&ui.atier<5&&achD().u[a.id])achClaim(a);else sfx&&sfx('blip')}}}
+  if(k==='a'){const a=L[ui.asel];if(a&&ui.atier<NT()&&achD().u[a.id])achClaim(a);else sfx&&sfx('blip')}}}
 function drawAch(t){if(achSnap)g.drawImage(achSnap,0,0,W,H);else R(0,0,W,H,'#2a1a10');R(0,0,W,H,'#0009');const A=achMig();
   RR(5,9,W-10,H-12,10,'#382010');RR(7,10,W-14,H-15,9,'#a8703c');for(let k=0;k<6;k++){R(9,16+k*34,W-18,1,'#8a5a2e');R(9,17+k*34,W-18,1,'#c48c50')}
   RR(13,24,W-26,H-33,7,'#5a3418');RR(14,25,W-28,H-35,6,'#fff6de');for(const[x,y]of[[11,13],[W-14,13],[11,H-8],[W-14,H-8]]){E(x+1,y+1,2.4,2.4,'#382010');E(x+1,y,2.2,2.2,'#e8c870')}
@@ -82,14 +113,14 @@ function drawAch(t){if(achSnap)g.drawImage(achSnap,0,0,W,H);else R(0,0,W,H,'#2a1
   RR(W-62,3,52,17,8,'#382010');RR(W-61,3,50,15,7,'#fff3a0','#d89a10');otxt('★',W-52,15,'#ffc83a',11*sc);txt(''+achShow,W-28,14.5,'#5a3418',10*sc);
   const ready=ACH_ALL.filter(a=>A.u[a.id]&&!A.cl[a.id]).length;if(ready){const p=.6+.4*Math.sin(t/6);g.globalAlpha=p;RR(10,3,48,15,7,'#ff5a8b');g.globalAlpha=1;txt(ready+' to CLAIM!',34,13.5,'#fff',6.5)}
   // tabs: tiers 1-5 + 🏆 completed
-  const tw=(W-36)/6;for(let i=0;i<6;i++){const x=18+i*tw,w=tw-2,on=i===ui.atier,T=ACH_TIERS[i],
-    rd=i<5&&T.L.some(r=>A.u[r[0]]&&!A.cl[r[0]]),done=i<5&&T.L.every(r=>A.cl[r[0]]);
-    RR(x,27,w,12,5,on?(i<5?T.c[0]:'#ffc83a'):'#e8dcc0',on?(i<5?T.c[1]:'#a06000'):rd?'#ff5a8b':'#c8b48c');txt(i<5?(done?'★':'')+(i+1):'🏆',x+w/2,36,on?'#fff':'#8a7058',8);if(rd&&!on)E(x+w-2,28,2.5,2.5,'#ff5a8b')}
+  const tw=(W-36)/(NT()+1);for(let i=0;i<=NT();i++){const x=18+i*tw,w=tw-2,on=i===ui.atier,T=ACH_TIERS[i],
+    rd=i<NT()&&T.L.some(r=>A.u[r[0]]&&!A.cl[r[0]]),done=i<NT()&&T.L.every(r=>A.cl[r[0]]);
+    RR(x,27,w,12,5,on?(i<NT()?T.c[0]:'#ffc83a'):'#e8dcc0',on?(i<NT()?T.c[1]:'#a06000'):rd?'#ff5a8b':'#c8b48c');txt(i<NT()?(done?'★':'')+(i+1):'🏆',x+w/2,36,on?'#fff':'#8a7058',8);if(rd&&!on)E(x+w-2,28,2.5,2.5,'#ff5a8b')}
   const L=achRows();
-  if(ui.atier===5){txt('◀ COMPLETED  •  '+L.length+'/'+ACH_ALL.length+' ▶',W/2,50,'#a06000',9)}
+  if(ui.atier===NT()){txt('◀ COMPLETED  •  '+L.length+'/'+ACH_ALL.length+' ▶',W/2,50,'#a06000',9)}
   else{const T=ACH_TIERS[ui.atier];txt('◀ TIER '+(ui.atier+1)+': '+T.n+'  •  '+ACH_W[ui.atier]+'★ each ▶',W/2,50,T.c[1],8.5)}
   const top=Math.max(0,Math.min(ui.asel-2,L.length-5));
-  if(!L.length){txt(ui.atier===5?'Nothing yet — claim a ★ to fill your scrapbook!':'Tier complete! ★ Check the 🏆 tab',W/2,110,'#8a7a68',7.5)}
+  if(!L.length){txt(ui.atier===NT()?'Nothing yet — claim a ★ to fill your scrapbook!':'Tier complete! ★ Check the 🏆 tab',W/2,110,'#8a7a68',7.5)}
   L.slice(top,top+5).forEach((a,j)=>{const i=top+j,y=55+j*27,on=i===ui.asel,T=ACH_TIERS[a.ti],cl=!!A.cl[a.id],rd=!cl&&!!A.u[a.id],v=achVal(a),pl=.5+.5*Math.sin(t/5);
     if(on){g.globalAlpha=.55+.45*pl;RR(16,y-2,W-32,28,8,T.c[0]);g.globalAlpha=1}
     RR(18,y,W-36,24,6,cl?'#fffbe8':rd?'#fff4c8':on?'#fff':'#f3ead6',cl?'#e8c870':rd?'#ffc83a':on?T.c[1]:'#d8c49c');
@@ -140,3 +171,9 @@ if(window.__pp)Object.assign(window.__pp,{openAch,achCheck,ACH_ALL,woolCycles});
 {const _b=bloom;bloom=function(...a){try{_b(...a)}catch(e){}}}
 if(typeof lamps==='function'){const _l=lamps;lamps=function(t){try{_l(t)}catch(e){}}}
 if(typeof penRoamers==='function'){const _p=penRoamers;penRoamers=function(t){try{_p(t)}catch(e){}}}
+
+// v117 extra counters: salon visits, trick performs, follow-walk steps, chore day streaks
+{let ps='';setInterval(()=>{try{if(!S||!DB||!DB.avatar)return;const sc=S.scene;if(sc!==ps){if(sc==='groom')achInc('salon');ps=sc}
+  const A=achD(),j=DB.jobsDone||0;if(j>(A.c.lastJobs||0)){A.c.lastJobs=j;const d=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);if(A.c.jobDay!==d){A.c.streak=A.c.jobDay===d-1?(A.c.streak||0)+1:1;A.c.jobDay=d;A.c.streakMax=Math.max(A.c.streakMax||0,A.c.streak);saveDB()}}}catch(e){}},700)}
+{const _p=perform;perform=function(tr){_p(tr);achInc('perform')}}
+{const _ou=owUpdate;let ls=-1;owUpdate=function(){_ou();const o=ui.ow;if(!o)return;if(ls>=0&&o.step>ls&&DB.follow&&DB.pets[DB.follow]&&S.scene==='map')achInc('followSteps',o.step-ls);ls=o.step}}
