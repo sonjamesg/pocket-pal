@@ -56,7 +56,7 @@ const CARE=[{id:'cuddle',n:'CUDDLE',d:'Pats & belly rubs'},{id:'teeth',n:'BRUSH 
 const ACTS={dog:['FEED','PLAY','TRICKS','CARE'],cat:['FEED','PLAY','CARE'],chicken:['FEED','PLAY','CUDDLE','SLEEP'],pig:['FEED','PLAY','CUDDLE','SLEEP'],horse:['FEED','PLAY','CUDDLE','SLEEP'],rabbit:['FEED','PLAY','CUDDLE','SLEEP'],sheep:['FEED','CUDDLE','BRUSH','SHEAR','SLEEP']};
 // v28 sheep wool: % per real HOUR. Fed+happy: 0->100 in ~3 min. Hungry or sad: 1/3 speed (~9 min). Sheep get hungry faster than dogs.
 const WOOL={fast:100*20,slow:100*20/3,hunger:7,happy:3.5,need:40,coins:0}; // v32: hunger/happy decay close to dogs (6/3 per hr)
-let ACTIONS=ACTS.dog;const CARE_X=[{id:'toys',n:'TOYS',d:'Pick a toy to play with'},{id:'sleep',n:'SLEEP',d:'Tuck in for a nap'}];function careList(){return (S.species==='cat'?CARE.slice(0,2):CARE).concat(CARE_X)}
+let ACTIONS=ACTS.dog;const CARE_X=[{id:'toys',n:'TOYS',d:'Pick a toy to play with'},{id:'sleep',n:'SLEEP',d:'Tuck in for a nap'}];function careList(){const base=S.species==='cat'?CARE.slice(0,2):CARE;const x=CARE_X.filter(c=>c.id!=='toys'||S.species==='dog'||S.species==='cat');return base.concat(x)} /* v129: toys care only for dog/cat */
 // ===== v43 animal TYPES (variants) for cats / chickens / cows =====
 const ANIMAL_TYPES={
  cat:[{id:'cat_tabby',n:'TABBY CAT',p:60,desc:'Stripy! Keeps mice away'},{id:'cat_black',n:'BLACK CAT',p:70,desc:'Gold eyes, mouse catcher'},{id:'cat_ginger',n:'GINGER CAT',p:80,desc:'Cuddly — care bonus coins'}],

@@ -57,7 +57,7 @@ function frame(){g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.globalAlpha=1;
   else if(sc==='groom')drawGroom(t);
   else if(sc==='teeth')drawTeeth(t);
   else{ bg(isNight());
-    S.toys.forEach((id,i)=>{if(ui.idle.k==='play'&&ui.idle.toy===id)return;toyIcon(id,60+i*26,203-(i%2)*4,.8)});
+    if(spOf(S)==='dog')(S.toys||[]).forEach((id,i)=>{if(ui.idle&&ui.idle.k==='play'&&ui.idle.toy===id)return;toyIcon(id,60+i*26,203-(i%2)*4,.8)}); /* v129: ball/toys only in dog visits */
     let pose=ui.pose,pt=ui.poseT;if(sc==='teach'&&ui.poseT===0)pose='idle';
     if(S.sleep){pose='sleep'}else if(pose==='idle'&&sc==='main'){idleTick();pose=idlePose();pt=ui.idle.t}
     else if(pose==='idle')pose='sit';

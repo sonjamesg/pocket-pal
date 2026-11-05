@@ -23,19 +23,24 @@ function bg(night){const t=ui.anim,h=new Date().getHours(),gold=!night&&(h>=17||
   R(0,140,W,4,'#0002');
   R(0,116,W,5,fs);R(0,117,W,3,fw);R(0,130,W,5,fs);R(0,131,W,3,fw);
   for(let x=-2;x<W;x+=12){const post=(x+2)%48===0;const pw=post?9:8,ph=post?38:33,py=post?104:108;R(x+2,py+2,pw,ph,'#0002');RR(x,py,pw,ph,2,fs);RR(x,py,pw-2,ph-1,2,fw);g.fillStyle=fw;g.beginPath();g.moveTo(x,py+1);g.lineTo(x+pw/2,py-4);g.lineTo(x+pw,py+1);g.fill();R(x+pw-2,py,2,ph,fs);if(post)R(x+3,py+4,2,2,fd)}
-  // dirt patch by kennel + grass tufts + flowers
-  E(196,180,40,14,night?'#3a3020':'#c8a070');E(196,179,34,11,night?'#4a3a28':'#dab884');
-  const tc=night?'#24492f':'#4a9a3a',tl=night?'#3a6a48':'#a8e888';
-  for(let i=0;i<26;i++){const x=(i*37+11)%W,y=150+(i*23)%60;if(x>160&&y>165)continue;g.strokeStyle=tc;g.lineWidth=1.2;g.beginPath();g.moveTo(x,y);g.lineTo(x+1,y-5);g.moveTo(x+3,y);g.lineTo(x+3,y-7);g.moveTo(x+6,y);g.lineTo(x+5,y-4);g.stroke();R(x+2,y-7,1,2,tl)}
+  // v129: species visit props — dogs keep kennel/bowl; sheep get open field (no kennel/bowl); others get fitting props
+  const sp=spOf(S),tc=night?'#24492f':'#4a9a3a',tl=night?'#3a6a48':'#a8e888';
+  for(let i=0;i<26;i++){const x=(i*37+11)%W,y=150+(i*23)%60;if(sp==='dog'&&x>160&&y>165)continue;g.strokeStyle=tc;g.lineWidth=1.2;g.beginPath();g.moveTo(x,y);g.lineTo(x+1,y-5);g.moveTo(x+3,y);g.lineTo(x+3,y-7);g.moveTo(x+6,y);g.lineTo(x+5,y-4);g.stroke();R(x+2,y-7,1,2,tl)}
   if(!night)[[60,206,'#ff7aa8'],[104,158,'#ffe36a'],[150,208,'#fff'],[14,152,'#b48aff']].forEach(([x,y,c])=>{E(x,y,2,2,c);E(x,y,.8,.8,'#ffd84a')});
-  if(!night){const bx=120+Math.sin(t*.03)*40,by=150+Math.sin(t*.07)*8,f=(t>>2)%2?3:1;E(bx-2,by,f,2,'#ffb0e0');E(bx+2,by,f,2,'#ffb0e0')}
-  // kennel
-  const sp=spOf(S);E(200,170,34,6,"#0003");
-  const im=IMG.b_doghouse;if(sp==='dog'&&im&&im.naturalWidth){const sc=1.6;g.save();g.imageSmoothingEnabled=false;if(night)g.filter='brightness(.6) saturate(.8)';g.drawImage(im,196-im.width*sc/2,170-im.height*sc,im.width*sc,im.height*sc);g.restore();plaque(S.name,196,124,7,56)}
-  else house(sp,212,166,1,night,S.name);
-  if(S.species==='pig')E(120,196,40,7,night?'#3a2a1a':'#8a6038');
-  // bowl (toy plastic)
-  E(27,186,15,4,'#0003');E(26,182,13,4,'#1e5aa8');R(13,175,26,7,'#3a86e8');R(15,176,4,5,'#7ab8ff');E(26,175,13,3.5,'#5aa0f0');E(26,175,10,2.5,S.hunger>40?'#a6683a':'#1e4a90');if(S.hunger>40){E(23,174,2,1,'#c88a5a');E(29,175,2,1,'#c88a5a')}}
+  if(!night&&sp!=='sheep'){const bx=120+Math.sin(t*.03)*40,by=150+Math.sin(t*.07)*8,f=(t>>2)%2?3:1;E(bx-2,by,f,2,'#ffb0e0');E(bx+2,by,f,2,'#ffb0e0')}
+  if(sp==='dog'){E(196,180,40,14,night?'#3a3020':'#c8a070');E(196,179,34,11,night?'#4a3a28':'#dab884');E(200,170,34,6,'#0003');
+    const im=IMG.b_doghouse;if(im&&im.naturalWidth){const sc=1.6;g.save();g.imageSmoothingEnabled=false;if(night)g.filter='brightness(.6) saturate(.8)';g.drawImage(im,196-im.width*sc/2,170-im.height*sc,im.width*sc,im.height*sc);g.restore();plaque(S.name,196,124,7,56)}
+    else house('dog',212,166,1,night,S.name);
+    E(27,186,15,4,'#0003');E(26,182,13,4,'#1e5aa8');R(13,175,26,7,'#3a86e8');R(15,176,4,5,'#7ab8ff');E(26,175,13,3.5,'#5aa0f0');E(26,175,10,2.5,S.hunger>40?'#a6683a':'#1e4a90');if(S.hunger>40){E(23,174,2,1,'#c88a5a');E(29,175,2,1,'#c88a5a')}}
+  else if(sp==='sheep'){/* open pasture — no kennel/bowl */E(40,188,70,10,night?'#3a4a28':'#6aaa48');E(160,192,50,8,night?'#3a4a28':'#6aaa48');
+    [[30,175],[50,178],[70,174]].forEach(([x,y],i)=>{RR(x,y,14,8,3,night?'#8a7038':'#e8c878','#6a5020');R(x+2,y+2,10,2,night?'#c8a858':'#fff0b0')});
+    house('sheep',212,166,1,night,S.name)}
+  else if(sp==='chicken'){E(30,188,50,8,night?'#5a4020':'#d8b878');[[24,170],[44,168],[64,172]].forEach(([x,y])=>{E(x,y,5,3,night?'#e8e0d0':'#fff8e8');E(x-2,y-1,2,2,'#fff')});house('chicken',212,166,1,night,S.name)}
+  else if(sp==='pig'){E(120,196,40,7,night?'#3a2a1a':'#8a6038');E(40,190,36,8,night?'#4a3020':'#a07848');house('pig',212,166,1,night,S.name)}
+  else if(sp==='horse'){R(20,170,8,28,night?'#5a4030':'#8a6038');R(20,168,40,4,night?'#6a5040':'#a07848');house('horse',212,166,1,night,S.name)}
+  else if(sp==='rabbit'){[[40,190,'#7aba50'],[70,200,'#ff8ab0'],[100,188,'#ffe36a']].forEach(([x,y,c])=>{E(x,y,3,3,c);E(x,y,1,1,'#fff8')});house('rabbit',212,166,1,night,S.name)}
+  else if(sp==='cat'){E(36,188,22,6,night?'#4a3a58':'#e8d8f8');house('cat',212,166,1,night,S.name)}
+  else house(sp,212,166,1,night,S.name)}
 function house(sp,x,y,s,night,name){g.save();g.translate(x,y);g.scale(s,s);const dk=c=>night?mix(c,'#1b1d4a',.4):c;
   E(0,1,30,5,'#0003');R(-10,0,20,3,dk('#c0504a'));
   if(sp==='dog'){RR(-22,-38,44,38,3,dk('#d65a4a'));g.fillStyle=dk('#a83a30');g.beginPath();g.moveTo(-28,-36);g.lineTo(0,-58);g.lineTo(28,-36);g.fill();R(-26,-37,52,3,dk('#7a2a24'));RR(-9,-24,18,24,9,'#3a2020')}
