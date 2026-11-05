@@ -28,7 +28,8 @@ function asfxPens(){const M=typeof MAP_LAYOUT!=='undefined'?MAP_LAYOUT:{},R=[];[
 function asfxNear(r){const o=ui&&ui.ow;if(!o||typeof CUR==='undefined'||CUR!=='ranch')return null;let best=null,bd=1e9;
   asfxPens().forEach(([[x,y,w,h],sp])=>{const dx=Math.max(x-o.x,0,o.x-(x+w-1)),dy=Math.max(y-o.y,0,o.y-(y+h-1)),d=Math.max(dx,dy);if(d<=r&&d<bd){bd=d;best=sp}});return best}
 // cuddle on pet screen (replaces synth 'baa' for sheep with the real one)
-{const _sf=sfx;sfx=function(k){if(k==='baa'&&ASFX.set.sheep){animalSfx('sheep');return}return _sf(k)}}
+{const _sf=sfx;sfx=function(k){if(k==='baa'&&ASFX.set.sheep){animalSfx('sheep');return}
+  /* v116: no more synth sawtooth 'woof' (sounded like a fart) — always one real bark clip */if(k==='woof'){const st=(typeof S!=='undefined'&&S.stage)||'adult';animalSfx(['egg','puppy','youngster'].includes(st)?'pup':'dog',{cd:2000});return}return _sf(k)}}
 {const _ca=careAct;careAct=function(id){if(id==='cuddle'&&!0&&typeof S!=='undefined'&&S.species&&S.species!=='sheep')animalSfx(S.species);return _ca(id)}}
 // A pressed at/next to a pen on the map
 {const _oi=owInput;owInput=function(k){if(k==='a'&&S.scene==='map'){const sp=asfxNear(1);if(sp){const e=asfxAll().find(q=>q.sp===sp);animalSfx(sp,{cd:2000,vol:e?Math.max(.75,asfxVol(e.d)):1,pan:e?e.rx/8:0})}}return _oi(k)}}

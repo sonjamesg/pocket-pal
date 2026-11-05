@@ -19,3 +19,4 @@ v113 dog barks (single bark, trimmed + normalised):
 bark1.mp3   https://bigsoundbank.com/barking-dog-s0916.html (adult)
 bark2.mp3   https://bigsoundbank.com/barking-dog-2-s2954.html (adult)
 pup1.mp3 / pup2.mp3  https://bigsoundbank.com/barking-of-a-spitz-s0682.html (single yips, pitched up ~22% for puppy)
+v116/117 re-cut: bark1/bark2 = isolated single barks from s0916 (t=6.8s, 24.9s), pup1/pup2 = single spitz yip s0682 pitched x1.22 / x1.35; highpass 280Hz to remove low thump.
