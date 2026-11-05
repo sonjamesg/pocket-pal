@@ -1,5 +1,5 @@
 // ===== east69.js — v69: hay fields art guard, pens w/ roaming animals, endless edge forest, closed WEST road,
-// JUMP (Space / C / pad X or Y — never over farm fences), tree-examine joke chain, street lamps + night windows =====
+// JUMP (Space / C / pad X or Y — never over farm fences), tree-examine joke chain, street lamps + night windows + lamp collision =====
 // --- endless forest beyond the world edge (perimeter is invisible-solid 'x'; we paint trees past it) ---
 function edgeForest(trees,x0,x1,y0,y1){const sy=Math.floor((y0-6)/2)*2-1;
   // v91: staggered rows (3 wide, offset every other row) so off-map crowns don't pile up
@@ -30,10 +30,15 @@ function westBarrier(t){const w=MAP_LAYOUT.westRoad;if(!w)return;const X=w[0]*TS
   RR(X+18,Y-14,46,14,3,'#ffe9a0','#6a4020');txt('OPENING',X+41,Y-8,'#c03020',5);txt('SOON!',X+41,Y-2,'#c03020',5)};
   if(typeof P3D!=='undefined'&&P3D)p3later(X+8,Y+31,f);else f()}
 // --- street lamps + night window light ---
-let LAMPS=null;function lampList(){if(LAMPS)return LAMPS;LAMPS=[];const Rw=MAP_LAYOUT.rows,isP=(x,y)=>'pG'.includes((Rw[y]||'')[x]);
+let LAMPS=null,LAMPSET=null;function lampList(){if(LAMPS)return LAMPS;LAMPS=[];LAMPSET=new Set();const Rw=MAP_LAYOUT.rows,isP=(x,y)=>'pG'.includes((Rw[y]||'')[x]);
   for(let y=1;y<MAP_LAYOUT.height-1;y++)for(let x=1;x<MAP_LAYOUT.width-1;x++){if(Rw[y][x]!=='g')continue;
     const hz=isP(x,y+1)&&isP(x+1,y+1)&&isP(x-1,y+1)&&!isP(x,y-1),vt=isP(x+1,y)&&isP(x+1,y-1)&&isP(x+1,y+1)&&!isP(x-1,y);
-    if((hz&&x%8===0)||(vt&&y%7===0&&!hz))LAMPS.push([x,y])}return LAMPS}
+    if((hz&&x%8===0)||(vt&&y%7===0&&!hz)){LAMPS.push([x,y]);LAMPSET.add(x+','+y)}}return LAMPS}
+function lampAt(x,y){if(!LAMPSET)lampList();return LAMPSET.has(x+','+y)}
+// v122: lamp post bases are one-tile solid (grass next to path only — paths stay walkable)
+{const _s=owSolid;owSolid=function(x,y){if(CUR==='ranch'&&lampAt(x,y))return true;return _s(x,y)}}
+{const _t=owThing;owThing=function(x,y){if(CUR==='ranch'&&lampAt(x,y))return{lamp:1};return _t(x,y)}}
+if(typeof owHint==='function'){const _h=owHint;owHint=function(th){if(th&&th.lamp)return 'A street lamp';return _h(th)}}
 const nightNow=()=>{const h=dayPhase();return h>=19.25||h<6.5};
 function lamps(t){const night=nightNow(),[cx,cy]=CAMC;lampList().forEach(([x,y])=>{const X=x*TS+8,Y=y*TS+14;if(Math.abs(X-cx)>W||Math.abs(Y-cy)>H)return;
   const f=()=>{E(X,Y+1,4,1.5,'#0004');R(X-1,Y-22,3,23,'#3a3048');R(X-2,Y-1,5,2,'#2b2440');RR(X-4,Y-29,9,8,2,night?'#fff2a0':'#d8e8f0','#2b2440');R(X-3,Y-31,7,2,'#2b2440')};
