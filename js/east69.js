@@ -170,12 +170,14 @@ const FARM_SELL={cowfarm:['cow','ROSIE','MOO MEADOW'],chickfarm:['chicken','HATT
  Object.assign(INT_MSG,{});}
 // v125: Pokemon-style farmer talk — dedicated bust portraits LEFT of text (no overlap), wraps long locked-farm lines
 const FARMER_PORT={ROSIE:{col:'#60b254',img:'prosie'},HATTIE:{col:'#e8a020',img:'phattie'},PERCY:{col:'#e88aa0',img:'ppercy'},GRACE:{col:'#8c5a32',img:'pgrace'}};
-{const _say=say;say=function(m,d){const r=_say.apply(this,arguments);const k=Object.keys(FARMER_PORT).find(n=>String(m).includes(n));ui.msgWho=k&&/Farmer|ROSIE/.test(String(m))?{n:k,m:ui.msg}:null;return r}}
+{const _say=say;say=function(m,d){const r=_say.apply(this,arguments);const s=String(m);let k=Object.keys(FARMER_PORT).find(n=>s.includes(n));
+  if(!k&&typeof FARM_SELL==='object'){for(const id in FARM_SELL){const F=FARM_SELL[id];if(F&&(s.includes(F[1])||s.includes(F[2])||(typeof FARM_NM==='object'&&FARM_NM[id]&&s.includes(FARM_NM[id])))){k=F[1];break}}}
+  ui.msgWho=k&&FARMER_PORT[k]?{n:k,m:ui.msg}:null;return r}}
 function farmerSpeech(raw){return String(raw).replace(/^Farmer\s+\w+:\s*/i,'').replace(/^["“]|["”]$/g,'')}
 function drawFarmerTalk(y,w){const F=FARMER_PORT[w.n];if(!F)return;const speech=farmerSpeech(ui.msg);
-  if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(speech.length,(ui.msgC||0)+1.35);
-  const portW=68,nameH=13,gap=5,bx=7,textX=bx+portW+gap,textW=W-textX-10;
-  let size=9,L=wrapMsg(speech,textW-6,size);if(L.length>4){size=8;L=wrapMsg(speech,textW-6,size)}if(L.length>5){size=7;L=wrapMsg(speech,textW-6,size)}
+  if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(speech.length,(ui.msgC||0)+2.4);
+  const portW=78,nameH=13,gap=4,bx=4,textX=bx+portW+gap,textW=W-textX-6;
+  let size=8,L=wrapMsg(speech,textW-6,size);if(L.length>4){size=7;L=wrapMsg(speech,textW-6,size)}if(L.length>5){size=6;L=wrapMsg(speech,textW-6,size)}
   L=L.slice(0,6);const lh=size+3,boxH=Math.max(portW+nameH+10,L.length*lh+18),top=y<H/2?Math.max(8,y-6):H-12-boxH;
   RR(4,top,W-8,boxH,8,'#fffef8','#2b2440');g.strokeStyle='#58a8f8';g.lineWidth=1.2;g.strokeRect(8.5,top+3.5,W-17,boxH-7);
   const by=top+6,ph=portW-2;RR(bx,by,portW,ph,6,'#fff','#2b2440');R(bx+3,by+3,portW-6,ph-6,'#bfe3ff');R(bx+3,by+ph-18,portW-6,15,'#8fd06a');

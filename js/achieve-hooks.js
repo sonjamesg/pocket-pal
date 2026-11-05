@@ -7,7 +7,9 @@
 {const _e=endGame;endGame=function(){const m=ui.mg;if(m&&m.id==='fetch'&&_sp(S)==='dog'){const A=achD();A.c.fetchBest=Math.max(A.c.fetchBest||0,m.score)}return _e()}}
 {const _t=toggleFollow;toggleFollow=function(){_t();if(DB.follow)achInc('follow')}}
 {const _oi=owInput;owInput=function(k){const n=CUR==='ranch'&&typeof ragL==='function'?ragL().length:0;const r=_oi(k);if(n&&ragL().length<n)achInc('rag');return r}}
-{const _ie=intEnter;intEnter=function(id,fx,fy){const r=_ie(id,fx,fy);if(id==='cowfarm')achInc('moo');if(FARM_CYC[id]){const c=woolCycles();setTimeout(()=>say(farmOpen(id)?FARM_NM[id]+' is OPEN in your achievements! Shop coming soon.':FARM_NM[id]+' opens after '+FARM_CYC[id]+' WOOL CYCLES (you have '+c+'). Check the 🏆 board!',260),50)}return r}}
+{const _ie=intEnter;intEnter=function(id,fx,fy){const r=_ie(id,fx,fy);if(id==='cowfarm')achInc('moo');if(FARM_CYC[id]){const c=woolCycles();setTimeout(()=>{const F=typeof FARM_SELL==='object'&&FARM_SELL[id],nm=F?F[1]:null,label=FARM_NM[id]||id;
+  const body=farmOpen(id)?(label+' is OPEN in your achievements! Shop coming soon.'):(label+' opens after '+FARM_CYC[id]+' WOOL CYCLES — you have '+c+'. Shear sheep (1 cycle = 6h fleece regrow) and check the 🏆 board!');
+  say(nm?('Farmer '+nm+': "'+body+'"'):body,300)},50)}return r}}
 {const _ou=owUpdate;let ls=-1,lm='';owUpdate=function(){_ou();const o=ui.ow;if(!o)return;if(lm!==CUR){if(CUR==='outer'&&!achC('woods'))achInc('woods');lm=CUR}
   if(ls>=0&&o.step>ls&&typeof nightNow==='function'&&nightNow()&&S.scene==='map')achInc('night',o.step-ls);ls=o.step;
   if(CUR==='ranch'&&DB.follow&&DB.pets[DB.follow]&&_sp(DB.pets[DB.follow])==='dog'&&!achC('herd')&&o.x>=46&&o.x<=58&&o.y>=46&&o.y<=54&&(typeof fieldSheep!=='function'||fieldSheep().length))achInc('herd')}}

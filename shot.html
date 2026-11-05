@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<title>Shot</title>
+<link rel="stylesheet" href="style.css?v=shot">
+<style>
+html,body{margin:0;background:#111;overflow:hidden}
+#screenwrap{position:fixed;left:0;top:0;width:480px;height:432px;padding:0!important;background:#000}
+#screen{width:480px!important;height:432px!important;image-rendering:pixelated;display:block}
+#deck,.zone{display:none!important}
+#status{position:fixed;left:4px;bottom:4px;color:#8f8;font:11px monospace;z-index:9;background:#000c;padding:3px 6px;max-width:490px;white-space:pre-wrap}
+</style>
+</head>
+<body data-layout="portrait">
+<main id="app" class="layout-v3">
+ <section id="screenwrap"><canvas id="screen" width="240" height="216"></canvas></section>
+ <section id="deck"></section>
+</main>
+<pre id="status">boot</pre>
+<script>
+const seed={v:9,pets:{},lastId:null,wallet:2618,coinsMerged:1,missions:{},avatar:'cowboy',playerName:'SHOT',introDone:1};
+try{localStorage.setItem('pocketpal_v9',JSON.stringify(seed));localStorage.setItem('pf_tok','shot-token');localStorage.setItem('pf_name','SHOT');sessionStorage.setItem('pf_tok','shot-token');sessionStorage.setItem('pf_name','SHOT');localStorage.removeItem('PETFARM_DEV')}catch(e){}
+window.__SHOT=new URLSearchParams(location.search).get('shot')||'map';
+function note(m){const s=document.getElementById('status'); s.textContent=m; console.log(m)}
+</script>
+<script src="js/padmode.js?v=shot"></script>
+<script src="js/data.js?v=shot"></script>
+<script src="js/save.js?v=shot"></script>
+<script src="js/care.js?v=shot"></script>
+<script src="js/menus.js?v=shot"></script>
+<script src="js/games.js?v=shot"></script>
+<script src="js/input.js?v=shot"></script>
+<script src="js/draw.js?v=shot"></script>
+<script src="js/map-data.js?v=shot"></script>
+<script src="js/overworld.js?v=shot"></script>
+<script src="js/assets.js?v=shot"></script>
+<script src="js/avatar.js?v=shot"></script>
+<script src="js/depth.js?v=shot"></script>
+<script src="js/p3d.js?v=shot"></script>
+<script src="js/overworld-draw.js?v=shot"></script>
+<script src="js/shop.js?v=shot"></script>
+<script src="js/interiors.js?v=shot"></script>
+<script src="js/controls.js?v=shot"></script>
+<script src="js/gamepad.js?v=shot"></script>
+<script src="js/dogmeta.js?v=shot"></script>
+<script src="js/animals.js?v=shot"></script>
+<script src="js/buildings.js?v=shot"></script>
+<script src="js/critters.js?v=shot"></script>
+<script src="js/scenes.js?v=shot"></script>
+<script src="js/frame.js?v=shot"></script>
+<script src="js/missions.js?v=shot"></script>
+<script src="js/farm.js?v=shot"></script>
+<script src="js/petshop.js?v=shot"></script>
+<script src="js/jobs2.js?v=shot"></script>
+<script src="js/account.js?v=shot"></script>
+<script src="js/cowfarm.js?v=shot"></script>
+<script src="js/farms2.js?v=shot"></script>
+<script src="js/nameinput.js?v=shot"></script>
+<script src="js/ambience.js?v=shot"></script>
+<script src="js/nature.js?v=shot"></script>
+<script src="js/east69.js?v=shot"></script>
+<script src="js/achieve.js?v=shot"></script>
+<script src="js/achieve-hooks.js?v=shot"></script>
+<script src="js/achieve-board.js?v=shot"></script>
+<script src="js/animalsfx.js?v=shot"></script>
+<script src="js/buyconfirm.js?v=shot"></script>
+<script src="js/main.js?v=shot"></script>
+<script>
+function readyArt(){return !!(ART_REV && IMG.b_farmhouse && IMG.b_farmhouse.complete && IMG.b_farmhouse.naturalWidth && (!window.__SHOT.includes('farmer') || (IMG.phattie && IMG.phattie.naturalWidth)))}
+function upload(name){return new Promise((res,rej)=>{cv.toBlob(async blob=>{try{const r=await fetch('/__shot/'+name,{method:'POST',body:blob});res(await r.text())}catch(e){rej(e)}},'image/png')})}
+function setup(){
+  ACC.token='shot-token';ACC.name='SHOT';
+  DB.avatar='cowboy';DB.playerName='SHOT';DB.introDone=1;DB.wallet=2618;saveDB();
+  ui.gate=0;ui.modal=null;ui.msgT=0;
+  try{const ov=document.getElementById('acctov'); if(ov)ov.hidden=true}catch(e){}
+  openMap();
+  const shot=window.__SHOT;
+  if(shot==='house-day'||shot==='house-night'){
+    intEnter('house',HOME[0]+1,HOME[1]+2);
+    Object.assign(ui.ow,{x:6,y:5,px:6*TS,py:5*TS,dir:'up',mv:null});
+  } else if(shot==='exterior'){
+    Object.assign(ui.ow,{x:HOME[0]+1,y:HOME[1]+3,px:(HOME[0]+1)*TS,py:(HOME[1]+3)*TS,dir:'up',mv:null});
+  } else if(shot==='farmer-talk'){
+    try{intEnter('chickfarm',2,8)}catch(e){}
+    Object.assign(ui.ow,{x:5,y:5,px:5*TS,py:5*TS,dir:'up',mv:null});
+    say('Farmer HATTIE: "CLUCKY HOLLOW opens after 10 WOOL CYCLES — you have 4. Shear sheep (1 cycle = 6h fleece regrow) and check the 🏆 board!"',9999);
+    ui.msgC=9999;
+  } else if(shot==='barn-sheep'){
+    Object.assign(ui.ow,{x:52,y:45,px:52*TS,py:45*TS,dir:'up',mv:null});
+  }
+  note('setup ok shot='+shot+' scene='+S.scene+' CUR='+CUR+' night='+(typeof nightNow==='function'?nightNow():'?')+' who='+(ui.msgWho&&ui.msgWho.n));
+}
+async function run(){
+  let tries=0;
+  while(!readyArt() && tries++<80){note('wait art '+Object.keys(IMG).length+' rev='+ART_REV+' tries='+tries); await new Promise(r=>setTimeout(r,200))}
+  if(!readyArt()){note('FAIL art never ready'); document.title='SHOT_FAIL_ART'; return}
+  try{setup()}catch(e){note('FAIL setup '+e); document.title='SHOT_FAIL_SETUP'; console.error(e); return}
+  // allow intEnter auto-say (50ms) + art settle
+  await new Promise(r=>setTimeout(r,250));
+  for(let i=0;i<90;i++) await new Promise(r=>requestAnimationFrame(r));
+  try{if(ui.msg){ui.msgC=9999;ui.msgShown=ui.msg}}catch(e){}
+  for(let i=0;i<20;i++) await new Promise(r=>requestAnimationFrame(r));
+  note('pre-upload who='+(ui.msgWho&&ui.msgWho.n)+' msg='+String(ui.msg||'').slice(0,60)+' night='+(typeof nightNow==='function'?nightNow():'?'));
+  try{
+    const t=await upload(window.__SHOT+'.png');
+    note('uploaded '+t); document.title='SHOT_OK';
+  }catch(e){note('FAIL upload '+e); document.title='SHOT_FAIL_UP'}
+}
+addEventListener('load',()=>setTimeout(run,300));
+</script>
+</body></html>
