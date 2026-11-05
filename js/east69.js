@@ -152,7 +152,7 @@ const FARM_SELL={cowfarm:['cow','ROSIE','MOO MEADOW'],chickfarm:['chicken','HATT
  Object.assign(BARN_MSG,{chickfarm:'CLUCKY HOLLOW — Farmer HATTIE sells CHICKENS. Walk in!',pigfarm:'MUDDY TROTTERS — Farmer PERCY sells PIGS. Walk in!',horsefarm:'GALLOP RIDGE — Farmer GRACE sells HORSES. Walk in!'});
  const _oi=owInput;owInput=function(k){const o=ui.ow,id=MAPS.int&&MAPS.int.id,F=FARM_SELL[id];
   if(CUR==='int'&&F&&id!=='cowfarm'&&k==='a'&&o&&!o.mv){const [dx,dy]=DV[o.dir],c=OWBASE[o.y+dy]&&OWBASE[o.y+dy][o.x+dx];
-   if(c==='N'){sfx&&sfx('blip');if(typeof farmOpen==='function'&&!farmOpen(id)){say('Farmer '+F[1]+': "Not open yet! Come back after '+FARM_CYC[id]+' WOOL CYCLES."',220);return}
+   if(c==='N'){sfx&&sfx('blip');if(typeof farmOpen==='function'&&!farmOpen(id)){say('Farmer '+F[1]+': "'+F[2]+' opens after '+FARM_CYC[id]+' WOOL CYCLES — you have '+(typeof woolCycles==='function'?woolCycles():0)+'. Shear sheep (1 cycle = 6h fleece regrow) and check the 🏆 board!"',300);return}
     say('Farmer '+F[1]+': "Welcome to '+F[2]+'! Have a look at my animals."',140);setTimeout(()=>{if(S.scene==='map'&&CUR==='int'){ui.farmShop=F[0];S={scene:'store'};ui.cowShop=0;ui.cat=0;ui.sel=0;ui.msgT=0}},900);return}}
   return _oi(k)};
  const _si=storeInput;storeInput=function(k){if(ui.farmShop&&(k==='b'||k==='start')){const F=Object.values(FARM_SELL).find(f=>f[0]===ui.farmShop);ui.farmShop=0;ui.cat=null;S={scene:'map'};say('Come back any time! — '+(F?F[1]:'the farmer'),160);return}return _si(k)};
@@ -184,3 +184,9 @@ const FARMER_PORT={ROSIE:['#60b254',0],HATTIE:['#e8a020',40],PERCY:['#e88aa0',30
   g.restore();
   if(((t>>6)%9)===0){g.save();g.font='7px sans-serif';g.fillStyle='#fff';g.fillText('z',X+13,Y-6-((t>>3)%4));g.restore()}}}
 {const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&CUR==='int'&&MAPS.int&&MAPS.int.id==='house'&&o&&!o.mv){const [dx,dy]=DV[o.dir];if(o.x+dx===3&&o.y+dy===3){const L=['Grandpa: "Ah, come sit by the fire, '+(DB.playerName||'partner')+'. This book\'s about a brave farm dog!"','Grandpa: "Rock-a-bye... don\'t mind me, just resting my eyes."','Grandpa: "Pull up the other chair — nothing beats a warm fire after farm work."'];say(L[(Date.now()/1000|0)%L.length],220);return}}return _oi(k)}}
+
+// v118: facing a specialty farmer shows who they are + what unlocks their shop (instead of "A: look")
+function farmerHint(o){try{if(CUR!=='int')return null;const id=MAPS.int&&MAPS.int.id,F=FARM_SELL[id];if(!F)return null;const [dx,dy]=DV[o.dir],at=n=>OWBASE[o.y+dy*n]&&OWBASE[o.y+dy*n][o.x+dx*n];
+  if(!(at(1)==='N'||(at(1)==='Q'&&at(2)==='N')))return null;
+  if(typeof farmOpen==='function'&&FARM_CYC[id]&&!farmOpen(id))return '🔒 '+F[2]+': need '+FARM_CYC[id]+' WOOL CYCLES ('+woolCycles()+' now)';
+  return 'A: talk to Farmer '+F[1]+' — buy '+F[0].toUpperCase()+'S'}catch(e){return null}}

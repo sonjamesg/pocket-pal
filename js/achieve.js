@@ -74,8 +74,10 @@ const ACH_TIERS=[
   ['rich5k','👑','RANCH TYCOON','Have 5000 coins',()=>DB.wallet||0,5000]]}];
 const ACH_ALL=[].concat(...ACH_TIERS.map((T,ti)=>T.L.map(a=>({id:a[0],ic:a[1],n:a[2],d:a[3],v:a[4],goal:a[5],ti}))));
 function achVal(a){let v=0;try{v=a.v()}catch(e){}return Math.min(a.goal,v||0)}
+// v118: tier N only unlocks once every goal in the tiers before it is done
+function tierOpen(ti){const A=achD();for(let i=0;i<ti;i++)if(ACH_TIERS[i].L.some(r=>!A.u[r[0]]))return false;return true}
 let achQ=[],achToast=null,achBusy=0;
-function achCheck(){if(achBusy||!DB||!DB.avatar)return;achBusy=1;try{const A=achD();let ch=0;for(const a of ACH_ALL){if(A.u[a.id])continue;if(achVal(a)>=a.goal){A.u[a.id]=Date.now();achQ.push(a);ch=1}}if(ch)saveDB()}finally{achBusy=0}}
+function achCheck(){if(achBusy||!DB||!DB.avatar)return;achBusy=1;try{const A=achD();let ch=0;for(const a of ACH_ALL){if(A.u[a.id])continue;if(!tierOpen(a.ti))continue;if(achVal(a)>=a.goal){A.u[a.id]=Date.now();achQ.push(a);ch=1}}if(ch)saveDB()}finally{achBusy=0}}
 setInterval(()=>{if(S&&S.scene!=='title')achCheck()},1000);
 // ---- event hooks ----
 {const _j=owJump;owJump=function(){const o=ui.ow,b=o&&o.jt;_j();if(o&&!b&&o.jt>0)achInc('jump')}}
@@ -118,7 +120,7 @@ function drawAch(t){if(achSnap)g.drawImage(achSnap,0,0,W,H);else R(0,0,W,H,'#2a1
     RR(x,27,w,12,5,on?(i<NT()?T.c[0]:'#ffc83a'):'#e8dcc0',on?(i<NT()?T.c[1]:'#a06000'):rd?'#ff5a8b':'#c8b48c');txt(i<NT()?(done?'★':'')+(i+1):'🏆',x+w/2,36,on?'#fff':'#8a7058',8);if(rd&&!on)E(x+w-2,28,2.5,2.5,'#ff5a8b')}
   const L=achRows();
   if(ui.atier===NT()){txt('◀ COMPLETED  •  '+L.length+'/'+ACH_ALL.length+' ▶',W/2,50,'#a06000',9)}
-  else{const T=ACH_TIERS[ui.atier];txt('◀ TIER '+(ui.atier+1)+': '+T.n+'  •  '+ACH_W[ui.atier]+'★ each ▶',W/2,50,T.c[1],8.5)}
+  else{const T=ACH_TIERS[ui.atier];txt(tierOpen(ui.atier)?'◀ TIER '+(ui.atier+1)+': '+T.n+'  •  '+ACH_W[ui.atier]+'★ each ▶':'◀ 🔒 TIER '+(ui.atier+1)+': finish TIER '+ui.atier+' first ▶',W/2,50,tierOpen(ui.atier)?T.c[1]:'#8a7a68',8.5)}
   const top=Math.max(0,Math.min(ui.asel-2,L.length-5));
   if(!L.length){txt(ui.atier===NT()?'Nothing yet — claim a ★ to fill your scrapbook!':'Tier complete! ★ Check the 🏆 tab',W/2,110,'#8a7a68',7.5)}
   L.slice(top,top+5).forEach((a,j)=>{const i=top+j,y=55+j*27,on=i===ui.asel,T=ACH_TIERS[a.ti],cl=!!A.cl[a.id],rd=!cl&&!!A.u[a.id],v=achVal(a),pl=.5+.5*Math.sin(t/5);
@@ -131,11 +133,11 @@ function drawAch(t){if(achSnap)g.drawImage(achSnap,0,0,W,H);else R(0,0,W,H,'#2a1
       g.save();g.translate(W-42,y+12);g.rotate(-.18);RR(-18,-7,36,14,4,'#ffe36a','#c88a10');txt('+'+ACH_W[a.ti]+'★',0,3.5,'#a05a00',8);g.restore()}
     else{txt(a.d,43,y+20,'#8a7a68',6.5,'left',W-115);
       if(rd){const s=1+.08*Math.sin(t/4);g.save();g.translate(W-42,y+12);g.scale(s,s);g.globalAlpha=.35+.3*pl;RR(-23,-9,46,18,9,'#ffe36a');g.globalAlpha=1;RR(-20,-7,40,14,7,'#ff8a3a','#c05a10');RR(-18,-6,36,4,3,'#ffb878');txt('CLAIM ★',0,3.5,'#fff',7);g.restore()}
-      else{RR(W-64,y+10,44,7,3.5,'#d8ccb4');RR(W-64,y+10,Math.max(4,44*v/a.goal),7,3.5,T.c[0]);g.globalAlpha=.5;R(W-62,y+11,Math.max(2,40*v/a.goal),1.5,'#fff');g.globalAlpha=1;
+      else if(!tierOpen(a.ti)){txt('🔒',W-42,y+16,'#8a7a68',10)}else{RR(W-64,y+10,44,7,3.5,'#d8ccb4');RR(W-64,y+10,Math.max(4,44*v/a.goal),7,3.5,T.c[0]);g.globalAlpha=.5;R(W-62,y+11,Math.max(2,40*v/a.goal),1.5,'#fff');g.globalAlpha=1;
         const sx=W-64+((t*1.5)%60)-8;if(v>0&&sx<W-64+44*v/a.goal-3&&sx>W-64){g.globalAlpha=.6;R(sx,y+10,3,7,'#fff');g.globalAlpha=1}txt(v+'/'+a.goal,W-42,y+8,'#6a5a48',6.5)}}});
   if(L.length>5){txt(top>0?'▲':'',W-20,58,'#a08a68',6);txt(top+5<L.length?'▼':'',W-20,H-34,'#a08a68',6)}
   // next reward tease
-  const near=ACH_ALL.filter(a=>!A.u[a.id]).map(a=>[a,achVal(a)/a.goal]).sort((x,y)=>y[1]-x[1])[0];const c=woolCycles(),nx=Object.keys(FARM_CYC).find(id=>c<FARM_CYC[id]);
+  const near=ACH_ALL.filter(a=>!A.u[a.id]&&tierOpen(a.ti)).map(a=>[a,achVal(a)/a.goal]).sort((x,y)=>y[1]-x[1])[0];const c=woolCycles(),nx=Object.keys(FARM_CYC).find(id=>c<FARM_CYC[id]);
   RR(18,H-30,W-36,15,7,'#efe6ff','#5b4b8a');txt(near&&near[1]>0&&t%240<120?'✨ SO CLOSE: '+near[0].n+' → +'+ACH_W[near[0].ti]+'★':'🧶 Wool cycles: '+c+(nx?'  •  '+FARM_NM[nx]+' at '+FARM_CYC[nx]:'  •  All farms open!'),W/2,H-19.5,'#5b4b8a',7,'center',W-44);
   txt('◀▶ tab  ▲▼ pick  A claim  B close',W/2,H-6,'#fff',6.5);
   // flying stars → header bank
