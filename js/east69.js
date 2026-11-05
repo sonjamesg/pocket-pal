@@ -168,18 +168,29 @@ const FARM_SELL={cowfarm:['cow','ROSIE','MOO MEADOW'],chickfarm:['chicken','HATT
  openCowShop=function(){S={scene:'store'};ui.cowShop=1;ui.farmShop=0;ui.cat=0;ui.sel=0;ui.msgT=0};
  // farmer needs a little 'N' greeting
  Object.assign(INT_MSG,{});}
-// v107: farmer portraits (Grandpa-style) when a specialty farmer is talking
-const FARMER_PORT={ROSIE:['#60b254',0],HATTIE:['#e8a020',40],PERCY:['#e88aa0',300],GRACE:['#8c5a32',200]};
+// v125: Pokemon-style farmer talk — dedicated bust portraits LEFT of text (no overlap), wraps long locked-farm lines
+const FARMER_PORT={ROSIE:{col:'#60b254',img:'prosie'},HATTIE:{col:'#e8a020',img:'phattie'},PERCY:{col:'#e88aa0',img:'ppercy'},GRACE:{col:'#8c5a32',img:'pgrace'}};
 {const _say=say;say=function(m,d){const r=_say.apply(this,arguments);const k=Object.keys(FARMER_PORT).find(n=>String(m).includes(n));ui.msgWho=k&&/Farmer|ROSIE/.test(String(m))?{n:k,m:ui.msg}:null;return r}}
-{const _dm=drawMsg;drawMsg=function(y){_dm(y);const w=ui.msgWho;if(!w||w.m!==ui.msg)return;const [col,hue]=FARMER_PORT[w.n],im=IMG.npc_rosie,bx=8,by=y<H/2?Math.min(H-80,y+60):H-118;
-  RR(bx,by,52,52,6,'#fff','#2b2440');R(bx+3,by+3,46,40,'#bfe3ff');R(bx+3,by+30,46,13,'#8fd06a');
-  if(im&&im.naturalWidth){g.save();g.imageSmoothingEnabled=false;if(hue)g.filter='hue-rotate('+hue+'deg)';g.drawImage(im,0,0,16,14,bx+5,by+3,42,37);g.restore()}else{E(bx+26,by+20,12,12,'#ffd6aa');R(bx+14,by+30,24,12,col)}
-  RR(bx,by+42,52,12,4,col,'#2b2440');txt(w.n,bx+26,by+51,'#fff',7)}}
+function farmerSpeech(raw){return String(raw).replace(/^Farmer\s+\w+:\s*/i,'').replace(/^["“]|["”]$/g,'')}
+function drawFarmerTalk(y,w){const F=FARMER_PORT[w.n];if(!F)return;const speech=farmerSpeech(ui.msg);
+  if(ui.msgShown!==ui.msg){ui.msgShown=ui.msg;ui.msgC=0}ui.msgC=Math.min(speech.length,(ui.msgC||0)+1.35);
+  const portW=68,nameH=13,gap=5,bx=7,textX=bx+portW+gap,textW=W-textX-10;
+  let size=9,L=wrapMsg(speech,textW-6,size);if(L.length>4){size=8;L=wrapMsg(speech,textW-6,size)}if(L.length>5){size=7;L=wrapMsg(speech,textW-6,size)}
+  L=L.slice(0,6);const lh=size+3,boxH=Math.max(portW+nameH+10,L.length*lh+18),top=y<H/2?Math.max(8,y-6):H-12-boxH;
+  RR(4,top,W-8,boxH,8,'#fffef8','#2b2440');g.strokeStyle='#58a8f8';g.lineWidth=1.2;g.strokeRect(8.5,top+3.5,W-17,boxH-7);
+  const by=top+6,ph=portW-2;RR(bx,by,portW,ph,6,'#fff','#2b2440');R(bx+3,by+3,portW-6,ph-6,'#bfe3ff');R(bx+3,by+ph-18,portW-6,15,'#8fd06a');
+  const im=IMG[F.img];if(im&&im.naturalWidth){g.save();g.imageSmoothingEnabled=false;const s=Math.min((portW-10)/im.width,(ph-12)/im.height),dw=im.width*s,dh=im.height*s;
+    g.drawImage(im,bx+(portW-dw)/2,by+4+(ph-10-dh)/2,dw,dh);g.restore()}else{E(bx+portW/2,by+ph/2-4,14,14,'#ffd6aa');R(bx+14,by+ph-22,40,14,F.col)}
+  RR(bx,by+ph+1,portW,nameH,4,F.col,'#2b2440');txt(w.n,bx+portW/2,by+ph+nameH/2+3.5,'#fff',7);
+  let left=Math.floor(ui.msgC);L.forEach((l,i)=>{const part=l.slice(0,Math.max(0,left));left-=l.length+1;txt(part,textX+2,top+12+size+i*lh,'#2b2440',size,'left')});
+  if(ui.msgC>=speech.length&&S.scene==='map'&&(ui.anim>>4)%2){g.fillStyle='#e8402a';g.beginPath();g.moveTo(W-20,top+boxH-10);g.lineTo(W-12,top+boxH-10);g.lineTo(W-16,top+boxH-6);g.fill()}}
+{const _dm=drawMsg;drawMsg=function(y){const w=ui.msgWho;if(w&&w.m===ui.msg&&FARMER_PORT[w.n]){drawFarmerTalk(y,w);return}_dm(y)}}
 // v108: Grandpa rocking in his chair by the fire, reading a book (left fireside chair), second armchair stays for you
 {const _dio=drawIntObj;drawIntObj=function(c,X,Y,x,y,t){if(!(c==='a'&&MAPS.int&&MAPS.int.id==='house'&&x===3&&y===3))return _dio(c,X,Y,x,y,t);
-  const a=Math.sin(t/28)*0.09;E(X+8,Y+15,8,2,'#0004');g.save();g.translate(X+8,Y+14);g.rotate(a);g.translate(-8,-14);
-  // rocking chair
-  g.strokeStyle='#5a3418';g.lineWidth=1.5;g.beginPath();g.arc(8,6,10,0.35*Math.PI,0.65*Math.PI);g.stroke();
+  // v125: clearer rocking chair + stronger rock so Grandpa reads as rocking by the hearth
+  const a=Math.sin(t/22)*0.16;E(X+8,Y+15,8,2,'#0004');g.save();g.translate(X+8,Y+14);g.rotate(a);g.translate(-8,-14);
+  g.strokeStyle='#3a2010';g.lineWidth=2.2;g.beginPath();g.arc(8,8,11,0.28*Math.PI,0.72*Math.PI);g.stroke();
+  g.strokeStyle='#8a5a2e';g.lineWidth=1.4;g.beginPath();g.arc(8,8,9.5,0.3*Math.PI,0.7*Math.PI);g.stroke();
   RR(2,-2,12,10,3,'#8a5a2e');RR(3,-1,10,8,2,'#a86a3a');RR(1,7,14,4,2,'#b07a44');R(2,10,2,4,'#5a3418');R(12,10,2,4,'#5a3418');
   // grandpa
   RR(4,6,8,6,2,'#3a5a9a');R(5,11,2,3,'#3a5a9a');R(9,11,2,3,'#3a5a9a');R(4,13,3,1.5,'#3a2010');R(9,13,3,1.5,'#3a2010');
@@ -193,6 +204,7 @@ const FARMER_PORT={ROSIE:['#60b254',0],HATTIE:['#e8a020',40],PERCY:['#e88aa0',30
 {const _oi=owInput;owInput=function(k){const o=ui.ow;if(k==='a'&&CUR==='int'&&MAPS.int&&MAPS.int.id==='house'&&o&&!o.mv){const [dx,dy]=DV[o.dir];if(o.x+dx===3&&o.y+dy===3){const L=['Grandpa: "Ah, come sit by the fire, '+(DB.playerName||'partner')+'. This book\'s about a brave farm dog!"','Grandpa: "Rock-a-bye... don\'t mind me, just resting my eyes."','Grandpa: "Pull up the other chair — nothing beats a warm fire after farm work."'];say(L[(Date.now()/1000|0)%L.length],220);return}}return _oi(k)}}
 
 // v118: facing a specialty farmer shows who they are + what unlocks their shop (instead of "A: look")
+if(typeof INT_MSG!=='undefined')INT_MSG.a='Grandpa\'s rocking chair by the fire — he\'s reading.';
 function farmerHint(o){try{if(CUR!=='int')return null;const id=MAPS.int&&MAPS.int.id,F=FARM_SELL[id];if(!F)return null;const [dx,dy]=DV[o.dir],at=n=>OWBASE[o.y+dy*n]&&OWBASE[o.y+dy*n][o.x+dx*n];
   if(!(at(1)==='N'||(at(1)==='Q'&&at(2)==='N')))return null;
   if(typeof farmOpen==='function'&&FARM_CYC[id]&&!farmOpen(id))return '🔒 '+F[2]+': need '+FARM_CYC[id]+' WOOL CYCLES ('+woolCycles()+' now)';
