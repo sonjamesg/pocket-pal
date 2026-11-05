@@ -104,14 +104,26 @@ def dogspr(bid,b,fr=''):
   c.ell(hx0+hr*.62,hy0+hr*.5,hr*.38,hr*.3,L_,ol=True); c.ell(hx0+hr*.82,hy0+hr*.38,1.7,1.3,hx('2a2028'))
   if ear in('flop','long'): c.ell(hx0-hr*.7,hy0+hr*(.25 if ear=='flop' else .5),hr*.32,hr*(.55 if ear=='flop' else .8),EC,ol=True)
   gloss(c,hx0-hr*.35,hy0-hr*.55,hr*.3,hr*.15)
+  # piebald white Staffy: black rear-head + rear body (eyes drawn after so they stay readable)
+  if bid=='staffy':
+    BK=hx('2a2430')
+    c.rr(bx-bl/2-0.5,by-bh/2,bl*0.58,bh,bh/2.2,BK,ol=False,shade=False)
+    c.ell(hx0-hr*.45,hy0,hr*.78,hr*.88,BK)  # rear half of head
+    if ear in('flop','long'): c.ell(hx0-hr*.7,hy0+hr*(.25 if ear=='flop' else .5),hr*.32,hr*(.55 if ear=='flop' else .8),BK,ol=True)
+    # keep white muzzle / front face
+    c.ell(hx0+hr*.35,hy0+hr*.15,hr*.55,hr*.7,L_)
+    c.ell(hx0+hr*.62,hy0+hr*.5,hr*.38,hr*.3,L_,ol=True); c.ell(hx0+hr*.82,hy0+hr*.38,1.7,1.3,hx('2a2028'))
+    gloss(c,hx0-hr*.1,hy0-hr*.5,hr*.22,hr*.12)
+  # v115: always white sclera so eyes read on dark fur / Staffy piebald
   e=hx(b['eye']) if b.get('eye') else EYE
-  OLc=hx('2a2028')
+  OLc=hx('2a2028'); PUP=hx('141018')
+  ey=hy0-hr*.12
   for x in (hx0-hr*.25,hx0+hr*.42):
     if fr in ('h','z'):  # happy ^^ / sleeping -- closed curved eyes
-      c.d.arc(c.S([x-2.2,hy0-hr*.12-(2 if fr=='h' else 0),x+2.2,hy0-hr*.12+(2 if fr=='h' else 2.5)]),200 if fr=='h' else 20,340 if fr=='h' else 160,fill=OLc,width=5)
+      c.d.arc(c.S([x-2.4,ey-(2.2 if fr=='h' else 0),x+2.4,ey+(1.4 if fr=='h' else 1.2)]),200 if fr=='h' else 0,340 if fr=='h' else 180,fill=OLc,width=6)
     else:
-      c.ell(x,hy0-hr*.12,2.3,2.6,hx('ffffff') if b.get('mask') else e); c.ell(x,hy0-hr*.12,1.9,2.2,e); c.ell(x+.7,hy0-hr*.35,.8,.8,W)
-      if fr=='s': c.d.line(c.S([x-2.4,hy0-hr*.42-(1.2 if x<hx0 else 0),x+2.4,hy0-hr*.42-(0 if x<hx0 else 1.2)]),fill=OLc,width=4)
+      c.ell(x,ey,2.7,3.0,W); c.ell(x,ey,2.0,2.2,e); c.ell(x,ey+.2,1.1,1.3,PUP); c.ell(x+.85,ey-.95,.75,.75,W)
+      if fr=='s': c.d.line(c.S([x-2.4,ey-hr*.3-(1.2 if x<hx0 else 0),x+2.4,ey-hr*.3-(0 if x<hx0 else 1.2)]),fill=OLc,width=4)
   mx,my=hx0+hr*.6,hy0+hr*.78
   if fr=='h': c.ell(mx,my,2.2,1.8,hx('6a2030'),ol=True); c.ell(mx,my+.8,1.3,.9,hx('ff7d9a'))
   elif fr=='s': c.d.arc(c.S([mx-2,my,mx+2,my+3]),200,340,fill=OLc,width=4); c.ell(hx0-hr*.25,hy0+hr*.25,1,1.6,hx('7ac8ff'))
