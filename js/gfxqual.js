@@ -4,11 +4,12 @@ const GFX={lvl:2,avg:16.7,last:0,bad:0,good:0,toast:0,
   ok(f){const L=this.lvl;if(f==='blur')return L>=2;if(f==='glow')return L>=1;if(f==='shadow'||f==='ambient')return L>=1;return true},
   dpr(){const c=this.mob?(this.lvl>=2?1.5:this.lvl>=1?1.25:1):(this.lvl>=2?2:this.lvl>=1?1.5:1);return Math.min(c,window.devicePixelRatio||1)},
   mode:'auto',
-  set(l){l=Math.max(0,Math.min(2,l));if(l===this.lvl)return;const down=l<this.lvl;this.lvl=l;this.bad=this.good=0;try{sessionStorage.setItem('pf_gfx',l);if(this.mode==='auto'&&this.mob)localStorage.setItem('pf_gfx_auto',l)}catch(e){}
+  set(l){if(this.mode!=='auto'&&this.mode in {high:1,med:1,low:1}){l=({high:2,med:1,low:0})[this.mode]}l=Math.max(0,Math.min(2,l));if(l===this.lvl)return;const down=l<this.lvl;this.lvl=l;this.bad=this.good=0;try{sessionStorage.setItem('pf_gfx',l);if(this.mode==='auto'&&this.mob)localStorage.setItem('pf_gfx_auto',l)}catch(e){}
     if(down&&!this.toasted){this.toasted=1;this.toast=150}try{fit()}catch(e){}},
   tick(now){if(this.mode!=='auto'){this.last=now;return}if(this.last){let dt=now-this.last;if(dt<250&&!document.hidden){this.avg+=(dt-this.avg)*.05;const fps=1000/this.avg;
       if(fps<(this.lvl>=2?40:28)){if(++this.bad>(this.mob?45:120))this.set(this.lvl-1)}else this.bad=Math.max(0,this.bad-1);
-      if(this.lvl<(this.mob?1:2)&&fps>55){if(++this.good>300)this.set(this.lvl+1)}else this.good=0}}this.last=now}};
+      /* v131: desktop AUTO may upshift; mobile AUTO never upshifts — MED↔LOW flipped P3D (laggy walk → flat "expand" + faster) */
+      if(!this.mob&&this.lvl<2&&fps>55){if(++this.good>300)this.set(this.lvl+1)}else this.good=0}}this.last=now}};
 // v98: phones start lighter — Android/mobile default MED (Android low-RAM → LOW), DPR capped harder; auto drops sooner and remembers per device
 GFX.mob=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches);
 GFX.droid=/Android/i.test(navigator.userAgent);
@@ -17,9 +18,13 @@ try{const s=localStorage.getItem('pf_gfx_auto');if(s!=null)GFX.lvl=Math.min(GFX.
 try{const s=sessionStorage.getItem('pf_gfx');if(s!=null)GFX.lvl=+s}catch(e){}
 // v88: persisted Options — graphics mode (auto/high/med/low) + sound
 const GFXM={high:2,med:1,low:0};
-try{const m=localStorage.getItem('pf_gfx_mode');if(m&&m in GFXM){GFX.mode=m;GFX.lvl=GFXM[m]}}catch(e){}
+let _gfxModeSaved=false;
+try{const m=localStorage.getItem('pf_gfx_mode');if(m&&(m==='auto'||m in GFXM)){GFX.mode=m;if(m in GFXM)GFX.lvl=GFXM[m];_gfxModeSaved=true}}catch(e){}
+/* v131: phones with no saved choice get fixed LOW (not AUTO). AUTO was starting MED (P3D) then downshifting on walk → view expand + speed-up. Manual LOW/MED/HIGH never adapt. */
+if(!_gfxModeSaved&&GFX.mob){GFX.mode='low';GFX.lvl=0;try{localStorage.setItem('pf_gfx_mode','low')}catch(e){}}
+if(GFX.mode in GFXM)GFX.lvl=GFXM[GFX.mode];
 let OPT_MUTE=false;try{OPT_MUTE=localStorage.getItem('pf_mute')==='1'}catch(e){}
-function gfxMode(m){GFX.mode=m;try{localStorage.setItem('pf_gfx_mode',m)}catch(e){}if(m!=='auto'){GFX.toasted=1;const l=GFXM[m];if(l===GFX.lvl){try{fit()}catch(e){}}else GFX.set(l)}else{GFX.bad=GFX.good=0;try{fit()}catch(e){}}}
+function gfxMode(m){GFX.mode=m;try{localStorage.setItem('pf_gfx_mode',m)}catch(e){}if(m!=='auto'){GFX.toasted=1;GFX.bad=GFX.good=0;const l=GFXM[m];if(l===GFX.lvl){try{fit()}catch(e){}}else GFX.set(l)}else{GFX.bad=GFX.good=0;try{fit()}catch(e){}}}
 function setMute(v){OPT_MUTE=!!v;try{localStorage.setItem('pf_mute',v?'1':'0')}catch(e){}if(typeof DB!=='undefined'&&DB){DB.mute=OPT_MUTE;if(typeof ACC!=='undefined'&&ACC.token)try{saveDB()}catch(e){}}}
 const GMODES=['auto','high','med','low'],GLBL={auto:'AUTO',high:'HIGH',med:'MED',low:'LOW'};
 function openOpts(back){ui.opts={row:0,back:back||null}}
@@ -33,7 +38,7 @@ function drawOpts(){const O=ui.opts;g.save();R(0,0,W,H,'#2b2440aa');panel(30,40,
   const rows=[['GRAPHICS',GLBL[GFX.mode]+(GFX.mode==='auto'?' ('+['LOW','MED','HIGH'][GFX.lvl]+')':'')],['SOUND',OPT_MUTE?'OFF':'ON'],['BACK','']];
   rows.forEach(([a,b],i)=>{const y=58+i*30,on=i===O.row;RR(40,y,W-80,24,8,on?'#ff5a8b':'#fff',on?'#fff':'#d8d0e8');
     if(b){txt(a,W/2-36,y+16,on?'#fff':'#5b4b8a',10);txt((on?'◀ ':'')+b+(on?' ▶':''),W/2+40,y+16,on?'#fff':(a==='SOUND'&&OPT_MUTE?'#e8402a':'#2a9a50'),10)}else txt(a,W/2,y+16,on?'#fff':'#5b4b8a',10)});
-  txt(O.row===0?'LOW = smoother on slow phones':'◀ ▶ change   B back',W/2,170,'#5b4b8a',8);g.restore()}
+  txt(O.row===0?'LOW = fixed for slow phones · AUTO adapts':'◀ ▶ change   B back',W/2,170,'#5b4b8a',8);g.restore()}
 // title + pause entries
 {const _ti=titleItems;titleItems=function(){const a=_ti();return a.includes('OPTIONS')?a:a.concat(['OPTIONS'])}}
 if(typeof PAUSE!=='undefined'&&!PAUSE.includes('OPTIONS'))PAUSE.splice(PAUSE.indexOf('HOME'),0,'OPTIONS');
